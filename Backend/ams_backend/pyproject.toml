@@ -1,0 +1,22 @@
+[project]
+name = "ams-backend"
+version = "0.1.0"
+description = "Apartment Management System API (FastAPI)"
+requires-python = ">=3.11"
+dependencies = [
+    "fastapi>=0.115",
+    "uvicorn[standard]>=0.30",
+    "sqlalchemy>=2.0",
+    "pydantic>=2.7",
+    "pyjwt>=2.8",
+    "python-multipart>=0.0.9",
+    "reportlab>=4.0",
+    "num2words>=0.5.13",
+    "tzdata",
+]
+
+[dependency-groups]
+dev = ["pytest>=8", "httpx>=0.27"]
+
+[tool.uv]
+package = false   # an application, not a library to build and publish
