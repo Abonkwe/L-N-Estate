@@ -347,6 +347,26 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/payments/preview": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Preview Payment
+         * @description Dry run: what would this payment cover? Saves nothing.
+         */
+        post: operations["preview_payment_payments_preview_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/payments/{payment_id}/void": {
         parameters: {
             query?: never;
@@ -1073,6 +1093,31 @@ export interface components {
             receipt_id: number | null;
             /** Balance Remaining */
             balance_remaining: number | null;
+        };
+        /**
+         * PaymentPreview
+         * @description What a payment WOULD do. Nothing is saved.
+         */
+        PaymentPreview: {
+            /** Covers From */
+            covers_from: string | null;
+            /** Covers To */
+            covers_to: string | null;
+            /** Months Covered */
+            months_covered: number;
+            /**
+             * Paid Through After
+             * Format: date
+             */
+            paid_through_after: string;
+            /** Credit Toward Next After */
+            credit_toward_next_after: number;
+            /** Shortfall Next After */
+            shortfall_next_after: number;
+            /** Balance Remaining */
+            balance_remaining: number;
+            /** Purpose */
+            purpose: string;
         };
         /**
          * RentSheetRow
@@ -2062,6 +2107,39 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["PaymentOut"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    preview_payment_payments_preview_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["PaymentIn"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["PaymentPreview"];
                 };
             };
             /** @description Validation Error */

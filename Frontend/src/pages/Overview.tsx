@@ -6,9 +6,17 @@ import { getDashboardApi, type LeaseItem } from "@/api/dashboard";
 import { SummaryStrip } from "@/components/shared/SummaryStrip";
 import { StatusMarker } from "@/components/shared/StatusMarker";
 import { formatMoney, formatDate, formatHeaderDate } from "@/lib/format";
+import { RecordPaymentDialog } from "@/components/payments/RecordPaymentDialog";
 
 export const OverviewPage: React.FC = () => {
   const [search, setSearch] = useState("");
+  const [paymentDialogOpen, setPaymentDialogOpen] = useState(false);
+  const [selectedLeaseForPayment, setSelectedLeaseForPayment] = useState<LeaseItem | null>(null);
+
+  const handleOpenPayment = (lease: LeaseItem | null = null) => {
+    setSelectedLeaseForPayment(lease);
+    setPaymentDialogOpen(true);
+  };
 
   const {
     data,
@@ -108,6 +116,7 @@ export const OverviewPage: React.FC = () => {
           {isUrgent ? (
             <button
               type="button"
+              onClick={() => handleOpenPayment(lease)}
               className="inline-flex items-center justify-center h-8 px-4 text-xs font-medium bg-primary hover:bg-primary-hover active:bg-[#174BB0] text-white rounded-btn-sm transition-colors focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-1"
             >
               Record payment
@@ -115,17 +124,18 @@ export const OverviewPage: React.FC = () => {
           ) : isExpiring ? (
             <button
               type="button"
+              onClick={() => handleOpenPayment(lease)}
               className="inline-flex items-center justify-center h-8 px-4 text-xs font-medium border border-primary text-primary hover:bg-primary/5 active:bg-primary/10 rounded-btn-sm transition-colors focus:outline-none focus:ring-2 focus:ring-primary"
             >
               Record payment
             </button>
           ) : (
-            <button
-              type="button"
+            <Link
+              to={`/leases/${lease.id}`}
               className="inline-flex items-center justify-center h-8 px-4 text-xs font-medium border border-line text-primary hover:bg-primary/5 active:bg-primary/10 rounded-btn-sm transition-colors focus:outline-none focus:ring-2 focus:ring-primary"
             >
               View
-            </button>
+            </Link>
           )}
         </td>
       </tr>
@@ -181,6 +191,7 @@ export const OverviewPage: React.FC = () => {
           {/* Primary Record payment button */}
           <button
             type="button"
+            onClick={() => handleOpenPayment(null)}
             className="h-10 px-4 bg-primary hover:bg-primary-hover active:bg-[#174BB0] text-white text-sm font-medium rounded-btn transition-colors shrink-0 focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2 flex items-center justify-center"
           >
             Record payment
@@ -318,6 +329,16 @@ export const OverviewPage: React.FC = () => {
           </div>
         </>
       )}
+
+      {/* Record Payment Dialog */}
+      <RecordPaymentDialog
+        isOpen={paymentDialogOpen}
+        onClose={() => setPaymentDialogOpen(false)}
+        preselectedLease={selectedLeaseForPayment}
+        onSuccess={() => {
+          refetch();
+        }}
+      />
     </div>
   );
 };

@@ -26,7 +26,7 @@ from .db import SessionLocal, engine
 from .security import hash_password
 from .services import audit, lease_out, record_payment, today_local
 
-DEV_EMAIL, DEV_PASSWORD = "dev@example.com", "dev-password-123"
+DEV_EMAIL, DEV_PASSWORD = "abonkwe@gmail.com", "abo-password-123"
 
 HOUSES = [("House 1", "Demo Street 1"), ("House 2", "Demo Street 2"), ("House 3", "Demo Street 3")]
 

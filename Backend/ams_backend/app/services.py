@@ -1,7 +1,7 @@
 """Business logic shared by the API routes (and later the WhatsApp assistant)."""
 from __future__ import annotations
 
-from datetime import date, datetime, timezone
+from datetime import date, datetime, timedelta, timezone
 from zoneinfo import ZoneInfo
 
 from fastapi import HTTPException
@@ -16,7 +16,11 @@ from .config import settings
 
 
 def today_local() -> date:
-    return datetime.now(ZoneInfo(settings.timezone)).date()
+    try:
+        return datetime.now(ZoneInfo(settings.timezone)).date()
+    except Exception:
+        # Fallback to UTC+1 (Douala / WAT timezone without DST) if tzdata is missing on Windows
+        return datetime.now(timezone(timedelta(hours=1))).date()
 
 
 # ---------- small helpers ----------
@@ -138,6 +142,21 @@ def payment_out(p: m.Payment) -> s.PaymentOut:
         covers_from=p.covers_from, covers_to=p.covers_to, is_void=p.is_void, void_reason=p.void_reason,
         receipt_id=p.receipt.id if p.receipt else None,
         balance_remaining=p.receipt.balance_remaining if p.receipt else None,
+    )
+
+
+def preview_payment_effect(lease: m.Lease, data: s.PaymentIn) -> s.PaymentPreview:
+    terms = lease_terms(lease)
+    before = lease_credit(lease)
+    after = before + data.amount
+    cov = billing.payment_coverage(lease.start_date, terms, before, after)
+    pos = billing.compute_position(lease.start_date, terms, after, data.paid_on, lease.grace_days)
+    return s.PaymentPreview(
+        covers_from=cov[0] if cov else None, covers_to=cov[1] if cov else None,
+        months_covered=cov[2] if cov else 0, paid_through_after=pos.paid_through,
+        credit_toward_next_after=pos.credit_toward_next, shortfall_next_after=pos.shortfall_next,
+        balance_remaining=pos.shortfall_next if pos.paid_through < data.paid_on else 0,
+        purpose=describe_period(cov),
     )
 
 

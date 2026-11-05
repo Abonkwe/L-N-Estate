@@ -206,6 +206,18 @@ class VoidIn(BaseModel):
     reason: str = Field(min_length=3)
 
 
+class PaymentPreview(BaseModel):
+    """What a payment WOULD do. Nothing is saved."""
+    covers_from: date | None
+    covers_to: date | None
+    months_covered: int
+    paid_through_after: date
+    credit_toward_next_after: int
+    shortfall_next_after: int
+    balance_remaining: int        # the "Reste" that would print on the receipt
+    purpose: str                  # the receipt wording
+
+
 class PaymentOut(BaseModel):
     id: int
     lease_id: int

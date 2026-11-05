@@ -11,7 +11,7 @@ from ..config import settings
 from ..db import get_db
 from ..deps import current_user
 from ..receipts import render_receipt_pdf
-from ..services import audit, commit, get_or_404, payment_out, record_payment
+from ..services import audit, commit, get_or_404, payment_out, preview_payment_effect, record_payment
 
 router = APIRouter(prefix="/payments", tags=["payments"], dependencies=[Depends(current_user)])
 
@@ -30,6 +30,12 @@ def create_payment(
     """
     lease = get_or_404(db, m.Lease, data.lease_id, "Lease")
     return payment_out(record_payment(db, lease, data, user))
+
+
+@router.post("/preview", response_model=s.PaymentPreview)
+def preview_payment(data: s.PaymentIn, db: Session = Depends(get_db)):
+    """Dry run: what would this payment cover? Saves nothing."""
+    return preview_payment_effect(get_or_404(db, m.Lease, data.lease_id, "Lease"), data)
 
 
 @router.get("", response_model=list[s.PaymentOut])

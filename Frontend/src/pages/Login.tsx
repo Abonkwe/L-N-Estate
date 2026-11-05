@@ -76,7 +76,7 @@ export const LoginPage: React.FC = () => {
               required
               value={email}
               onChange={(e) => setEmail(e.target.value)}
-              placeholder="e.g. dev@example.com"
+              placeholder="e.g. abonkwe@gmail.com"
               disabled={submitting}
               className="w-full h-11 px-3.5 bg-surface border border-input-border rounded-input text-sm text-ink placeholder:text-ink-2/50 focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent transition-colors disabled:opacity-50"
             />
