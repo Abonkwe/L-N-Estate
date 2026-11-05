@@ -3,6 +3,7 @@ import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { AuthProvider, useAuth } from "./context/AuthContext";
 import { LoginPage } from "./pages/Login";
+import { OverviewPage } from "./pages/Overview";
 import { AppShell } from "./components/layout/AppShell";
 import { PlaceholderPage } from "./pages/PlaceholderPage";
 
@@ -54,15 +55,7 @@ export const App: React.FC = () => {
                 </ProtectedRoute>
               }
             >
-              <Route
-                index
-                element={
-                  <PlaceholderPage
-                    title="Overview"
-                    subtitle="App shell active. Overview screen will be built in Step 2."
-                  />
-                }
-              />
+              <Route index element={<OverviewPage />} />
               <Route path="tenants" element={<PlaceholderPage title="Tenants" />} />
               <Route path="payments" element={<PlaceholderPage title="Payments" />} />
               <Route path="expenses" element={<PlaceholderPage title="Expenses" />} />

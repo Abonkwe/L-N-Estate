@@ -1,16 +1,7 @@
 import React from "react";
 import { NavLink, useLocation } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
-import {
-  LayoutDashboard,
-  Users,
-  CreditCard,
-  Receipt,
-  BarChart3,
-  Building2,
-  LogOut,
-  X,
-} from "lucide-react";
+import { LogOut, X } from "lucide-react";
 import { getHousesApi, type House } from "@/api/houses";
 import { useAuth } from "@/context/AuthContext";
 import { cn } from "@/lib/cn";
@@ -21,11 +12,11 @@ interface SidebarProps {
 }
 
 const MANAGE_NAV_ITEMS = [
-  { label: "Overview", to: "/", icon: LayoutDashboard },
-  { label: "Tenants", to: "/tenants", icon: Users },
-  { label: "Payments", to: "/payments", icon: CreditCard },
-  { label: "Expenses", to: "/expenses", icon: Receipt },
-  { label: "Reports", to: "/reports", icon: BarChart3 },
+  { label: "Overview", to: "/" },
+  { label: "Tenants", to: "/tenants" },
+  { label: "Payments", to: "/payments" },
+  { label: "Expenses", to: "/expenses" },
+  { label: "Reports", to: "/reports" },
 ];
 
 export const Sidebar: React.FC<SidebarProps> = ({ onNavigate, isMobileDrawer = false }) => {
@@ -41,18 +32,18 @@ export const Sidebar: React.FC<SidebarProps> = ({ onNavigate, isMobileDrawer = f
   return (
     <aside
       className={cn(
-        "bg-sidebar text-sidebar-text flex flex-col h-full",
+        "bg-sidebar text-sidebar-text flex flex-col h-full select-none",
         isMobileDrawer ? "w-full max-w-[320px]" : "w-sidebar"
       )}
     >
       {/* Brand Header */}
       <div className="h-16 px-5 flex items-center justify-between border-b border-sidebar-hover shrink-0">
         <div>
-          <div className="text-white font-bold text-lg tracking-tight flex items-center gap-2">
-            <span>AMS</span>
+          <div className="text-white font-bold text-base tracking-tight leading-tight">
+            L&amp;N Apartments
           </div>
-          <div className="text-[11px] font-semibold tracking-header-cap text-sidebar-label uppercase">
-            L&amp;N Estate &bull; Buea
+          <div className="text-[11px] font-semibold tracking-header-cap text-sidebar-label uppercase mt-0.5">
+            Rent management
           </div>
         </div>
         {isMobileDrawer && onNavigate && (
@@ -75,7 +66,6 @@ export const Sidebar: React.FC<SidebarProps> = ({ onNavigate, isMobileDrawer = f
           </div>
           <nav className="space-y-0.5">
             {MANAGE_NAV_ITEMS.map((item) => {
-              const Icon = item.icon;
               const isActive =
                 item.to === "/"
                   ? location.pathname === "/"
@@ -87,13 +77,12 @@ export const Sidebar: React.FC<SidebarProps> = ({ onNavigate, isMobileDrawer = f
                   to={item.to}
                   onClick={onNavigate}
                   className={cn(
-                    "flex items-center gap-3 px-3 py-2.5 rounded-btn-sm text-sm font-medium transition-colors min-h-[44px]",
+                    "flex items-center px-3 py-2 rounded-btn-sm text-sm font-medium transition-colors min-h-[38px] md:min-h-[36px]",
                     isActive
                       ? "bg-sidebar-active text-white"
                       : "text-sidebar-text hover:bg-sidebar-hover hover:text-white"
                   )}
                 >
-                  <Icon className="w-4 h-4 shrink-0 text-sidebar-label" />
                   <span className="truncate">{item.label}</span>
                 </NavLink>
               );
@@ -107,13 +96,6 @@ export const Sidebar: React.FC<SidebarProps> = ({ onNavigate, isMobileDrawer = f
             <span className="text-[11px] font-semibold uppercase tracking-header-cap text-sidebar-label">
               Houses
             </span>
-            <NavLink
-              to="/houses"
-              onClick={onNavigate}
-              className="text-[11px] font-semibold text-sidebar-label hover:text-white transition-colors"
-            >
-              All
-            </NavLink>
           </div>
 
           <div className="space-y-0.5">
@@ -128,16 +110,13 @@ export const Sidebar: React.FC<SidebarProps> = ({ onNavigate, isMobileDrawer = f
                   to={`/houses?house_id=${house.id}`}
                   onClick={onNavigate}
                   className={cn(
-                    "flex items-center justify-between px-3 py-2 rounded-btn-sm text-sm transition-colors min-h-[44px]",
+                    "flex items-center justify-between px-3 py-2 rounded-btn-sm text-sm transition-colors min-h-[38px] md:min-h-[36px]",
                     location.search.includes(`house_id=${house.id}`)
                       ? "bg-sidebar-active text-white font-medium"
                       : "text-sidebar-text hover:bg-sidebar-hover hover:text-white"
                   )}
                 >
-                  <div className="flex items-center gap-2.5 min-w-0 pr-2">
-                    <Building2 className="w-4 h-4 shrink-0 text-sidebar-label" />
-                    <span className="truncate">{house.name}</span>
-                  </div>
+                  <span className="truncate pr-2">{house.name}</span>
                   <span className="font-mono text-xs text-sidebar-label figure tabular-nums shrink-0">
                     {house.occupied_count} of {house.unit_count}
                   </span>
@@ -161,7 +140,7 @@ export const Sidebar: React.FC<SidebarProps> = ({ onNavigate, isMobileDrawer = f
             onClick={logout}
             title="Sign out"
             aria-label="Sign out"
-            className="p-2 text-sidebar-label hover:text-white hover:bg-sidebar-hover rounded-btn-sm transition-colors min-w-[44px] min-h-[44px] flex items-center justify-center focus:outline-none focus:ring-2 focus:ring-primary"
+            className="p-2 text-sidebar-label hover:text-white hover:bg-sidebar-hover rounded-btn-sm transition-colors min-w-[36px] min-h-[36px] flex items-center justify-center focus:outline-none focus:ring-2 focus:ring-primary"
           >
             <LogOut className="w-4 h-4" />
           </button>
@@ -170,4 +149,3 @@ export const Sidebar: React.FC<SidebarProps> = ({ onNavigate, isMobileDrawer = f
     </aside>
   );
 };
-
