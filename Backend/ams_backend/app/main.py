@@ -14,12 +14,16 @@ from app import models
 from app.config import settings
 from app.db import engine
 from app.routers import api_router
+from app.seed_data import auto_seed_if_empty
 
 
 @asynccontextmanager
 async def lifespan(_: FastAPI):
     # MVP convenience. Switch to Alembic migrations before the schema starts changing in production.
     models.Base.metadata.create_all(engine)
+    if auto_seed_if_empty():
+        print("\n[AMS] Dev seed data automatically populated.")
+        print("[AMS] Login: dev@example.com / dev-password-123\n")
     yield
 
 
