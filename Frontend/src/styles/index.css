@@ -1,0 +1,21 @@
+@import "./tokens.css";
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  body {
+    background-color: var(--bg);
+    color: var(--ink);
+    font-family: 'Hanken Grotesk', system-ui, -apple-system, sans-serif;
+  }
+
+  /* Mono font with tabular figures */
+  .font-mono,
+  .figure {
+    font-family: 'IBM Plex Mono', ui-monospace, monospace;
+    font-feature-settings: "tnum" on, "zero" on;
+  }
+}
+

@@ -13,7 +13,7 @@ class Settings:
     database_url: str = os.getenv("DATABASE_URL", _DEFAULT_DB_URL)
     secret_key: str = os.getenv("SECRET_KEY", "ams-dev-secret-key-minimum-32-bytes-long-for-production-safety")
     token_minutes: int = int(os.getenv("TOKEN_MINUTES", "720"))
-    cors_origins: tuple = tuple(os.getenv("CORS_ORIGINS", "http://localhost:5173").split(","))
+    cors_origins: tuple = tuple(os.getenv("CORS_ORIGINS", "http://localhost:5174").split(","))
     business_name: str = os.getenv("BUSINESS_NAME", "L&N Apartments")
     receipt_place: str = os.getenv("RECEIPT_PLACE", "Buea")
     timezone: str = os.getenv("TIMEZONE", "Africa/Douala")

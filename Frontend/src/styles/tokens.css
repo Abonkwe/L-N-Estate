@@ -1,0 +1,33 @@
+:root {
+  /* Sidebar */
+  --sidebar: #0F2540;
+  --sidebar-hover: #17335A;
+  --sidebar-active: #1B3A63;
+  --sidebar-text: #BFD0E6;
+  --sidebar-label: #8FA6C6;
+
+  /* App surfaces and lines */
+  --bg: #E6ECF4;
+  --surface: #FFFFFF;
+  --line: #C4CFDF;
+  --row-line: #DCE3EE;
+  --band: #EDF1F7;
+  --input-border: #B3C0D4;
+
+  /* Text ink */
+  --ink: #14213A;
+  --ink-2: #4F5C74;
+
+  /* Brand / Action */
+  --primary: #1F5FD6;
+  --primary-hover: #174BB0;
+
+  /* Status tokens */
+  --overdue: #A4281F;
+  --grace-text: #7A5200;
+  --grace-marker: #D9971B;
+  --expiring-text: #1F4E9E;
+  --expiring-marker: #1F5FD6;
+  --paid: #2F6B4A;
+}
+
