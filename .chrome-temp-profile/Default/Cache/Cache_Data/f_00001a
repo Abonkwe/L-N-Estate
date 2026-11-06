@@ -1,0 +1,509 @@
+import { createHotContext as __vite__createHotContext } from "/@vite/client";import.meta.hot = __vite__createHotContext("/src/components/houses/UnitFormDialog.tsx");import __vite__cjsImport0_react_jsxDevRuntime from "/node_modules/.vite/deps/react_jsx-dev-runtime.js?v=13fb731d"; const jsxDEV = __vite__cjsImport0_react_jsxDevRuntime["jsxDEV"];
+import * as RefreshRuntime from "/@react-refresh";
+const inWebWorker = typeof WorkerGlobalScope !== "undefined" && self instanceof WorkerGlobalScope;
+let prevRefreshReg;
+let prevRefreshSig;
+if (import.meta.hot && !inWebWorker) {
+  if (!window.$RefreshReg$) {
+    throw new Error(
+      "@vitejs/plugin-react can't detect preamble. Something is wrong."
+    );
+  }
+  prevRefreshReg = window.$RefreshReg$;
+  prevRefreshSig = window.$RefreshSig$;
+  window.$RefreshReg$ = RefreshRuntime.getRefreshReg("C:/Users/Abonkwe Princely/Desktop/L&N Estate/Frontend/src/components/houses/UnitFormDialog.tsx");
+  window.$RefreshSig$ = RefreshRuntime.createSignatureFunctionForTransform;
+}
+var _s = $RefreshSig$();
+import __vite__cjsImport3_react from "/node_modules/.vite/deps/react.js?v=13fb731d"; const useState = __vite__cjsImport3_react["useState"]; const useEffect = __vite__cjsImport3_react["useEffect"];
+import { X, Loader2, AlertCircle } from "/node_modules/.vite/deps/lucide-react.js?v=13fb731d";
+import { useQueryClient } from "/node_modules/.vite/deps/@tanstack_react-query.js?v=13fb731d";
+import { createUnitApi, updateUnitApi } from "/src/api/units.ts?t=1793987371047";
+export const UnitFormDialog = ({
+  isOpen,
+  onClose,
+  houseId,
+  houseName,
+  unit = null,
+  onSuccess
+}) => {
+  _s();
+  const queryClient = useQueryClient();
+  const isEditing = Boolean(unit);
+  const [label, setLabel] = useState("");
+  const [unitType, setUnitType] = useState("apartment");
+  const [listedRentStr, setListedRentStr] = useState("");
+  const [description, setDescription] = useState("");
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [errorMessage, setErrorMessage] = useState(null);
+  useEffect(() => {
+    if (isOpen) {
+      if (unit) {
+        setLabel(unit.label || "");
+        setUnitType(unit.unit_type || "apartment");
+        setListedRentStr(unit.listed_rent != null ? String(unit.listed_rent) : "");
+        setDescription(unit.description || "");
+      } else {
+        setLabel("");
+        setUnitType("apartment");
+        setListedRentStr("");
+        setDescription("");
+      }
+      setErrorMessage(null);
+    }
+  }, [isOpen, unit]);
+  useEffect(() => {
+    if (!isOpen) return;
+    const handleKeyDown = (e) => {
+      if (e.key === "Escape" && !isSubmitting) {
+        onClose();
+      }
+    };
+    window.addEventListener("keydown", handleKeyDown);
+    return () => window.removeEventListener("keydown", handleKeyDown);
+  }, [isOpen, isSubmitting, onClose]);
+  if (!isOpen) return null;
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setErrorMessage(null);
+    const trimmedLabel = label.trim();
+    if (!trimmedLabel) {
+      setErrorMessage("Unit label is required.");
+      return;
+    }
+    let parsedListedRent = null;
+    if (listedRentStr.trim()) {
+      const num = parseInt(listedRentStr.trim().replace(/\s+/g, ""), 10);
+      if (isNaN(num) || num <= 0) {
+        setErrorMessage("Listed rent must be a positive whole integer if provided.");
+        return;
+      }
+      parsedListedRent = num;
+    }
+    setIsSubmitting(true);
+    try {
+      let savedUnit;
+      if (isEditing && unit) {
+        const patchData = {
+          label: trimmedLabel,
+          unit_type: unitType,
+          listed_rent: parsedListedRent,
+          description: description.trim() ? description.trim() : null
+        };
+        savedUnit = await updateUnitApi(unit.id, patchData);
+      } else {
+        const inData = {
+          house_id: houseId,
+          label: trimmedLabel,
+          unit_type: unitType,
+          listed_rent: parsedListedRent,
+          description: description.trim() ? description.trim() : null
+        };
+        savedUnit = await createUnitApi(inData);
+      }
+      await queryClient.invalidateQueries({ queryKey: ["units", { house_id: houseId }] });
+      await queryClient.invalidateQueries({ queryKey: ["units"] });
+      await queryClient.invalidateQueries({ queryKey: ["houses"] });
+      await queryClient.invalidateQueries({ queryKey: ["houses", houseId] });
+      onSuccess?.(savedUnit);
+      onClose();
+    } catch (err) {
+      if (err instanceof Error) {
+        setErrorMessage(err.message);
+      } else {
+        setErrorMessage("Failed to save unit");
+      }
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
+  return /* @__PURE__ */ jsxDEV(
+    "div",
+    {
+      className: "fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 overflow-y-auto",
+      role: "dialog",
+      "aria-modal": "true",
+      "aria-labelledby": "unit-dialog-title",
+      children: /* @__PURE__ */ jsxDEV("div", { className: "relative w-full max-w-md bg-surface border border-line rounded-panel shadow-xl overflow-hidden my-8", children: [
+        /* @__PURE__ */ jsxDEV("div", { className: "px-6 py-4 border-b border-line flex items-center justify-between bg-band/30", children: [
+          /* @__PURE__ */ jsxDEV("div", { children: [
+            /* @__PURE__ */ jsxDEV("h2", { id: "unit-dialog-title", className: "text-lg font-semibold text-ink", children: isEditing ? "Edit unit" : "New unit" }, void 0, false, {
+              fileName: "C:/Users/Abonkwe Princely/Desktop/L&N Estate/Frontend/src/components/houses/UnitFormDialog.tsx",
+              lineNumber: 157,
+              columnNumber: 13
+            }, this),
+            /* @__PURE__ */ jsxDEV("p", { className: "text-xs text-ink-2 mt-0.5", children: [
+              houseName ? `${houseName} • ` : "",
+              isEditing ? `Modify unit ${unit?.label}` : "Add a rentable unit"
+            ] }, void 0, true, {
+              fileName: "C:/Users/Abonkwe Princely/Desktop/L&N Estate/Frontend/src/components/houses/UnitFormDialog.tsx",
+              lineNumber: 160,
+              columnNumber: 13
+            }, this)
+          ] }, void 0, true, {
+            fileName: "C:/Users/Abonkwe Princely/Desktop/L&N Estate/Frontend/src/components/houses/UnitFormDialog.tsx",
+            lineNumber: 156,
+            columnNumber: 11
+          }, this),
+          /* @__PURE__ */ jsxDEV(
+            "button",
+            {
+              type: "button",
+              onClick: onClose,
+              disabled: isSubmitting,
+              className: "p-1 text-ink-2 hover:text-ink rounded-btn-sm hover:bg-band focus:outline-none focus:ring-2 focus:ring-primary min-w-[36px] min-h-[36px] flex items-center justify-center",
+              "aria-label": "Close dialog",
+              children: /* @__PURE__ */ jsxDEV(X, { className: "w-5 h-5" }, void 0, false, {
+                fileName: "C:/Users/Abonkwe Princely/Desktop/L&N Estate/Frontend/src/components/houses/UnitFormDialog.tsx",
+                lineNumber: 172,
+                columnNumber: 13
+              }, this)
+            },
+            void 0,
+            false,
+            {
+              fileName: "C:/Users/Abonkwe Princely/Desktop/L&N Estate/Frontend/src/components/houses/UnitFormDialog.tsx",
+              lineNumber: 165,
+              columnNumber: 11
+            },
+            this
+          )
+        ] }, void 0, true, {
+          fileName: "C:/Users/Abonkwe Princely/Desktop/L&N Estate/Frontend/src/components/houses/UnitFormDialog.tsx",
+          lineNumber: 155,
+          columnNumber: 9
+        }, this),
+        /* @__PURE__ */ jsxDEV("form", { onSubmit: handleSubmit, className: "p-6 space-y-4", children: [
+          errorMessage && /* @__PURE__ */ jsxDEV(
+            "div",
+            {
+              role: "alert",
+              className: "p-3 bg-[#FDF2F1] border border-overdue/30 rounded-btn-sm flex items-start gap-2.5 text-xs text-overdue font-medium",
+              children: [
+                /* @__PURE__ */ jsxDEV(AlertCircle, { className: "w-4 h-4 shrink-0 mt-0.5" }, void 0, false, {
+                  fileName: "C:/Users/Abonkwe Princely/Desktop/L&N Estate/Frontend/src/components/houses/UnitFormDialog.tsx",
+                  lineNumber: 183,
+                  columnNumber: 15
+                }, this),
+                /* @__PURE__ */ jsxDEV("div", { className: "flex-1", children: errorMessage }, void 0, false, {
+                  fileName: "C:/Users/Abonkwe Princely/Desktop/L&N Estate/Frontend/src/components/houses/UnitFormDialog.tsx",
+                  lineNumber: 184,
+                  columnNumber: 15
+                }, this)
+              ]
+            },
+            void 0,
+            true,
+            {
+              fileName: "C:/Users/Abonkwe Princely/Desktop/L&N Estate/Frontend/src/components/houses/UnitFormDialog.tsx",
+              lineNumber: 179,
+              columnNumber: 11
+            },
+            this
+          ),
+          /* @__PURE__ */ jsxDEV("div", { children: [
+            /* @__PURE__ */ jsxDEV(
+              "label",
+              {
+                htmlFor: "unit-label-input",
+                className: "block text-xs font-semibold uppercase tracking-header-cap text-ink-2 mb-1",
+                children: [
+                  "Unit Label ",
+                  /* @__PURE__ */ jsxDEV("span", { className: "text-overdue", children: "*" }, void 0, false, {
+                    fileName: "C:/Users/Abonkwe Princely/Desktop/L&N Estate/Frontend/src/components/houses/UnitFormDialog.tsx",
+                    lineNumber: 194,
+                    columnNumber: 26
+                  }, this)
+                ]
+              },
+              void 0,
+              true,
+              {
+                fileName: "C:/Users/Abonkwe Princely/Desktop/L&N Estate/Frontend/src/components/houses/UnitFormDialog.tsx",
+                lineNumber: 190,
+                columnNumber: 13
+              },
+              this
+            ),
+            /* @__PURE__ */ jsxDEV(
+              "input",
+              {
+                id: "unit-label-input",
+                type: "text",
+                required: true,
+                value: label,
+                onChange: (e) => setLabel(e.target.value),
+                placeholder: "e.g. Unit 1, Flat 3B, Studio 102",
+                className: "w-full h-10 px-3 bg-surface border border-input-border rounded-input text-sm text-ink placeholder:text-ink-2/60 focus:outline-none focus:ring-2 focus:ring-primary"
+              },
+              void 0,
+              false,
+              {
+                fileName: "C:/Users/Abonkwe Princely/Desktop/L&N Estate/Frontend/src/components/houses/UnitFormDialog.tsx",
+                lineNumber: 196,
+                columnNumber: 13
+              },
+              this
+            )
+          ] }, void 0, true, {
+            fileName: "C:/Users/Abonkwe Princely/Desktop/L&N Estate/Frontend/src/components/houses/UnitFormDialog.tsx",
+            lineNumber: 189,
+            columnNumber: 11
+          }, this),
+          /* @__PURE__ */ jsxDEV("div", { children: [
+            /* @__PURE__ */ jsxDEV(
+              "label",
+              {
+                htmlFor: "unit-type-select",
+                className: "block text-xs font-semibold uppercase tracking-header-cap text-ink-2 mb-1",
+                children: [
+                  "Type ",
+                  /* @__PURE__ */ jsxDEV("span", { className: "text-overdue", children: "*" }, void 0, false, {
+                    fileName: "C:/Users/Abonkwe Princely/Desktop/L&N Estate/Frontend/src/components/houses/UnitFormDialog.tsx",
+                    lineNumber: 213,
+                    columnNumber: 20
+                  }, this)
+                ]
+              },
+              void 0,
+              true,
+              {
+                fileName: "C:/Users/Abonkwe Princely/Desktop/L&N Estate/Frontend/src/components/houses/UnitFormDialog.tsx",
+                lineNumber: 209,
+                columnNumber: 13
+              },
+              this
+            ),
+            /* @__PURE__ */ jsxDEV(
+              "select",
+              {
+                id: "unit-type-select",
+                value: unitType,
+                onChange: (e) => setUnitType(e.target.value),
+                className: "w-full h-10 px-3 bg-surface border border-input-border rounded-input text-sm text-ink focus:outline-none focus:ring-2 focus:ring-primary",
+                children: [
+                  /* @__PURE__ */ jsxDEV("option", { value: "apartment", children: "Apartment" }, void 0, false, {
+                    fileName: "C:/Users/Abonkwe Princely/Desktop/L&N Estate/Frontend/src/components/houses/UnitFormDialog.tsx",
+                    lineNumber: 221,
+                    columnNumber: 15
+                  }, this),
+                  /* @__PURE__ */ jsxDEV("option", { value: "studio", children: "Studio" }, void 0, false, {
+                    fileName: "C:/Users/Abonkwe Princely/Desktop/L&N Estate/Frontend/src/components/houses/UnitFormDialog.tsx",
+                    lineNumber: 222,
+                    columnNumber: 15
+                  }, this),
+                  /* @__PURE__ */ jsxDEV("option", { value: "other", children: "Other" }, void 0, false, {
+                    fileName: "C:/Users/Abonkwe Princely/Desktop/L&N Estate/Frontend/src/components/houses/UnitFormDialog.tsx",
+                    lineNumber: 223,
+                    columnNumber: 15
+                  }, this)
+                ]
+              },
+              void 0,
+              true,
+              {
+                fileName: "C:/Users/Abonkwe Princely/Desktop/L&N Estate/Frontend/src/components/houses/UnitFormDialog.tsx",
+                lineNumber: 215,
+                columnNumber: 13
+              },
+              this
+            )
+          ] }, void 0, true, {
+            fileName: "C:/Users/Abonkwe Princely/Desktop/L&N Estate/Frontend/src/components/houses/UnitFormDialog.tsx",
+            lineNumber: 208,
+            columnNumber: 11
+          }, this),
+          /* @__PURE__ */ jsxDEV("div", { children: [
+            /* @__PURE__ */ jsxDEV(
+              "label",
+              {
+                htmlFor: "unit-listed-rent-input",
+                className: "block text-xs font-semibold uppercase tracking-header-cap text-ink-2 mb-1",
+                children: "Listed Rent (FCFA)"
+              },
+              void 0,
+              false,
+              {
+                fileName: "C:/Users/Abonkwe Princely/Desktop/L&N Estate/Frontend/src/components/houses/UnitFormDialog.tsx",
+                lineNumber: 229,
+                columnNumber: 13
+              },
+              this
+            ),
+            /* @__PURE__ */ jsxDEV("div", { className: "relative", children: [
+              /* @__PURE__ */ jsxDEV(
+                "input",
+                {
+                  id: "unit-listed-rent-input",
+                  type: "text",
+                  inputMode: "numeric",
+                  value: listedRentStr,
+                  onChange: (e) => setListedRentStr(e.target.value),
+                  placeholder: "e.g. 100 000",
+                  className: "w-full h-10 pl-3 pr-14 bg-surface border border-input-border rounded-input text-sm font-mono text-ink placeholder:text-ink-2/60 focus:outline-none focus:ring-2 focus:ring-primary tabular-nums"
+                },
+                void 0,
+                false,
+                {
+                  fileName: "C:/Users/Abonkwe Princely/Desktop/L&N Estate/Frontend/src/components/houses/UnitFormDialog.tsx",
+                  lineNumber: 236,
+                  columnNumber: 15
+                },
+                this
+              ),
+              /* @__PURE__ */ jsxDEV("span", { className: "absolute right-3 top-1/2 -translate-y-1/2 text-xs font-semibold text-ink-2 pointer-events-none", children: "FCFA" }, void 0, false, {
+                fileName: "C:/Users/Abonkwe Princely/Desktop/L&N Estate/Frontend/src/components/houses/UnitFormDialog.tsx",
+                lineNumber: 245,
+                columnNumber: 15
+              }, this)
+            ] }, void 0, true, {
+              fileName: "C:/Users/Abonkwe Princely/Desktop/L&N Estate/Frontend/src/components/houses/UnitFormDialog.tsx",
+              lineNumber: 235,
+              columnNumber: 13
+            }, this),
+            /* @__PURE__ */ jsxDEV("p", { className: "text-xs text-ink-2 mt-1", children: "Listed rent is optional and is only a default suggestion, not the real rent." }, void 0, false, {
+              fileName: "C:/Users/Abonkwe Princely/Desktop/L&N Estate/Frontend/src/components/houses/UnitFormDialog.tsx",
+              lineNumber: 249,
+              columnNumber: 13
+            }, this)
+          ] }, void 0, true, {
+            fileName: "C:/Users/Abonkwe Princely/Desktop/L&N Estate/Frontend/src/components/houses/UnitFormDialog.tsx",
+            lineNumber: 228,
+            columnNumber: 11
+          }, this),
+          /* @__PURE__ */ jsxDEV("div", { children: [
+            /* @__PURE__ */ jsxDEV(
+              "label",
+              {
+                htmlFor: "unit-desc-input",
+                className: "block text-xs font-semibold uppercase tracking-header-cap text-ink-2 mb-1",
+                children: "Description"
+              },
+              void 0,
+              false,
+              {
+                fileName: "C:/Users/Abonkwe Princely/Desktop/L&N Estate/Frontend/src/components/houses/UnitFormDialog.tsx",
+                lineNumber: 256,
+                columnNumber: 13
+              },
+              this
+            ),
+            /* @__PURE__ */ jsxDEV(
+              "textarea",
+              {
+                id: "unit-desc-input",
+                rows: 3,
+                value: description,
+                onChange: (e) => setDescription(e.target.value),
+                placeholder: "e.g. Ground floor front side, 2 bedrooms, private veranda...",
+                className: "w-full p-2.5 bg-surface border border-input-border rounded-input text-sm text-ink placeholder:text-ink-2/60 focus:outline-none focus:ring-2 focus:ring-primary resize-none"
+              },
+              void 0,
+              false,
+              {
+                fileName: "C:/Users/Abonkwe Princely/Desktop/L&N Estate/Frontend/src/components/houses/UnitFormDialog.tsx",
+                lineNumber: 262,
+                columnNumber: 13
+              },
+              this
+            )
+          ] }, void 0, true, {
+            fileName: "C:/Users/Abonkwe Princely/Desktop/L&N Estate/Frontend/src/components/houses/UnitFormDialog.tsx",
+            lineNumber: 255,
+            columnNumber: 11
+          }, this),
+          /* @__PURE__ */ jsxDEV("div", { className: "pt-3 border-t border-line flex items-center justify-end gap-3", children: [
+            /* @__PURE__ */ jsxDEV(
+              "button",
+              {
+                type: "button",
+                onClick: onClose,
+                disabled: isSubmitting,
+                className: "px-4 py-2 text-xs font-medium border border-line text-ink hover:bg-band rounded-btn-sm transition-colors focus:outline-none focus:ring-2 focus:ring-primary min-h-[36px]",
+                children: "Cancel"
+              },
+              void 0,
+              false,
+              {
+                fileName: "C:/Users/Abonkwe Princely/Desktop/L&N Estate/Frontend/src/components/houses/UnitFormDialog.tsx",
+                lineNumber: 274,
+                columnNumber: 13
+              },
+              this
+            ),
+            /* @__PURE__ */ jsxDEV(
+              "button",
+              {
+                type: "submit",
+                disabled: isSubmitting || !label.trim(),
+                className: "inline-flex items-center justify-center gap-1.5 px-4 py-2 text-xs font-semibold bg-primary hover:bg-primary-hover active:bg-[#174BB0] text-white rounded-btn-sm transition-colors focus:outline-none focus:ring-2 focus:ring-primary disabled:opacity-50 min-h-[36px]",
+                children: [
+                  isSubmitting && /* @__PURE__ */ jsxDEV(Loader2, { className: "w-3.5 h-3.5 animate-spin" }, void 0, false, {
+                    fileName: "C:/Users/Abonkwe Princely/Desktop/L&N Estate/Frontend/src/components/houses/UnitFormDialog.tsx",
+                    lineNumber: 287,
+                    columnNumber: 32
+                  }, this),
+                  /* @__PURE__ */ jsxDEV("span", { children: isEditing ? "Save changes" : "Create unit" }, void 0, false, {
+                    fileName: "C:/Users/Abonkwe Princely/Desktop/L&N Estate/Frontend/src/components/houses/UnitFormDialog.tsx",
+                    lineNumber: 288,
+                    columnNumber: 15
+                  }, this)
+                ]
+              },
+              void 0,
+              true,
+              {
+                fileName: "C:/Users/Abonkwe Princely/Desktop/L&N Estate/Frontend/src/components/houses/UnitFormDialog.tsx",
+                lineNumber: 282,
+                columnNumber: 13
+              },
+              this
+            )
+          ] }, void 0, true, {
+            fileName: "C:/Users/Abonkwe Princely/Desktop/L&N Estate/Frontend/src/components/houses/UnitFormDialog.tsx",
+            lineNumber: 273,
+            columnNumber: 11
+          }, this)
+        ] }, void 0, true, {
+          fileName: "C:/Users/Abonkwe Princely/Desktop/L&N Estate/Frontend/src/components/houses/UnitFormDialog.tsx",
+          lineNumber: 177,
+          columnNumber: 9
+        }, this)
+      ] }, void 0, true, {
+        fileName: "C:/Users/Abonkwe Princely/Desktop/L&N Estate/Frontend/src/components/houses/UnitFormDialog.tsx",
+        lineNumber: 153,
+        columnNumber: 7
+      }, this)
+    },
+    void 0,
+    false,
+    {
+      fileName: "C:/Users/Abonkwe Princely/Desktop/L&N Estate/Frontend/src/components/houses/UnitFormDialog.tsx",
+      lineNumber: 147,
+      columnNumber: 5
+    },
+    this
+  );
+};
+_s(UnitFormDialog, "hBBiYTIDzSCIkEZfeAu0nY6/91c=", false, function() {
+  return [useQueryClient];
+});
+_c = UnitFormDialog;
+var _c;
+$RefreshReg$(_c, "UnitFormDialog");
+if (import.meta.hot && !inWebWorker) {
+  window.$RefreshReg$ = prevRefreshReg;
+  window.$RefreshSig$ = prevRefreshSig;
+}
+if (import.meta.hot && !inWebWorker) {
+  RefreshRuntime.__hmr_import(import.meta.url).then((currentExports) => {
+    RefreshRuntime.registerExportsForReactRefresh("C:/Users/Abonkwe Princely/Desktop/L&N Estate/Frontend/src/components/houses/UnitFormDialog.tsx", currentExports);
+    import.meta.hot.accept((nextExports) => {
+      if (!nextExports) return;
+      const invalidateMessage = RefreshRuntime.validateRefreshBoundaryAndEnqueueUpdate("C:/Users/Abonkwe Princely/Desktop/L&N Estate/Frontend/src/components/houses/UnitFormDialog.tsx", currentExports, nextExports);
+      if (invalidateMessage) import.meta.hot.invalidate(invalidateMessage);
+    });
+  });
+}
+
+//# sourceMappingURL=data:application/json;base64,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QTtBQUFBLGVBa0hBO0FBQUEsV0ExSUY7QUFBQTtBQUFBO0FBQUE7QUFBQSxhQTJJQTtBQUFBO0FBQUEsSUFqSkY7QUFBQTtBQUFBO0FBQUE7QUFBQTtBQUFBO0FBQUE7QUFBQTtBQUFBLEVBa0pBO0FBRUo7QUFBRUYsR0FwUVdQLGdCQUE2QztBQUFBLFVBUXBDSCxjQUFjO0FBQUE7QUFBQSxLQVJ2Qkc7QUFBNkMsSUFBQXFEO0FBQUEsYUFBQUEsSUFBQSIsIm5hbWVzIjpbInVzZVN0YXRlIiwidXNlRWZmZWN0IiwiWCIsIkxvYWRlcjIiLCJBbGVydENpcmNsZSIsInVzZVF1ZXJ5Q2xpZW50IiwiY3JlYXRlVW5pdEFwaSIsInVwZGF0ZVVuaXRBcGkiLCJVbml0Rm9ybURpYWxvZyIsImlzT3BlbiIsIm9uQ2xvc2UiLCJob3VzZUlkIiwiaG91c2VOYW1lIiwidW5pdCIsIm9uU3VjY2VzcyIsIl9zIiwicXVlcnlDbGllbnQiLCJpc0VkaXRpbmciLCJCb29sZWFuIiwibGFiZWwiLCJzZXRMYWJlbCIsInVuaXRUeXBlIiwic2V0VW5pdFR5cGUiLCJsaXN0ZWRSZW50U3RyIiwic2V0TGlzdGVkUmVudFN0ciIsImRlc2NyaXB0aW9uIiwic2V0RGVzY3JpcHRpb24iLCJpc1N1Ym1pdHRpbmciLCJzZXRJc1N1Ym1pdHRpbmciLCJlcnJvck1lc3NhZ2UiLCJzZXRFcnJvck1lc3NhZ2UiLCJ1bml0X3R5cGUiLCJsaXN0ZWRfcmVudCIsIlN0cmluZyIsImhhbmRsZUtleURvd24iLCJlIiwia2V5Iiwid2luZG93IiwiYWRkRXZlbnRMaXN0ZW5lciIsInJlbW92ZUV2ZW50TGlzdGVuZXIiLCJoYW5kbGVTdWJtaXQiLCJwcmV2ZW50RGVmYXVsdCIsInRyaW1tZWRMYWJlbCIsInRyaW0iLCJwYXJzZWRMaXN0ZWRSZW50IiwibnVtIiwicGFyc2VJbnQiLCJyZXBsYWNlIiwiaXNOYU4iLCJzYXZlZFVuaXQiLCJwYXRjaERhdGEiLCJpZCIsImluRGF0YSIsImhvdXNlX2lkIiwiaW52YWxpZGF0ZVF1ZXJpZXMiLCJxdWVyeUtleSIsImVyciIsIkVycm9yIiwibWVzc2FnZSIsInRhcmdldCIsInZhbHVlIiwiX2MiXSwiaWdub3JlTGlzdCI6W10sInNvdXJjZXMiOlsiVW5pdEZvcm1EaWFsb2cudHN4Il0sInNvdXJjZXNDb250ZW50IjpbImltcG9ydCBSZWFjdCwgeyB1c2VTdGF0ZSwgdXNlRWZmZWN0IH0gZnJvbSBcInJlYWN0XCI7XG5pbXBvcnQgeyBYLCBMb2FkZXIyLCBBbGVydENpcmNsZSB9IGZyb20gXCJsdWNpZGUtcmVhY3RcIjtcbmltcG9ydCB7IHVzZVF1ZXJ5Q2xpZW50IH0gZnJvbSBcIkB0YW5zdGFjay9yZWFjdC1xdWVyeVwiO1xuaW1wb3J0IHR5cGUgeyBVbml0LCBVbml0SW4sIFVuaXRQYXRjaCwgVW5pdFR5cGUgfSBmcm9tIFwiQC9hcGkvdW5pdHNcIjtcbmltcG9ydCB7IGNyZWF0ZVVuaXRBcGksIHVwZGF0ZVVuaXRBcGkgfSBmcm9tIFwiQC9hcGkvdW5pdHNcIjtcblxuaW50ZXJmYWNlIFVuaXRGb3JtRGlhbG9nUHJvcHMge1xuICBpc09wZW46IGJvb2xlYW47XG4gIG9uQ2xvc2U6ICgpID0+IHZvaWQ7XG4gIGhvdXNlSWQ6IG51bWJlcjtcbiAgaG91c2VOYW1lPzogc3RyaW5nO1xuICB1bml0PzogVW5pdCB8IG51bGw7XG4gIG9uU3VjY2Vzcz86IChzYXZlZFVuaXQ6IFVuaXQpID0+IHZvaWQ7XG59XG5cbmV4cG9ydCBjb25zdCBVbml0Rm9ybURpYWxvZzogUmVhY3QuRkM8VW5pdEZvcm1EaWFsb2dQcm9wcz4gPSAoe1xuICBpc09wZW4sXG4gIG9uQ2xvc2UsXG4gIGhvdXNlSWQsXG4gIGhvdXNlTmFtZSxcbiAgdW5pdCA9IG51bGwsXG4gIG9uU3VjY2Vzcyxcbn0pID0+IHtcbiAgY29uc3QgcXVlcnlDbGllbnQgPSB1c2VRdWVyeUNsaWVudCgpO1xuICBjb25zdCBpc0VkaXRpbmcgPSBCb29sZWFuKHVuaXQpO1xuXG4gIGNvbnN0IFtsYWJlbCwgc2V0TGFiZWxdID0gdXNlU3RhdGUoXCJcIik7XG4gIGNvbnN0IFt1bml0VHlwZSwgc2V0VW5pdFR5cGVdID0gdXNlU3RhdGU8VW5pdFR5cGU+KFwiYXBhcnRtZW50XCIpO1xuICBjb25zdCBbbGlzdGVkUmVudFN0ciwgc2V0TGlzdGVkUmVudFN0cl0gPSB1c2VTdGF0ZShcIlwiKTtcbiAgY29uc3QgW2Rlc2NyaXB0aW9uLCBzZXREZXNjcmlwdGlvbl0gPSB1c2VTdGF0ZShcIlwiKTtcblxuICBjb25zdCBbaXNTdWJtaXR0aW5nLCBzZXRJc1N1Ym1pdHRpbmddID0gdXNlU3RhdGUoZmFsc2UpO1xuICBjb25zdCBbZXJyb3JNZXNzYWdlLCBzZXRFcnJvck1lc3NhZ2VdID0gdXNlU3RhdGU8c3RyaW5nIHwgbnVsbD4obnVsbCk7XG5cbiAgdXNlRWZmZWN0KCgpID0+IHtcbiAgICBpZiAoaXNPcGVuKSB7XG4gICAgICBpZiAodW5pdCkge1xuICAgICAgICBzZXRMYWJlbCh1bml0LmxhYmVsIHx8IFwiXCIpO1xuICAgICAgICBzZXRVbml0VHlwZSh1bml0LnVuaXRfdHlwZSB8fCBcImFwYXJ0bWVudFwiKTtcbiAgICAgICAgc2V0TGlzdGVkUmVudFN0cih1bml0Lmxpc3RlZF9yZW50ICE9IG51bGwgPyBTdHJpbmcodW5pdC5saXN0ZWRfcmVudCkgOiBcIlwiKTtcbiAgICAgICAgc2V0RGVzY3JpcHRpb24odW5pdC5kZXNjcmlwdGlvbiB8fCBcIlwiKTtcbiAgICAgIH0gZWxzZSB7XG4gICAgICAgIHNldExhYmVsKFwiXCIpO1xuICAgICAgICBzZXRVbml0VHlwZShcImFwYXJ0bWVudFwiKTtcbiAgICAgICAgc2V0TGlzdGVkUmVudFN0cihcIlwiKTtcbiAgICAgICAgc2V0RGVzY3JpcHRpb24oXCJcIik7XG4gICAgICB9XG4gICAgICBzZXRFcnJvck1lc3NhZ2UobnVsbCk7XG4gICAgfVxuICB9LCBbaXNPcGVuLCB1bml0XSk7XG5cbiAgLy8gSGFuZGxlIEVTQyBrZXlcbiAgdXNlRWZmZWN0KCgpID0+IHtcbiAgICBpZiAoIWlzT3BlbikgcmV0dXJuO1xuICAgIGNvbnN0IGhhbmRsZUtleURvd24gPSAoZTogS2V5Ym9hcmRFdmVudCkgPT4ge1xuICAgICAgaWYgKGUua2V5ID09PSBcIkVzY2FwZVwiICYmICFpc1N1Ym1pdHRpbmcpIHtcbiAgICAgICAgb25DbG9zZSgpO1xuICAgICAgfVxuICAgIH07XG4gICAgd2luZG93LmFkZEV2ZW50TGlzdGVuZXIoXCJrZXlkb3duXCIsIGhhbmRsZUtleURvd24pO1xuICAgIHJldHVybiAoKSA9PiB3aW5kb3cucmVtb3ZlRXZlbnRMaXN0ZW5lcihcImtleWRvd25cIiwgaGFuZGxlS2V5RG93bik7XG4gIH0sIFtpc09wZW4sIGlzU3VibWl0dGluZywgb25DbG9zZV0pO1xuXG4gIGlmICghaXNPcGVuKSByZXR1cm4gbnVsbDtcblxuICBjb25zdCBoYW5kbGVTdWJtaXQgPSBhc3luYyAoZTogUmVhY3QuRm9ybUV2ZW50KSA9PiB7XG4gICAgZS5wcmV2ZW50RGVmYXVsdCgpO1xuICAgIHNldEVycm9yTWVzc2FnZShudWxsKTtcblxuICAgIGNvbnN0IHRyaW1tZWRMYWJlbCA9IGxhYmVsLnRyaW0oKTtcbiAgICBpZiAoIXRyaW1tZWRMYWJlbCkge1xuICAgICAgc2V0RXJyb3JNZXNzYWdlKFwiVW5pdCBsYWJlbCBpcyByZXF1aXJlZC5cIik7XG4gICAgICByZXR1cm47XG4gICAgfVxuXG4gICAgbGV0IHBhcnNlZExpc3RlZFJlbnQ6IG51bWJlciB8IG51bGwgPSBudWxsO1xuICAgIGlmIChsaXN0ZWRSZW50U3RyLnRyaW0oKSkge1xuICAgICAgY29uc3QgbnVtID0gcGFyc2VJbnQobGlzdGVkUmVudFN0ci50cmltKCkucmVwbGFjZSgvXFxzKy9nLCBcIlwiKSwgMTApO1xuICAgICAgaWYgKGlzTmFOKG51bSkgfHwgbnVtIDw9IDApIHtcbiAgICAgICAgc2V0RXJyb3JNZXNzYWdlKFwiTGlzdGVkIHJlbnQgbXVzdCBiZSBhIHBvc2l0aXZlIHdob2xlIGludGVnZXIgaWYgcHJvdmlkZWQuXCIpO1xuICAgICAgICByZXR1cm47XG4gICAgICB9XG4gICAgICBwYXJzZWRMaXN0ZWRSZW50ID0gbnVtO1xuICAgIH1cblxuICAgIHNldElzU3VibWl0dGluZyh0cnVlKTtcbiAgICB0cnkge1xuICAgICAgbGV0IHNhdmVkVW5pdDogVW5pdDtcbiAgICAgIGlmIChpc0VkaXRpbmcgJiYgdW5pdCkge1xuICAgICAgICBjb25zdCBwYXRjaERhdGE6IFVuaXRQYXRjaCA9IHtcbiAgICAgICAgICBsYWJlbDogdHJpbW1lZExhYmVsLFxuICAgICAgICAgIHVuaXRfdHlwZTogdW5pdFR5cGUsXG4gICAgICAgICAgbGlzdGVkX3JlbnQ6IHBhcnNlZExpc3RlZFJlbnQsXG4gICAgICAgICAgZGVzY3JpcHRpb246IGRlc2NyaXB0aW9uLnRyaW0oKSA/IGRlc2NyaXB0aW9uLnRyaW0oKSA6IG51bGwsXG4gICAgICAgIH07XG4gICAgICAgIHNhdmVkVW5pdCA9IGF3YWl0IHVwZGF0ZVVuaXRBcGkodW5pdC5pZCwgcGF0Y2hEYXRhKTtcbiAgICAgIH0gZWxzZSB7XG4gICAgICAgIGNvbnN0IGluRGF0YTogVW5pdEluID0ge1xuICAgICAgICAgIGhvdXNlX2lkOiBob3VzZUlkLFxuICAgICAgICAgIGxhYmVsOiB0cmltbWVkTGFiZWwsXG4gICAgICAgICAgdW5pdF90eXBlOiB1bml0VHlwZSxcbiAgICAgICAgICBsaXN0ZWRfcmVudDogcGFyc2VkTGlzdGVkUmVudCxcbiAgICAgICAgICBkZXNjcmlwdGlvbjogZGVzY3JpcHRpb24udHJpbSgpID8gZGVzY3JpcHRpb24udHJpbSgpIDogbnVsbCxcbiAgICAgICAgfTtcbiAgICAgICAgc2F2ZWRVbml0ID0gYXdhaXQgY3JlYXRlVW5pdEFwaShpbkRhdGEpO1xuICAgICAgfVxuXG4gICAgICAvLyBJbnZhbGlkYXRlIHJlbGV2YW50IHF1ZXJpZXNcbiAgICAgIGF3YWl0IHF1ZXJ5Q2xpZW50LmludmFsaWRhdGVRdWVyaWVzKHsgcXVlcnlLZXk6IFtcInVuaXRzXCIsIHsgaG91c2VfaWQ6IGhvdXNlSWQgfV0gfSk7XG4gICAgICBhd2FpdCBxdWVyeUNsaWVudC5pbnZhbGlkYXRlUXVlcmllcyh7IHF1ZXJ5S2V5OiBbXCJ1bml0c1wiXSB9KTtcbiAgICAgIGF3YWl0IHF1ZXJ5Q2xpZW50LmludmFsaWRhdGVRdWVyaWVzKHsgcXVlcnlLZXk6IFtcImhvdXNlc1wiXSB9KTtcbiAgICAgIGF3YWl0IHF1ZXJ5Q2xpZW50LmludmFsaWRhdGVRdWVyaWVzKHsgcXVlcnlLZXk6IFtcImhvdXNlc1wiLCBob3VzZUlkXSB9KTtcblxuICAgICAgb25TdWNjZXNzPy4oc2F2ZWRVbml0KTtcbiAgICAgIG9uQ2xvc2UoKTtcbiAgICB9IGNhdGNoIChlcnI6IHVua25vd24pIHtcbiAgICAgIGlmIChlcnIgaW5zdGFuY2VvZiBFcnJvcikge1xuICAgICAgICBzZXRFcnJvck1lc3NhZ2UoZXJyLm1lc3NhZ2UpO1xuICAgICAgfSBlbHNlIHtcbiAgICAgICAgc2V0RXJyb3JNZXNzYWdlKFwiRmFpbGVkIHRvIHNhdmUgdW5pdFwiKTtcbiAgICAgIH1cbiAgICB9IGZpbmFsbHkge1xuICAgICAgc2V0SXNTdWJtaXR0aW5nKGZhbHNlKTtcbiAgICB9XG4gIH07XG5cbiAgcmV0dXJuIChcbiAgICA8ZGl2XG4gICAgICBjbGFzc05hbWU9XCJmaXhlZCBpbnNldC0wIHotNTAgZmxleCBpdGVtcy1jZW50ZXIganVzdGlmeS1jZW50ZXIgcC00IGJnLWJsYWNrLzUwIG92ZXJmbG93LXktYXV0b1wiXG4gICAgICByb2xlPVwiZGlhbG9nXCJcbiAgICAgIGFyaWEtbW9kYWw9XCJ0cnVlXCJcbiAgICAgIGFyaWEtbGFiZWxsZWRieT1cInVuaXQtZGlhbG9nLXRpdGxlXCJcbiAgICA+XG4gICAgICA8ZGl2IGNsYXNzTmFtZT1cInJlbGF0aXZlIHctZnVsbCBtYXgtdy1tZCBiZy1zdXJmYWNlIGJvcmRlciBib3JkZXItbGluZSByb3VuZGVkLXBhbmVsIHNoYWRvdy14bCBvdmVyZmxvdy1oaWRkZW4gbXktOFwiPlxuICAgICAgICB7LyogSGVhZGVyICovfVxuICAgICAgICA8ZGl2IGNsYXNzTmFtZT1cInB4LTYgcHktNCBib3JkZXItYiBib3JkZXItbGluZSBmbGV4IGl0ZW1zLWNlbnRlciBqdXN0aWZ5LWJldHdlZW4gYmctYmFuZC8zMFwiPlxuICAgICAgICAgIDxkaXY+XG4gICAgICAgICAgICA8aDIgaWQ9XCJ1bml0LWRpYWxvZy10aXRsZVwiIGNsYXNzTmFtZT1cInRleHQtbGcgZm9udC1zZW1pYm9sZCB0ZXh0LWlua1wiPlxuICAgICAgICAgICAgICB7aXNFZGl0aW5nID8gXCJFZGl0IHVuaXRcIiA6IFwiTmV3IHVuaXRcIn1cbiAgICAgICAgICAgIDwvaDI+XG4gICAgICAgICAgICA8cCBjbGFzc05hbWU9XCJ0ZXh0LXhzIHRleHQtaW5rLTIgbXQtMC41XCI+XG4gICAgICAgICAgICAgIHtob3VzZU5hbWUgPyBgJHtob3VzZU5hbWV9IOKAoiBgIDogXCJcIn1cbiAgICAgICAgICAgICAge2lzRWRpdGluZyA/IGBNb2RpZnkgdW5pdCAke3VuaXQ/LmxhYmVsfWAgOiBcIkFkZCBhIHJlbnRhYmxlIHVuaXRcIn1cbiAgICAgICAgICAgIDwvcD5cbiAgICAgICAgICA8L2Rpdj5cbiAgICAgICAgICA8YnV0dG9uXG4gICAgICAgICAgICB0eXBlPVwiYnV0dG9uXCJcbiAgICAgICAgICAgIG9uQ2xpY2s9e29uQ2xvc2V9XG4gICAgICAgICAgICBkaXNhYmxlZD17aXNTdWJtaXR0aW5nfVxuICAgICAgICAgICAgY2xhc3NOYW1lPVwicC0xIHRleHQtaW5rLTIgaG92ZXI6dGV4dC1pbmsgcm91bmRlZC1idG4tc20gaG92ZXI6YmctYmFuZCBmb2N1czpvdXRsaW5lLW5vbmUgZm9jdXM6cmluZy0yIGZvY3VzOnJpbmctcHJpbWFyeSBtaW4tdy1bMzZweF0gbWluLWgtWzM2cHhdIGZsZXggaXRlbXMtY2VudGVyIGp1c3RpZnktY2VudGVyXCJcbiAgICAgICAgICAgIGFyaWEtbGFiZWw9XCJDbG9zZSBkaWFsb2dcIlxuICAgICAgICAgID5cbiAgICAgICAgICAgIDxYIGNsYXNzTmFtZT1cInctNSBoLTVcIiAvPlxuICAgICAgICAgIDwvYnV0dG9uPlxuICAgICAgICA8L2Rpdj5cblxuICAgICAgICB7LyogRm9ybSBCb2R5ICovfVxuICAgICAgICA8Zm9ybSBvblN1Ym1pdD17aGFuZGxlU3VibWl0fSBjbGFzc05hbWU9XCJwLTYgc3BhY2UteS00XCI+XG4gICAgICAgICAge2Vycm9yTWVzc2FnZSAmJiAoXG4gICAgICAgICAgICA8ZGl2XG4gICAgICAgICAgICAgIHJvbGU9XCJhbGVydFwiXG4gICAgICAgICAgICAgIGNsYXNzTmFtZT1cInAtMyBiZy1bI0ZERjJGMV0gYm9yZGVyIGJvcmRlci1vdmVyZHVlLzMwIHJvdW5kZWQtYnRuLXNtIGZsZXggaXRlbXMtc3RhcnQgZ2FwLTIuNSB0ZXh0LXhzIHRleHQtb3ZlcmR1ZSBmb250LW1lZGl1bVwiXG4gICAgICAgICAgICA+XG4gICAgICAgICAgICAgIDxBbGVydENpcmNsZSBjbGFzc05hbWU9XCJ3LTQgaC00IHNocmluay0wIG10LTAuNVwiIC8+XG4gICAgICAgICAgICAgIDxkaXYgY2xhc3NOYW1lPVwiZmxleC0xXCI+e2Vycm9yTWVzc2FnZX08L2Rpdj5cbiAgICAgICAgICAgIDwvZGl2PlxuICAgICAgICAgICl9XG5cbiAgICAgICAgICB7LyogVW5pdCBMYWJlbCAqL31cbiAgICAgICAgICA8ZGl2PlxuICAgICAgICAgICAgPGxhYmVsXG4gICAgICAgICAgICAgIGh0bWxGb3I9XCJ1bml0LWxhYmVsLWlucHV0XCJcbiAgICAgICAgICAgICAgY2xhc3NOYW1lPVwiYmxvY2sgdGV4dC14cyBmb250LXNlbWlib2xkIHVwcGVyY2FzZSB0cmFja2luZy1oZWFkZXItY2FwIHRleHQtaW5rLTIgbWItMVwiXG4gICAgICAgICAgICA+XG4gICAgICAgICAgICAgIFVuaXQgTGFiZWwgPHNwYW4gY2xhc3NOYW1lPVwidGV4dC1vdmVyZHVlXCI+Kjwvc3Bhbj5cbiAgICAgICAgICAgIDwvbGFiZWw+XG4gICAgICAgICAgICA8aW5wdXRcbiAgICAgICAgICAgICAgaWQ9XCJ1bml0LWxhYmVsLWlucHV0XCJcbiAgICAgICAgICAgICAgdHlwZT1cInRleHRcIlxuICAgICAgICAgICAgICByZXF1aXJlZFxuICAgICAgICAgICAgICB2YWx1ZT17bGFiZWx9XG4gICAgICAgICAgICAgIG9uQ2hhbmdlPXsoZSkgPT4gc2V0TGFiZWwoZS50YXJnZXQudmFsdWUpfVxuICAgICAgICAgICAgICBwbGFjZWhvbGRlcj1cImUuZy4gVW5pdCAxLCBGbGF0IDNCLCBTdHVkaW8gMTAyXCJcbiAgICAgICAgICAgICAgY2xhc3NOYW1lPVwidy1mdWxsIGgtMTAgcHgtMyBiZy1zdXJmYWNlIGJvcmRlciBib3JkZXItaW5wdXQtYm9yZGVyIHJvdW5kZWQtaW5wdXQgdGV4dC1zbSB0ZXh0LWluayBwbGFjZWhvbGRlcjp0ZXh0LWluay0yLzYwIGZvY3VzOm91dGxpbmUtbm9uZSBmb2N1czpyaW5nLTIgZm9jdXM6cmluZy1wcmltYXJ5XCJcbiAgICAgICAgICAgIC8+XG4gICAgICAgICAgPC9kaXY+XG5cbiAgICAgICAgICB7LyogVW5pdCBUeXBlICovfVxuICAgICAgICAgIDxkaXY+XG4gICAgICAgICAgICA8bGFiZWxcbiAgICAgICAgICAgICAgaHRtbEZvcj1cInVuaXQtdHlwZS1zZWxlY3RcIlxuICAgICAgICAgICAgICBjbGFzc05hbWU9XCJibG9jayB0ZXh0LXhzIGZvbnQtc2VtaWJvbGQgdXBwZXJjYXNlIHRyYWNraW5nLWhlYWRlci1jYXAgdGV4dC1pbmstMiBtYi0xXCJcbiAgICAgICAgICAgID5cbiAgICAgICAgICAgICAgVHlwZSA8c3BhbiBjbGFzc05hbWU9XCJ0ZXh0LW92ZXJkdWVcIj4qPC9zcGFuPlxuICAgICAgICAgICAgPC9sYWJlbD5cbiAgICAgICAgICAgIDxzZWxlY3RcbiAgICAgICAgICAgICAgaWQ9XCJ1bml0LXR5cGUtc2VsZWN0XCJcbiAgICAgICAgICAgICAgdmFsdWU9e3VuaXRUeXBlfVxuICAgICAgICAgICAgICBvbkNoYW5nZT17KGUpID0+IHNldFVuaXRUeXBlKGUudGFyZ2V0LnZhbHVlIGFzIFVuaXRUeXBlKX1cbiAgICAgICAgICAgICAgY2xhc3NOYW1lPVwidy1mdWxsIGgtMTAgcHgtMyBiZy1zdXJmYWNlIGJvcmRlciBib3JkZXItaW5wdXQtYm9yZGVyIHJvdW5kZWQtaW5wdXQgdGV4dC1zbSB0ZXh0LWluayBmb2N1czpvdXRsaW5lLW5vbmUgZm9jdXM6cmluZy0yIGZvY3VzOnJpbmctcHJpbWFyeVwiXG4gICAgICAgICAgICA+XG4gICAgICAgICAgICAgIDxvcHRpb24gdmFsdWU9XCJhcGFydG1lbnRcIj5BcGFydG1lbnQ8L29wdGlvbj5cbiAgICAgICAgICAgICAgPG9wdGlvbiB2YWx1ZT1cInN0dWRpb1wiPlN0dWRpbzwvb3B0aW9uPlxuICAgICAgICAgICAgICA8b3B0aW9uIHZhbHVlPVwib3RoZXJcIj5PdGhlcjwvb3B0aW9uPlxuICAgICAgICAgICAgPC9zZWxlY3Q+XG4gICAgICAgICAgPC9kaXY+XG5cbiAgICAgICAgICB7LyogTGlzdGVkIFJlbnQgKi99XG4gICAgICAgICAgPGRpdj5cbiAgICAgICAgICAgIDxsYWJlbFxuICAgICAgICAgICAgICBodG1sRm9yPVwidW5pdC1saXN0ZWQtcmVudC1pbnB1dFwiXG4gICAgICAgICAgICAgIGNsYXNzTmFtZT1cImJsb2NrIHRleHQteHMgZm9udC1zZW1pYm9sZCB1cHBlcmNhc2UgdHJhY2tpbmctaGVhZGVyLWNhcCB0ZXh0LWluay0yIG1iLTFcIlxuICAgICAgICAgICAgPlxuICAgICAgICAgICAgICBMaXN0ZWQgUmVudCAoRkNGQSlcbiAgICAgICAgICAgIDwvbGFiZWw+XG4gICAgICAgICAgICA8ZGl2IGNsYXNzTmFtZT1cInJlbGF0aXZlXCI+XG4gICAgICAgICAgICAgIDxpbnB1dFxuICAgICAgICAgICAgICAgIGlkPVwidW5pdC1saXN0ZWQtcmVudC1pbnB1dFwiXG4gICAgICAgICAgICAgICAgdHlwZT1cInRleHRcIlxuICAgICAgICAgICAgICAgIGlucHV0TW9kZT1cIm51bWVyaWNcIlxuICAgICAgICAgICAgICAgIHZhbHVlPXtsaXN0ZWRSZW50U3RyfVxuICAgICAgICAgICAgICAgIG9uQ2hhbmdlPXsoZSkgPT4gc2V0TGlzdGVkUmVudFN0cihlLnRhcmdldC52YWx1ZSl9XG4gICAgICAgICAgICAgICAgcGxhY2Vob2xkZXI9XCJlLmcuIDEwMCAwMDBcIlxuICAgICAgICAgICAgICAgIGNsYXNzTmFtZT1cInctZnVsbCBoLTEwIHBsLTMgcHItMTQgYmctc3VyZmFjZSBib3JkZXIgYm9yZGVyLWlucHV0LWJvcmRlciByb3VuZGVkLWlucHV0IHRleHQtc20gZm9udC1tb25vIHRleHQtaW5rIHBsYWNlaG9sZGVyOnRleHQtaW5rLTIvNjAgZm9jdXM6b3V0bGluZS1ub25lIGZvY3VzOnJpbmctMiBmb2N1czpyaW5nLXByaW1hcnkgdGFidWxhci1udW1zXCJcbiAgICAgICAgICAgICAgLz5cbiAgICAgICAgICAgICAgPHNwYW4gY2xhc3NOYW1lPVwiYWJzb2x1dGUgcmlnaHQtMyB0b3AtMS8yIC10cmFuc2xhdGUteS0xLzIgdGV4dC14cyBmb250LXNlbWlib2xkIHRleHQtaW5rLTIgcG9pbnRlci1ldmVudHMtbm9uZVwiPlxuICAgICAgICAgICAgICAgIEZDRkFcbiAgICAgICAgICAgICAgPC9zcGFuPlxuICAgICAgICAgICAgPC9kaXY+XG4gICAgICAgICAgICA8cCBjbGFzc05hbWU9XCJ0ZXh0LXhzIHRleHQtaW5rLTIgbXQtMVwiPlxuICAgICAgICAgICAgICBMaXN0ZWQgcmVudCBpcyBvcHRpb25hbCBhbmQgaXMgb25seSBhIGRlZmF1bHQgc3VnZ2VzdGlvbiwgbm90IHRoZSByZWFsIHJlbnQuXG4gICAgICAgICAgICA8L3A+XG4gICAgICAgICAgPC9kaXY+XG5cbiAgICAgICAgICB7LyogRGVzY3JpcHRpb24gKi99XG4gICAgICAgICAgPGRpdj5cbiAgICAgICAgICAgIDxsYWJlbFxuICAgICAgICAgICAgICBodG1sRm9yPVwidW5pdC1kZXNjLWlucHV0XCJcbiAgICAgICAgICAgICAgY2xhc3NOYW1lPVwiYmxvY2sgdGV4dC14cyBmb250LXNlbWlib2xkIHVwcGVyY2FzZSB0cmFja2luZy1oZWFkZXItY2FwIHRleHQtaW5rLTIgbWItMVwiXG4gICAgICAgICAgICA+XG4gICAgICAgICAgICAgIERlc2NyaXB0aW9uXG4gICAgICAgICAgICA8L2xhYmVsPlxuICAgICAgICAgICAgPHRleHRhcmVhXG4gICAgICAgICAgICAgIGlkPVwidW5pdC1kZXNjLWlucHV0XCJcbiAgICAgICAgICAgICAgcm93cz17M31cbiAgICAgICAgICAgICAgdmFsdWU9e2Rlc2NyaXB0aW9ufVxuICAgICAgICAgICAgICBvbkNoYW5nZT17KGUpID0+IHNldERlc2NyaXB0aW9uKGUudGFyZ2V0LnZhbHVlKX1cbiAgICAgICAgICAgICAgcGxhY2Vob2xkZXI9XCJlLmcuIEdyb3VuZCBmbG9vciBmcm9udCBzaWRlLCAyIGJlZHJvb21zLCBwcml2YXRlIHZlcmFuZGEuLi5cIlxuICAgICAgICAgICAgICBjbGFzc05hbWU9XCJ3LWZ1bGwgcC0yLjUgYmctc3VyZmFjZSBib3JkZXIgYm9yZGVyLWlucHV0LWJvcmRlciByb3VuZGVkLWlucHV0IHRleHQtc20gdGV4dC1pbmsgcGxhY2Vob2xkZXI6dGV4dC1pbmstMi82MCBmb2N1czpvdXRsaW5lLW5vbmUgZm9jdXM6cmluZy0yIGZvY3VzOnJpbmctcHJpbWFyeSByZXNpemUtbm9uZVwiXG4gICAgICAgICAgICAvPlxuICAgICAgICAgIDwvZGl2PlxuXG4gICAgICAgICAgey8qIEFjdGlvbnMgKi99XG4gICAgICAgICAgPGRpdiBjbGFzc05hbWU9XCJwdC0zIGJvcmRlci10IGJvcmRlci1saW5lIGZsZXggaXRlbXMtY2VudGVyIGp1c3RpZnktZW5kIGdhcC0zXCI+XG4gICAgICAgICAgICA8YnV0dG9uXG4gICAgICAgICAgICAgIHR5cGU9XCJidXR0b25cIlxuICAgICAgICAgICAgICBvbkNsaWNrPXtvbkNsb3NlfVxuICAgICAgICAgICAgICBkaXNhYmxlZD17aXNTdWJtaXR0aW5nfVxuICAgICAgICAgICAgICBjbGFzc05hbWU9XCJweC00IHB5LTIgdGV4dC14cyBmb250LW1lZGl1bSBib3JkZXIgYm9yZGVyLWxpbmUgdGV4dC1pbmsgaG92ZXI6YmctYmFuZCByb3VuZGVkLWJ0bi1zbSB0cmFuc2l0aW9uLWNvbG9ycyBmb2N1czpvdXRsaW5lLW5vbmUgZm9jdXM6cmluZy0yIGZvY3VzOnJpbmctcHJpbWFyeSBtaW4taC1bMzZweF1cIlxuICAgICAgICAgICAgPlxuICAgICAgICAgICAgICBDYW5jZWxcbiAgICAgICAgICAgIDwvYnV0dG9uPlxuICAgICAgICAgICAgPGJ1dHRvblxuICAgICAgICAgICAgICB0eXBlPVwic3VibWl0XCJcbiAgICAgICAgICAgICAgZGlzYWJsZWQ9e2lzU3VibWl0dGluZyB8fCAhbGFiZWwudHJpbSgpfVxuICAgICAgICAgICAgICBjbGFzc05hbWU9XCJpbmxpbmUtZmxleCBpdGVtcy1jZW50ZXIganVzdGlmeS1jZW50ZXIgZ2FwLTEuNSBweC00IHB5LTIgdGV4dC14cyBmb250LXNlbWlib2xkIGJnLXByaW1hcnkgaG92ZXI6YmctcHJpbWFyeS1ob3ZlciBhY3RpdmU6YmctWyMxNzRCQjBdIHRleHQtd2hpdGUgcm91bmRlZC1idG4tc20gdHJhbnNpdGlvbi1jb2xvcnMgZm9jdXM6b3V0bGluZS1ub25lIGZvY3VzOnJpbmctMiBmb2N1czpyaW5nLXByaW1hcnkgZGlzYWJsZWQ6b3BhY2l0eS01MCBtaW4taC1bMzZweF1cIlxuICAgICAgICAgICAgPlxuICAgICAgICAgICAgICB7aXNTdWJtaXR0aW5nICYmIDxMb2FkZXIyIGNsYXNzTmFtZT1cInctMy41IGgtMy41IGFuaW1hdGUtc3BpblwiIC8+fVxuICAgICAgICAgICAgICA8c3Bhbj57aXNFZGl0aW5nID8gXCJTYXZlIGNoYW5nZXNcIiA6IFwiQ3JlYXRlIHVuaXRcIn08L3NwYW4+XG4gICAgICAgICAgICA8L2J1dHRvbj5cbiAgICAgICAgICA8L2Rpdj5cbiAgICAgICAgPC9mb3JtPlxuICAgICAgPC9kaXY+XG4gICAgPC9kaXY+XG4gICk7XG59O1xuIl0sImZpbGUiOiJDOi9Vc2Vycy9BYm9ua3dlIFByaW5jZWx5L0Rlc2t0b3AvTCZOIEVzdGF0ZS9Gcm9udGVuZC9zcmMvY29tcG9uZW50cy9ob3VzZXMvVW5pdEZvcm1EaWFsb2cudHN4In0=

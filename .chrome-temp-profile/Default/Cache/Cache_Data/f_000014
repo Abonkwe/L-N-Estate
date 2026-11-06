@@ -1,0 +1,555 @@
+import { createHotContext as __vite__createHotContext } from "/@vite/client";import.meta.hot = __vite__createHotContext("/src/components/leases/AddRentChangeDialog.tsx");import __vite__cjsImport0_react_jsxDevRuntime from "/node_modules/.vite/deps/react_jsx-dev-runtime.js?v=13fb731d"; const jsxDEV = __vite__cjsImport0_react_jsxDevRuntime["jsxDEV"];
+import * as RefreshRuntime from "/@react-refresh";
+const inWebWorker = typeof WorkerGlobalScope !== "undefined" && self instanceof WorkerGlobalScope;
+let prevRefreshReg;
+let prevRefreshSig;
+if (import.meta.hot && !inWebWorker) {
+  if (!window.$RefreshReg$) {
+    throw new Error(
+      "@vitejs/plugin-react can't detect preamble. Something is wrong."
+    );
+  }
+  prevRefreshReg = window.$RefreshReg$;
+  prevRefreshSig = window.$RefreshSig$;
+  window.$RefreshReg$ = RefreshRuntime.getRefreshReg("C:/Users/Abonkwe Princely/Desktop/L&N Estate/Frontend/src/components/leases/AddRentChangeDialog.tsx");
+  window.$RefreshSig$ = RefreshRuntime.createSignatureFunctionForTransform;
+}
+var _s = $RefreshSig$();
+import __vite__cjsImport3_react from "/node_modules/.vite/deps/react.js?v=13fb731d"; const useState = __vite__cjsImport3_react["useState"]; const useEffect = __vite__cjsImport3_react["useEffect"]; const useMemo = __vite__cjsImport3_react["useMemo"];
+import { X, Loader2, AlertCircle } from "/node_modules/.vite/deps/lucide-react.js?v=13fb731d";
+import { addRentTermApi } from "/src/api/leases.ts?t=1793917300570";
+import { formatMoney } from "/src/lib/format.ts?t=1793884938243";
+export const AddRentChangeDialog = ({
+  isOpen,
+  onClose,
+  lease,
+  onSuccess
+}) => {
+  _s();
+  const [effectiveFrom, setEffectiveFrom] = useState("");
+  const [baseRentStr, setBaseRentStr] = useState("");
+  const [waterFeeStr, setWaterFeeStr] = useState("");
+  const [wasteFeeStr, setWasteFeeStr] = useState("");
+  const [noticeGivenOn, setNoticeGivenOn] = useState("");
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [errorMessage, setErrorMessage] = useState(null);
+  useEffect(() => {
+    if (isOpen) {
+      setEffectiveFrom(lease.paid_through || lease.next_period_start || "");
+      setBaseRentStr(String(lease.base_rent ?? ""));
+      setWaterFeeStr(String(lease.water_fee ?? 0));
+      setWasteFeeStr(String(lease.waste_fee ?? 0));
+      setNoticeGivenOn("");
+      setErrorMessage(null);
+    }
+  }, [isOpen, lease]);
+  useEffect(() => {
+    if (!isOpen) return;
+    const handleKeyDown = (e) => {
+      if (e.key === "Escape" && !isSubmitting) {
+        onClose();
+      }
+    };
+    window.addEventListener("keydown", handleKeyDown);
+    return () => window.removeEventListener("keydown", handleKeyDown);
+  }, [isOpen, isSubmitting, onClose]);
+  const calculatedTotal = useMemo(() => {
+    const base = parseInt(baseRentStr, 10) || 0;
+    const water = parseInt(waterFeeStr, 10) || 0;
+    const waste = parseInt(wasteFeeStr, 10) || 0;
+    return base + water + waste;
+  }, [baseRentStr, waterFeeStr, wasteFeeStr]);
+  if (!isOpen) return null;
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setErrorMessage(null);
+    const baseRent = parseInt(baseRentStr, 10);
+    const waterFee = parseInt(waterFeeStr, 10);
+    const wasteFee = parseInt(wasteFeeStr, 10);
+    if (!effectiveFrom) {
+      setErrorMessage("Effective date is required.");
+      return;
+    }
+    if (isNaN(baseRent) || baseRent <= 0) {
+      setErrorMessage("Base rent must be a positive integer.");
+      return;
+    }
+    if (isNaN(waterFee) || waterFee < 0) {
+      setErrorMessage("Water fee must be a non-negative integer.");
+      return;
+    }
+    if (isNaN(wasteFee) || wasteFee < 0) {
+      setErrorMessage("Waste fee must be a non-negative integer.");
+      return;
+    }
+    setIsSubmitting(true);
+    try {
+      await addRentTermApi(lease.id, {
+        effective_from: effectiveFrom,
+        base_rent: baseRent,
+        water_fee: waterFee,
+        waste_fee: wasteFee,
+        notice_given_on: noticeGivenOn.trim() ? noticeGivenOn : null
+      });
+      onSuccess();
+      onClose();
+    } catch (err) {
+      setErrorMessage(
+        err instanceof Error ? err.message : "Failed to record rent change"
+      );
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
+  return /* @__PURE__ */ jsxDEV(
+    "div",
+    {
+      className: "fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 overflow-y-auto",
+      role: "dialog",
+      "aria-modal": "true",
+      "aria-labelledby": "rent-change-dialog-title",
+      children: /* @__PURE__ */ jsxDEV("div", { className: "relative w-full max-w-lg bg-surface border border-line rounded-panel shadow-xl overflow-hidden my-8", children: [
+        /* @__PURE__ */ jsxDEV("div", { className: "px-6 py-4 border-b border-line flex items-center justify-between bg-band/30", children: [
+          /* @__PURE__ */ jsxDEV("div", { children: [
+            /* @__PURE__ */ jsxDEV(
+              "h2",
+              {
+                id: "rent-change-dialog-title",
+                className: "text-lg font-semibold text-ink",
+                children: "Add rent change"
+              },
+              void 0,
+              false,
+              {
+                fileName: "C:/Users/Abonkwe Princely/Desktop/L&N Estate/Frontend/src/components/leases/AddRentChangeDialog.tsx",
+                lineNumber: 144,
+                columnNumber: 13
+              },
+              this
+            ),
+            /* @__PURE__ */ jsxDEV("p", { className: "text-xs text-ink-2 mt-0.5", children: [
+              lease.tenant_name,
+              " • ",
+              lease.house_name,
+              ", ",
+              lease.unit_label
+            ] }, void 0, true, {
+              fileName: "C:/Users/Abonkwe Princely/Desktop/L&N Estate/Frontend/src/components/leases/AddRentChangeDialog.tsx",
+              lineNumber: 150,
+              columnNumber: 13
+            }, this)
+          ] }, void 0, true, {
+            fileName: "C:/Users/Abonkwe Princely/Desktop/L&N Estate/Frontend/src/components/leases/AddRentChangeDialog.tsx",
+            lineNumber: 143,
+            columnNumber: 11
+          }, this),
+          /* @__PURE__ */ jsxDEV(
+            "button",
+            {
+              type: "button",
+              onClick: onClose,
+              disabled: isSubmitting,
+              className: "p-1 text-ink-2 hover:text-ink rounded-btn-sm hover:bg-band focus:outline-none focus:ring-2 focus:ring-primary",
+              "aria-label": "Close dialog",
+              children: /* @__PURE__ */ jsxDEV(X, { className: "w-5 h-5" }, void 0, false, {
+                fileName: "C:/Users/Abonkwe Princely/Desktop/L&N Estate/Frontend/src/components/leases/AddRentChangeDialog.tsx",
+                lineNumber: 161,
+                columnNumber: 13
+              }, this)
+            },
+            void 0,
+            false,
+            {
+              fileName: "C:/Users/Abonkwe Princely/Desktop/L&N Estate/Frontend/src/components/leases/AddRentChangeDialog.tsx",
+              lineNumber: 154,
+              columnNumber: 11
+            },
+            this
+          )
+        ] }, void 0, true, {
+          fileName: "C:/Users/Abonkwe Princely/Desktop/L&N Estate/Frontend/src/components/leases/AddRentChangeDialog.tsx",
+          lineNumber: 142,
+          columnNumber: 9
+        }, this),
+        /* @__PURE__ */ jsxDEV("form", { onSubmit: handleSubmit, className: "p-6 space-y-4", children: [
+          /* @__PURE__ */ jsxDEV("div", { className: "p-3 bg-band/70 border border-line/60 rounded-btn-sm text-xs text-ink-2 leading-relaxed", children: [
+            /* @__PURE__ */ jsxDEV("span", { className: "font-semibold text-ink", children: "Guideline:" }, void 0, false, {
+              fileName: "C:/Users/Abonkwe Princely/Desktop/L&N Estate/Frontend/src/components/leases/AddRentChangeDialog.tsx",
+              lineNumber: 169,
+              columnNumber: 13
+            }, this),
+            " Set the effective date to the day the tenant's current paid period ends."
+          ] }, void 0, true, {
+            fileName: "C:/Users/Abonkwe Princely/Desktop/L&N Estate/Frontend/src/components/leases/AddRentChangeDialog.tsx",
+            lineNumber: 168,
+            columnNumber: 11
+          }, this),
+          errorMessage && /* @__PURE__ */ jsxDEV(
+            "div",
+            {
+              role: "alert",
+              className: "p-3 bg-[#FDF2F1] border border-overdue/30 rounded-btn-sm flex items-start gap-2.5 text-xs text-overdue font-medium",
+              children: [
+                /* @__PURE__ */ jsxDEV(AlertCircle, { className: "w-4 h-4 shrink-0 mt-0.5" }, void 0, false, {
+                  fileName: "C:/Users/Abonkwe Princely/Desktop/L&N Estate/Frontend/src/components/leases/AddRentChangeDialog.tsx",
+                  lineNumber: 178,
+                  columnNumber: 15
+                }, this),
+                /* @__PURE__ */ jsxDEV("div", { className: "flex-1", children: errorMessage }, void 0, false, {
+                  fileName: "C:/Users/Abonkwe Princely/Desktop/L&N Estate/Frontend/src/components/leases/AddRentChangeDialog.tsx",
+                  lineNumber: 179,
+                  columnNumber: 15
+                }, this)
+              ]
+            },
+            void 0,
+            true,
+            {
+              fileName: "C:/Users/Abonkwe Princely/Desktop/L&N Estate/Frontend/src/components/leases/AddRentChangeDialog.tsx",
+              lineNumber: 174,
+              columnNumber: 11
+            },
+            this
+          ),
+          /* @__PURE__ */ jsxDEV("div", { children: [
+            /* @__PURE__ */ jsxDEV(
+              "label",
+              {
+                htmlFor: "effective-from-input",
+                className: "block text-xs font-semibold uppercase tracking-header-cap text-ink-2 mb-1",
+                children: [
+                  "Effective date ",
+                  /* @__PURE__ */ jsxDEV("span", { className: "text-overdue", children: "*" }, void 0, false, {
+                    fileName: "C:/Users/Abonkwe Princely/Desktop/L&N Estate/Frontend/src/components/leases/AddRentChangeDialog.tsx",
+                    lineNumber: 189,
+                    columnNumber: 30
+                  }, this)
+                ]
+              },
+              void 0,
+              true,
+              {
+                fileName: "C:/Users/Abonkwe Princely/Desktop/L&N Estate/Frontend/src/components/leases/AddRentChangeDialog.tsx",
+                lineNumber: 185,
+                columnNumber: 13
+              },
+              this
+            ),
+            /* @__PURE__ */ jsxDEV(
+              "input",
+              {
+                id: "effective-from-input",
+                type: "date",
+                value: effectiveFrom,
+                onChange: (e) => setEffectiveFrom(e.target.value),
+                required: true,
+                className: "w-full h-10 px-3 bg-surface border border-input-border rounded-input text-sm text-ink focus:outline-none focus:ring-2 focus:ring-primary"
+              },
+              void 0,
+              false,
+              {
+                fileName: "C:/Users/Abonkwe Princely/Desktop/L&N Estate/Frontend/src/components/leases/AddRentChangeDialog.tsx",
+                lineNumber: 191,
+                columnNumber: 13
+              },
+              this
+            )
+          ] }, void 0, true, {
+            fileName: "C:/Users/Abonkwe Princely/Desktop/L&N Estate/Frontend/src/components/leases/AddRentChangeDialog.tsx",
+            lineNumber: 184,
+            columnNumber: 11
+          }, this),
+          /* @__PURE__ */ jsxDEV("div", { className: "grid grid-cols-1 sm:grid-cols-3 gap-3", children: [
+            /* @__PURE__ */ jsxDEV("div", { children: [
+              /* @__PURE__ */ jsxDEV(
+                "label",
+                {
+                  htmlFor: "base-rent-input",
+                  className: "block text-xs font-semibold uppercase tracking-header-cap text-ink-2 mb-1",
+                  children: [
+                    "Base rent (FCFA) ",
+                    /* @__PURE__ */ jsxDEV("span", { className: "text-overdue", children: "*" }, void 0, false, {
+                      fileName: "C:/Users/Abonkwe Princely/Desktop/L&N Estate/Frontend/src/components/leases/AddRentChangeDialog.tsx",
+                      lineNumber: 208,
+                      columnNumber: 34
+                    }, this)
+                  ]
+                },
+                void 0,
+                true,
+                {
+                  fileName: "C:/Users/Abonkwe Princely/Desktop/L&N Estate/Frontend/src/components/leases/AddRentChangeDialog.tsx",
+                  lineNumber: 204,
+                  columnNumber: 15
+                },
+                this
+              ),
+              /* @__PURE__ */ jsxDEV(
+                "input",
+                {
+                  id: "base-rent-input",
+                  type: "number",
+                  min: "0",
+                  step: "1",
+                  value: baseRentStr,
+                  onChange: (e) => setBaseRentStr(e.target.value),
+                  required: true,
+                  className: "w-full h-10 px-3 bg-surface border border-input-border rounded-input text-sm font-mono text-ink text-right tabular-nums focus:outline-none focus:ring-2 focus:ring-primary"
+                },
+                void 0,
+                false,
+                {
+                  fileName: "C:/Users/Abonkwe Princely/Desktop/L&N Estate/Frontend/src/components/leases/AddRentChangeDialog.tsx",
+                  lineNumber: 210,
+                  columnNumber: 15
+                },
+                this
+              )
+            ] }, void 0, true, {
+              fileName: "C:/Users/Abonkwe Princely/Desktop/L&N Estate/Frontend/src/components/leases/AddRentChangeDialog.tsx",
+              lineNumber: 203,
+              columnNumber: 13
+            }, this),
+            /* @__PURE__ */ jsxDEV("div", { children: [
+              /* @__PURE__ */ jsxDEV(
+                "label",
+                {
+                  htmlFor: "water-fee-input",
+                  className: "block text-xs font-semibold uppercase tracking-header-cap text-ink-2 mb-1",
+                  children: "Water fee (FCFA)"
+                },
+                void 0,
+                false,
+                {
+                  fileName: "C:/Users/Abonkwe Princely/Desktop/L&N Estate/Frontend/src/components/leases/AddRentChangeDialog.tsx",
+                  lineNumber: 223,
+                  columnNumber: 15
+                },
+                this
+              ),
+              /* @__PURE__ */ jsxDEV(
+                "input",
+                {
+                  id: "water-fee-input",
+                  type: "number",
+                  min: "0",
+                  step: "1",
+                  value: waterFeeStr,
+                  onChange: (e) => setWaterFeeStr(e.target.value),
+                  className: "w-full h-10 px-3 bg-surface border border-input-border rounded-input text-sm font-mono text-ink text-right tabular-nums focus:outline-none focus:ring-2 focus:ring-primary"
+                },
+                void 0,
+                false,
+                {
+                  fileName: "C:/Users/Abonkwe Princely/Desktop/L&N Estate/Frontend/src/components/leases/AddRentChangeDialog.tsx",
+                  lineNumber: 229,
+                  columnNumber: 15
+                },
+                this
+              )
+            ] }, void 0, true, {
+              fileName: "C:/Users/Abonkwe Princely/Desktop/L&N Estate/Frontend/src/components/leases/AddRentChangeDialog.tsx",
+              lineNumber: 222,
+              columnNumber: 13
+            }, this),
+            /* @__PURE__ */ jsxDEV("div", { children: [
+              /* @__PURE__ */ jsxDEV(
+                "label",
+                {
+                  htmlFor: "waste-fee-input",
+                  className: "block text-xs font-semibold uppercase tracking-header-cap text-ink-2 mb-1",
+                  children: "Waste fee (FCFA)"
+                },
+                void 0,
+                false,
+                {
+                  fileName: "C:/Users/Abonkwe Princely/Desktop/L&N Estate/Frontend/src/components/leases/AddRentChangeDialog.tsx",
+                  lineNumber: 241,
+                  columnNumber: 15
+                },
+                this
+              ),
+              /* @__PURE__ */ jsxDEV(
+                "input",
+                {
+                  id: "waste-fee-input",
+                  type: "number",
+                  min: "0",
+                  step: "1",
+                  value: wasteFeeStr,
+                  onChange: (e) => setWasteFeeStr(e.target.value),
+                  className: "w-full h-10 px-3 bg-surface border border-input-border rounded-input text-sm font-mono text-ink text-right tabular-nums focus:outline-none focus:ring-2 focus:ring-primary"
+                },
+                void 0,
+                false,
+                {
+                  fileName: "C:/Users/Abonkwe Princely/Desktop/L&N Estate/Frontend/src/components/leases/AddRentChangeDialog.tsx",
+                  lineNumber: 247,
+                  columnNumber: 15
+                },
+                this
+              )
+            ] }, void 0, true, {
+              fileName: "C:/Users/Abonkwe Princely/Desktop/L&N Estate/Frontend/src/components/leases/AddRentChangeDialog.tsx",
+              lineNumber: 240,
+              columnNumber: 13
+            }, this)
+          ] }, void 0, true, {
+            fileName: "C:/Users/Abonkwe Princely/Desktop/L&N Estate/Frontend/src/components/leases/AddRentChangeDialog.tsx",
+            lineNumber: 202,
+            columnNumber: 11
+          }, this),
+          /* @__PURE__ */ jsxDEV("div", { className: "p-3 bg-band/40 border border-row-line rounded-btn-sm flex items-center justify-between", children: [
+            /* @__PURE__ */ jsxDEV("span", { className: "text-xs font-medium text-ink-2", children: "New monthly total:" }, void 0, false, {
+              fileName: "C:/Users/Abonkwe Princely/Desktop/L&N Estate/Frontend/src/components/leases/AddRentChangeDialog.tsx",
+              lineNumber: 261,
+              columnNumber: 13
+            }, this),
+            /* @__PURE__ */ jsxDEV("span", { className: "text-sm font-mono font-semibold text-ink tabular-nums", children: formatMoney(calculatedTotal, true) }, void 0, false, {
+              fileName: "C:/Users/Abonkwe Princely/Desktop/L&N Estate/Frontend/src/components/leases/AddRentChangeDialog.tsx",
+              lineNumber: 264,
+              columnNumber: 13
+            }, this)
+          ] }, void 0, true, {
+            fileName: "C:/Users/Abonkwe Princely/Desktop/L&N Estate/Frontend/src/components/leases/AddRentChangeDialog.tsx",
+            lineNumber: 260,
+            columnNumber: 11
+          }, this),
+          /* @__PURE__ */ jsxDEV("div", { children: [
+            /* @__PURE__ */ jsxDEV(
+              "label",
+              {
+                htmlFor: "notice-given-input",
+                className: "block text-xs font-semibold uppercase tracking-header-cap text-ink-2 mb-1",
+                children: "Notice date (optional)"
+              },
+              void 0,
+              false,
+              {
+                fileName: "C:/Users/Abonkwe Princely/Desktop/L&N Estate/Frontend/src/components/leases/AddRentChangeDialog.tsx",
+                lineNumber: 271,
+                columnNumber: 13
+              },
+              this
+            ),
+            /* @__PURE__ */ jsxDEV(
+              "input",
+              {
+                id: "notice-given-input",
+                type: "date",
+                value: noticeGivenOn,
+                onChange: (e) => setNoticeGivenOn(e.target.value),
+                className: "w-full h-10 px-3 bg-surface border border-input-border rounded-input text-sm text-ink focus:outline-none focus:ring-2 focus:ring-primary"
+              },
+              void 0,
+              false,
+              {
+                fileName: "C:/Users/Abonkwe Princely/Desktop/L&N Estate/Frontend/src/components/leases/AddRentChangeDialog.tsx",
+                lineNumber: 277,
+                columnNumber: 13
+              },
+              this
+            ),
+            /* @__PURE__ */ jsxDEV("p", { className: "text-[11px] text-ink-2 mt-1", children: "Date on which the rent change notice was issued to the tenant." }, void 0, false, {
+              fileName: "C:/Users/Abonkwe Princely/Desktop/L&N Estate/Frontend/src/components/leases/AddRentChangeDialog.tsx",
+              lineNumber: 284,
+              columnNumber: 13
+            }, this)
+          ] }, void 0, true, {
+            fileName: "C:/Users/Abonkwe Princely/Desktop/L&N Estate/Frontend/src/components/leases/AddRentChangeDialog.tsx",
+            lineNumber: 270,
+            columnNumber: 11
+          }, this),
+          /* @__PURE__ */ jsxDEV("div", { className: "pt-3 border-t border-line flex items-center justify-end gap-3", children: [
+            /* @__PURE__ */ jsxDEV(
+              "button",
+              {
+                type: "button",
+                onClick: onClose,
+                disabled: isSubmitting,
+                className: "px-4 py-2 text-xs font-medium border border-line text-ink hover:bg-band rounded-btn-sm transition-colors focus:outline-none focus:ring-2 focus:ring-primary",
+                children: "Cancel"
+              },
+              void 0,
+              false,
+              {
+                fileName: "C:/Users/Abonkwe Princely/Desktop/L&N Estate/Frontend/src/components/leases/AddRentChangeDialog.tsx",
+                lineNumber: 291,
+                columnNumber: 13
+              },
+              this
+            ),
+            /* @__PURE__ */ jsxDEV(
+              "button",
+              {
+                type: "submit",
+                disabled: isSubmitting,
+                className: "inline-flex items-center justify-center gap-1.5 px-4 py-2 text-xs font-medium bg-primary hover:bg-primary-hover active:bg-[#174BB0] text-white rounded-btn-sm transition-colors focus:outline-none focus:ring-2 focus:ring-primary disabled:opacity-50",
+                children: [
+                  isSubmitting && /* @__PURE__ */ jsxDEV(Loader2, { className: "w-3.5 h-3.5 animate-spin" }, void 0, false, {
+                    fileName: "C:/Users/Abonkwe Princely/Desktop/L&N Estate/Frontend/src/components/leases/AddRentChangeDialog.tsx",
+                    lineNumber: 304,
+                    columnNumber: 32
+                  }, this),
+                  /* @__PURE__ */ jsxDEV("span", { children: "Save rent change" }, void 0, false, {
+                    fileName: "C:/Users/Abonkwe Princely/Desktop/L&N Estate/Frontend/src/components/leases/AddRentChangeDialog.tsx",
+                    lineNumber: 305,
+                    columnNumber: 15
+                  }, this)
+                ]
+              },
+              void 0,
+              true,
+              {
+                fileName: "C:/Users/Abonkwe Princely/Desktop/L&N Estate/Frontend/src/components/leases/AddRentChangeDialog.tsx",
+                lineNumber: 299,
+                columnNumber: 13
+              },
+              this
+            )
+          ] }, void 0, true, {
+            fileName: "C:/Users/Abonkwe Princely/Desktop/L&N Estate/Frontend/src/components/leases/AddRentChangeDialog.tsx",
+            lineNumber: 290,
+            columnNumber: 11
+          }, this)
+        ] }, void 0, true, {
+          fileName: "C:/Users/Abonkwe Princely/Desktop/L&N Estate/Frontend/src/components/leases/AddRentChangeDialog.tsx",
+          lineNumber: 166,
+          columnNumber: 9
+        }, this)
+      ] }, void 0, true, {
+        fileName: "C:/Users/Abonkwe Princely/Desktop/L&N Estate/Frontend/src/components/leases/AddRentChangeDialog.tsx",
+        lineNumber: 140,
+        columnNumber: 7
+      }, this)
+    },
+    void 0,
+    false,
+    {
+      fileName: "C:/Users/Abonkwe Princely/Desktop/L&N Estate/Frontend/src/components/leases/AddRentChangeDialog.tsx",
+      lineNumber: 134,
+      columnNumber: 5
+    },
+    this
+  );
+};
+_s(AddRentChangeDialog, "EUf7Bo6d7Zlrei8FWV+t/tsUUDM=");
+_c = AddRentChangeDialog;
+var _c;
+$RefreshReg$(_c, "AddRentChangeDialog");
+if (import.meta.hot && !inWebWorker) {
+  window.$RefreshReg$ = prevRefreshReg;
+  window.$RefreshSig$ = prevRefreshSig;
+}
+if (import.meta.hot && !inWebWorker) {
+  RefreshRuntime.__hmr_import(import.meta.url).then((currentExports) => {
+    RefreshRuntime.registerExportsForReactRefresh("C:/Users/Abonkwe Princely/Desktop/L&N Estate/Frontend/src/components/leases/AddRentChangeDialog.tsx", currentExports);
+    import.meta.hot.accept((nextExports) => {
+      if (!nextExports) return;
+      const invalidateMessage = RefreshRuntime.validateRefreshBoundaryAndEnqueueUpdate("C:/Users/Abonkwe Princely/Desktop/L&N Estate/Frontend/src/components/leases/AddRentChangeDialog.tsx", currentExports, nextExports);
+      if (invalidateMessage) import.meta.hot.invalidate(invalidateMessage);
+    });
+  });
+}
+
+//# sourceMappingURL=data:application/json;base64,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QUFBQSx5QkFBNkM7QUFBQSxrQkFDOUQsdUJBQUMsVUFBSyxnQ0FBTjtBQUFBO0FBQUE7QUFBQTtBQUFBLHlCQUFzQjtBQUFBO0FBQUE7QUFBQSxjQU54QjtBQUFBO0FBQUE7QUFBQTtBQUFBO0FBQUE7QUFBQTtBQUFBO0FBQUEsWUFPQTtBQUFBLGVBaEJGO0FBQUE7QUFBQTtBQUFBO0FBQUEsaUJBaUJBO0FBQUEsYUE3SUY7QUFBQTtBQUFBO0FBQUE7QUFBQSxlQThJQTtBQUFBLFdBeEtGO0FBQUE7QUFBQTtBQUFBO0FBQUEsYUF5S0E7QUFBQTtBQUFBLElBL0tGO0FBQUE7QUFBQTtBQUFBO0FBQUE7QUFBQTtBQUFBO0FBQUE7QUFBQSxFQWdMQTtBQUVKO0FBQUVYLEdBdlJXTCxxQkFBdUQ7QUFBQSxLQUF2REE7QUFBdUQsSUFBQXVEO0FBQUEsYUFBQUEsSUFBQSIsIm5hbWVzIjpbInVzZVN0YXRlIiwidXNlRWZmZWN0IiwidXNlTWVtbyIsIlgiLCJMb2FkZXIyIiwiQWxlcnRDaXJjbGUiLCJhZGRSZW50VGVybUFwaSIsImZvcm1hdE1vbmV5IiwiQWRkUmVudENoYW5nZURpYWxvZyIsImlzT3BlbiIsIm9uQ2xvc2UiLCJsZWFzZSIsIm9uU3VjY2VzcyIsIl9zIiwiZWZmZWN0aXZlRnJvbSIsInNldEVmZmVjdGl2ZUZyb20iLCJiYXNlUmVudFN0ciIsInNldEJhc2VSZW50U3RyIiwid2F0ZXJGZWVTdHIiLCJzZXRXYXRlckZlZVN0ciIsIndhc3RlRmVlU3RyIiwic2V0V2FzdGVGZWVTdHIiLCJub3RpY2VHaXZlbk9uIiwic2V0Tm90aWNlR2l2ZW5PbiIsImlzU3VibWl0dGluZyIsInNldElzU3VibWl0dGluZyIsImVycm9yTWVzc2FnZSIsInNldEVycm9yTWVzc2FnZSIsInBhaWRfdGhyb3VnaCIsIm5leHRfcGVyaW9kX3N0YXJ0IiwiU3RyaW5nIiwiYmFzZV9yZW50Iiwid2F0ZXJfZmVlIiwid2FzdGVfZmVlIiwiaGFuZGxlS2V5RG93biIsImUiLCJrZXkiLCJ3aW5kb3ciLCJhZGRFdmVudExpc3RlbmVyIiwicmVtb3ZlRXZlbnRMaXN0ZW5lciIsImNhbGN1bGF0ZWRUb3RhbCIsImJhc2UiLCJwYXJzZUludCIsIndhdGVyIiwid2FzdGUiLCJoYW5kbGVTdWJtaXQiLCJwcmV2ZW50RGVmYXVsdCIsImJhc2VSZW50Iiwid2F0ZXJGZWUiLCJ3YXN0ZUZlZSIsImlzTmFOIiwiaWQiLCJlZmZlY3RpdmVfZnJvbSIsIm5vdGljZV9naXZlbl9vbiIsInRyaW0iLCJlcnIiLCJFcnJvciIsIm1lc3NhZ2UiLCJ0ZW5hbnRfbmFtZSIsImhvdXNlX25hbWUiLCJ1bml0X2xhYmVsIiwidGFyZ2V0IiwidmFsdWUiLCJfYyJdLCJpZ25vcmVMaXN0IjpbXSwic291cmNlcyI6WyJBZGRSZW50Q2hhbmdlRGlhbG9nLnRzeCJdLCJzb3VyY2VzQ29udGVudCI6WyJpbXBvcnQgUmVhY3QsIHsgdXNlU3RhdGUsIHVzZUVmZmVjdCwgdXNlTWVtbyB9IGZyb20gXCJyZWFjdFwiO1xuaW1wb3J0IHsgWCwgTG9hZGVyMiwgQWxlcnRDaXJjbGUgfSBmcm9tIFwibHVjaWRlLXJlYWN0XCI7XG5pbXBvcnQgdHlwZSB7IExlYXNlRGV0YWlsIH0gZnJvbSBcIkAvYXBpL2xlYXNlc1wiO1xuaW1wb3J0IHsgYWRkUmVudFRlcm1BcGkgfSBmcm9tIFwiQC9hcGkvbGVhc2VzXCI7XG5pbXBvcnQgeyBmb3JtYXRNb25leSB9IGZyb20gXCJAL2xpYi9mb3JtYXRcIjtcblxuaW50ZXJmYWNlIEFkZFJlbnRDaGFuZ2VEaWFsb2dQcm9wcyB7XG4gIGlzT3BlbjogYm9vbGVhbjtcbiAgb25DbG9zZTogKCkgPT4gdm9pZDtcbiAgbGVhc2U6IExlYXNlRGV0YWlsO1xuICBvblN1Y2Nlc3M6ICgpID0+IHZvaWQ7XG59XG5cbmV4cG9ydCBjb25zdCBBZGRSZW50Q2hhbmdlRGlhbG9nOiBSZWFjdC5GQzxBZGRSZW50Q2hhbmdlRGlhbG9nUHJvcHM+ID0gKHtcbiAgaXNPcGVuLFxuICBvbkNsb3NlLFxuICBsZWFzZSxcbiAgb25TdWNjZXNzLFxufSkgPT4ge1xuICBjb25zdCBbZWZmZWN0aXZlRnJvbSwgc2V0RWZmZWN0aXZlRnJvbV0gPSB1c2VTdGF0ZShcIlwiKTtcbiAgY29uc3QgW2Jhc2VSZW50U3RyLCBzZXRCYXNlUmVudFN0cl0gPSB1c2VTdGF0ZShcIlwiKTtcbiAgY29uc3QgW3dhdGVyRmVlU3RyLCBzZXRXYXRlckZlZVN0cl0gPSB1c2VTdGF0ZShcIlwiKTtcbiAgY29uc3QgW3dhc3RlRmVlU3RyLCBzZXRXYXN0ZUZlZVN0cl0gPSB1c2VTdGF0ZShcIlwiKTtcbiAgY29uc3QgW25vdGljZUdpdmVuT24sIHNldE5vdGljZUdpdmVuT25dID0gdXNlU3RhdGUoXCJcIik7XG5cbiAgY29uc3QgW2lzU3VibWl0dGluZywgc2V0SXNTdWJtaXR0aW5nXSA9IHVzZVN0YXRlKGZhbHNlKTtcbiAgY29uc3QgW2Vycm9yTWVzc2FnZSwgc2V0RXJyb3JNZXNzYWdlXSA9IHVzZVN0YXRlPHN0cmluZyB8IG51bGw+KG51bGwpO1xuXG4gIC8vIEluaXRpYWxpemUgZm9ybSBkZWZhdWx0cyB3aGVuIGRpYWxvZyBvcGVuc1xuICB1c2VFZmZlY3QoKCkgPT4ge1xuICAgIGlmIChpc09wZW4pIHtcbiAgICAgIC8vIEhlbHBlciB0ZXh0IHNheXM6IFwiU2V0IHRoZSBlZmZlY3RpdmUgZGF0ZSB0byB0aGUgZGF5IHRoZSB0ZW5hbnQncyBjdXJyZW50IHBhaWQgcGVyaW9kIGVuZHMuXCJcbiAgICAgIC8vIERlZmF1bHQgdG8gcGFpZF90aHJvdWdoIG9yIG5leHRfcGVyaW9kX3N0YXJ0IGlmIGF2YWlsYWJsZVxuICAgICAgc2V0RWZmZWN0aXZlRnJvbShsZWFzZS5wYWlkX3Rocm91Z2ggfHwgbGVhc2UubmV4dF9wZXJpb2Rfc3RhcnQgfHwgXCJcIik7XG4gICAgICBzZXRCYXNlUmVudFN0cihTdHJpbmcobGVhc2UuYmFzZV9yZW50ID8/IFwiXCIpKTtcbiAgICAgIHNldFdhdGVyRmVlU3RyKFN0cmluZyhsZWFzZS53YXRlcl9mZWUgPz8gMCkpO1xuICAgICAgc2V0V2FzdGVGZWVTdHIoU3RyaW5nKGxlYXNlLndhc3RlX2ZlZSA/PyAwKSk7XG4gICAgICBzZXROb3RpY2VHaXZlbk9uKFwiXCIpO1xuICAgICAgc2V0RXJyb3JNZXNzYWdlKG51bGwpO1xuICAgIH1cbiAgfSwgW2lzT3BlbiwgbGVhc2VdKTtcblxuICAvLyBIYW5kbGUgRVNDIGtleVxuICB1c2VFZmZlY3QoKCkgPT4ge1xuICAgIGlmICghaXNPcGVuKSByZXR1cm47XG4gICAgY29uc3QgaGFuZGxlS2V5RG93biA9IChlOiBLZXlib2FyZEV2ZW50KSA9PiB7XG4gICAgICBpZiAoZS5rZXkgPT09IFwiRXNjYXBlXCIgJiYgIWlzU3VibWl0dGluZykge1xuICAgICAgICBvbkNsb3NlKCk7XG4gICAgICB9XG4gICAgfTtcbiAgICB3aW5kb3cuYWRkRXZlbnRMaXN0ZW5lcihcImtleWRvd25cIiwgaGFuZGxlS2V5RG93bik7XG4gICAgcmV0dXJuICgpID0+IHdpbmRvdy5yZW1vdmVFdmVudExpc3RlbmVyKFwia2V5ZG93blwiLCBoYW5kbGVLZXlEb3duKTtcbiAgfSwgW2lzT3BlbiwgaXNTdWJtaXR0aW5nLCBvbkNsb3NlXSk7XG5cbiAgLy8gRGVyaXZlZCBwcmV2aWV3IHRvdGFsXG4gIGNvbnN0IGNhbGN1bGF0ZWRUb3RhbCA9IHVzZU1lbW8oKCkgPT4ge1xuICAgIGNvbnN0IGJhc2UgPSBwYXJzZUludChiYXNlUmVudFN0ciwgMTApIHx8IDA7XG4gICAgY29uc3Qgd2F0ZXIgPSBwYXJzZUludCh3YXRlckZlZVN0ciwgMTApIHx8IDA7XG4gICAgY29uc3Qgd2FzdGUgPSBwYXJzZUludCh3YXN0ZUZlZVN0ciwgMTApIHx8IDA7XG4gICAgcmV0dXJuIGJhc2UgKyB3YXRlciArIHdhc3RlO1xuICB9LCBbYmFzZVJlbnRTdHIsIHdhdGVyRmVlU3RyLCB3YXN0ZUZlZVN0cl0pO1xuXG4gIGlmICghaXNPcGVuKSByZXR1cm4gbnVsbDtcblxuICBjb25zdCBoYW5kbGVTdWJtaXQgPSBhc3luYyAoZTogUmVhY3QuRm9ybUV2ZW50KSA9PiB7XG4gICAgZS5wcmV2ZW50RGVmYXVsdCgpO1xuICAgIHNldEVycm9yTWVzc2FnZShudWxsKTtcblxuICAgIGNvbnN0IGJhc2VSZW50ID0gcGFyc2VJbnQoYmFzZVJlbnRTdHIsIDEwKTtcbiAgICBjb25zdCB3YXRlckZlZSA9IHBhcnNlSW50KHdhdGVyRmVlU3RyLCAxMCk7XG4gICAgY29uc3Qgd2FzdGVGZWUgPSBwYXJzZUludCh3YXN0ZUZlZVN0ciwgMTApO1xuXG4gICAgaWYgKCFlZmZlY3RpdmVGcm9tKSB7XG4gICAgICBzZXRFcnJvck1lc3NhZ2UoXCJFZmZlY3RpdmUgZGF0ZSBpcyByZXF1aXJlZC5cIik7XG4gICAgICByZXR1cm47XG4gICAgfVxuXG4gICAgaWYgKGlzTmFOKGJhc2VSZW50KSB8fCBiYXNlUmVudCA8PSAwKSB7XG4gICAgICBzZXRFcnJvck1lc3NhZ2UoXCJCYXNlIHJlbnQgbXVzdCBiZSBhIHBvc2l0aXZlIGludGVnZXIuXCIpO1xuICAgICAgcmV0dXJuO1xuICAgIH1cblxuICAgIGlmIChpc05hTih3YXRlckZlZSkgfHwgd2F0ZXJGZWUgPCAwKSB7XG4gICAgICBzZXRFcnJvck1lc3NhZ2UoXCJXYXRlciBmZWUgbXVzdCBiZSBhIG5vbi1uZWdhdGl2ZSBpbnRlZ2VyLlwiKTtcbiAgICAgIHJldHVybjtcbiAgICB9XG5cbiAgICBpZiAoaXNOYU4od2FzdGVGZWUpIHx8IHdhc3RlRmVlIDwgMCkge1xuICAgICAgc2V0RXJyb3JNZXNzYWdlKFwiV2FzdGUgZmVlIG11c3QgYmUgYSBub24tbmVnYXRpdmUgaW50ZWdlci5cIik7XG4gICAgICByZXR1cm47XG4gICAgfVxuXG4gICAgc2V0SXNTdWJtaXR0aW5nKHRydWUpO1xuICAgIHRyeSB7XG4gICAgICBhd2FpdCBhZGRSZW50VGVybUFwaShsZWFzZS5pZCwge1xuICAgICAgICBlZmZlY3RpdmVfZnJvbTogZWZmZWN0aXZlRnJvbSxcbiAgICAgICAgYmFzZV9yZW50OiBiYXNlUmVudCxcbiAgICAgICAgd2F0ZXJfZmVlOiB3YXRlckZlZSxcbiAgICAgICAgd2FzdGVfZmVlOiB3YXN0ZUZlZSxcbiAgICAgICAgbm90aWNlX2dpdmVuX29uOiBub3RpY2VHaXZlbk9uLnRyaW0oKSA/IG5vdGljZUdpdmVuT24gOiBudWxsLFxuICAgICAgfSk7XG5cbiAgICAgIG9uU3VjY2VzcygpO1xuICAgICAgb25DbG9zZSgpO1xuICAgIH0gY2F0Y2ggKGVycjogdW5rbm93bikge1xuICAgICAgc2V0RXJyb3JNZXNzYWdlKFxuICAgICAgICBlcnIgaW5zdGFuY2VvZiBFcnJvciA/IGVyci5tZXNzYWdlIDogXCJGYWlsZWQgdG8gcmVjb3JkIHJlbnQgY2hhbmdlXCJcbiAgICAgICk7XG4gICAgfSBmaW5hbGx5IHtcbiAgICAgIHNldElzU3VibWl0dGluZyhmYWxzZSk7XG4gICAgfVxuICB9O1xuXG4gIHJldHVybiAoXG4gICAgPGRpdlxuICAgICAgY2xhc3NOYW1lPVwiZml4ZWQgaW5zZXQtMCB6LTUwIGZsZXggaXRlbXMtY2VudGVyIGp1c3RpZnktY2VudGVyIHAtNCBiZy1ibGFjay81MCBvdmVyZmxvdy15LWF1dG9cIlxuICAgICAgcm9sZT1cImRpYWxvZ1wiXG4gICAgICBhcmlhLW1vZGFsPVwidHJ1ZVwiXG4gICAgICBhcmlhLWxhYmVsbGVkYnk9XCJyZW50LWNoYW5nZS1kaWFsb2ctdGl0bGVcIlxuICAgID5cbiAgICAgIDxkaXYgY2xhc3NOYW1lPVwicmVsYXRpdmUgdy1mdWxsIG1heC13LWxnIGJnLXN1cmZhY2UgYm9yZGVyIGJvcmRlci1saW5lIHJvdW5kZWQtcGFuZWwgc2hhZG93LXhsIG92ZXJmbG93LWhpZGRlbiBteS04XCI+XG4gICAgICAgIHsvKiBIZWFkZXIgKi99XG4gICAgICAgIDxkaXYgY2xhc3NOYW1lPVwicHgtNiBweS00IGJvcmRlci1iIGJvcmRlci1saW5lIGZsZXggaXRlbXMtY2VudGVyIGp1c3RpZnktYmV0d2VlbiBiZy1iYW5kLzMwXCI+XG4gICAgICAgICAgPGRpdj5cbiAgICAgICAgICAgIDxoMlxuICAgICAgICAgICAgICBpZD1cInJlbnQtY2hhbmdlLWRpYWxvZy10aXRsZVwiXG4gICAgICAgICAgICAgIGNsYXNzTmFtZT1cInRleHQtbGcgZm9udC1zZW1pYm9sZCB0ZXh0LWlua1wiXG4gICAgICAgICAgICA+XG4gICAgICAgICAgICAgIEFkZCByZW50IGNoYW5nZVxuICAgICAgICAgICAgPC9oMj5cbiAgICAgICAgICAgIDxwIGNsYXNzTmFtZT1cInRleHQteHMgdGV4dC1pbmstMiBtdC0wLjVcIj5cbiAgICAgICAgICAgICAge2xlYXNlLnRlbmFudF9uYW1lfSAmYnVsbDsge2xlYXNlLmhvdXNlX25hbWV9LCB7bGVhc2UudW5pdF9sYWJlbH1cbiAgICAgICAgICAgIDwvcD5cbiAgICAgICAgICA8L2Rpdj5cbiAgICAgICAgICA8YnV0dG9uXG4gICAgICAgICAgICB0eXBlPVwiYnV0dG9uXCJcbiAgICAgICAgICAgIG9uQ2xpY2s9e29uQ2xvc2V9XG4gICAgICAgICAgICBkaXNhYmxlZD17aXNTdWJtaXR0aW5nfVxuICAgICAgICAgICAgY2xhc3NOYW1lPVwicC0xIHRleHQtaW5rLTIgaG92ZXI6dGV4dC1pbmsgcm91bmRlZC1idG4tc20gaG92ZXI6YmctYmFuZCBmb2N1czpvdXRsaW5lLW5vbmUgZm9jdXM6cmluZy0yIGZvY3VzOnJpbmctcHJpbWFyeVwiXG4gICAgICAgICAgICBhcmlhLWxhYmVsPVwiQ2xvc2UgZGlhbG9nXCJcbiAgICAgICAgICA+XG4gICAgICAgICAgICA8WCBjbGFzc05hbWU9XCJ3LTUgaC01XCIgLz5cbiAgICAgICAgICA8L2J1dHRvbj5cbiAgICAgICAgPC9kaXY+XG5cbiAgICAgICAgey8qIENvbnRlbnQgKi99XG4gICAgICAgIDxmb3JtIG9uU3VibWl0PXtoYW5kbGVTdWJtaXR9IGNsYXNzTmFtZT1cInAtNiBzcGFjZS15LTRcIj5cbiAgICAgICAgICB7LyogSGVscGVyIHRleHQgcmVxdWlyZWQgYnkgYnJpZWYgKi99XG4gICAgICAgICAgPGRpdiBjbGFzc05hbWU9XCJwLTMgYmctYmFuZC83MCBib3JkZXIgYm9yZGVyLWxpbmUvNjAgcm91bmRlZC1idG4tc20gdGV4dC14cyB0ZXh0LWluay0yIGxlYWRpbmctcmVsYXhlZFwiPlxuICAgICAgICAgICAgPHNwYW4gY2xhc3NOYW1lPVwiZm9udC1zZW1pYm9sZCB0ZXh0LWlua1wiPkd1aWRlbGluZTo8L3NwYW4+IFNldCB0aGVcbiAgICAgICAgICAgIGVmZmVjdGl2ZSBkYXRlIHRvIHRoZSBkYXkgdGhlIHRlbmFudCZhcG9zO3MgY3VycmVudCBwYWlkIHBlcmlvZCBlbmRzLlxuICAgICAgICAgIDwvZGl2PlxuXG4gICAgICAgICAge2Vycm9yTWVzc2FnZSAmJiAoXG4gICAgICAgICAgICA8ZGl2XG4gICAgICAgICAgICAgIHJvbGU9XCJhbGVydFwiXG4gICAgICAgICAgICAgIGNsYXNzTmFtZT1cInAtMyBiZy1bI0ZERjJGMV0gYm9yZGVyIGJvcmRlci1vdmVyZHVlLzMwIHJvdW5kZWQtYnRuLXNtIGZsZXggaXRlbXMtc3RhcnQgZ2FwLTIuNSB0ZXh0LXhzIHRleHQtb3ZlcmR1ZSBmb250LW1lZGl1bVwiXG4gICAgICAgICAgICA+XG4gICAgICAgICAgICAgIDxBbGVydENpcmNsZSBjbGFzc05hbWU9XCJ3LTQgaC00IHNocmluay0wIG10LTAuNVwiIC8+XG4gICAgICAgICAgICAgIDxkaXYgY2xhc3NOYW1lPVwiZmxleC0xXCI+e2Vycm9yTWVzc2FnZX08L2Rpdj5cbiAgICAgICAgICAgIDwvZGl2PlxuICAgICAgICAgICl9XG5cbiAgICAgICAgICB7LyogRWZmZWN0aXZlIERhdGUgKi99XG4gICAgICAgICAgPGRpdj5cbiAgICAgICAgICAgIDxsYWJlbFxuICAgICAgICAgICAgICBodG1sRm9yPVwiZWZmZWN0aXZlLWZyb20taW5wdXRcIlxuICAgICAgICAgICAgICBjbGFzc05hbWU9XCJibG9jayB0ZXh0LXhzIGZvbnQtc2VtaWJvbGQgdXBwZXJjYXNlIHRyYWNraW5nLWhlYWRlci1jYXAgdGV4dC1pbmstMiBtYi0xXCJcbiAgICAgICAgICAgID5cbiAgICAgICAgICAgICAgRWZmZWN0aXZlIGRhdGUgPHNwYW4gY2xhc3NOYW1lPVwidGV4dC1vdmVyZHVlXCI+Kjwvc3Bhbj5cbiAgICAgICAgICAgIDwvbGFiZWw+XG4gICAgICAgICAgICA8aW5wdXRcbiAgICAgICAgICAgICAgaWQ9XCJlZmZlY3RpdmUtZnJvbS1pbnB1dFwiXG4gICAgICAgICAgICAgIHR5cGU9XCJkYXRlXCJcbiAgICAgICAgICAgICAgdmFsdWU9e2VmZmVjdGl2ZUZyb219XG4gICAgICAgICAgICAgIG9uQ2hhbmdlPXsoZSkgPT4gc2V0RWZmZWN0aXZlRnJvbShlLnRhcmdldC52YWx1ZSl9XG4gICAgICAgICAgICAgIHJlcXVpcmVkXG4gICAgICAgICAgICAgIGNsYXNzTmFtZT1cInctZnVsbCBoLTEwIHB4LTMgYmctc3VyZmFjZSBib3JkZXIgYm9yZGVyLWlucHV0LWJvcmRlciByb3VuZGVkLWlucHV0IHRleHQtc20gdGV4dC1pbmsgZm9jdXM6b3V0bGluZS1ub25lIGZvY3VzOnJpbmctMiBmb2N1czpyaW5nLXByaW1hcnlcIlxuICAgICAgICAgICAgLz5cbiAgICAgICAgICA8L2Rpdj5cblxuICAgICAgICAgIHsvKiBSZW50IEJyZWFrZG93biBJbnB1dHMgKi99XG4gICAgICAgICAgPGRpdiBjbGFzc05hbWU9XCJncmlkIGdyaWQtY29scy0xIHNtOmdyaWQtY29scy0zIGdhcC0zXCI+XG4gICAgICAgICAgICA8ZGl2PlxuICAgICAgICAgICAgICA8bGFiZWxcbiAgICAgICAgICAgICAgICBodG1sRm9yPVwiYmFzZS1yZW50LWlucHV0XCJcbiAgICAgICAgICAgICAgICBjbGFzc05hbWU9XCJibG9jayB0ZXh0LXhzIGZvbnQtc2VtaWJvbGQgdXBwZXJjYXNlIHRyYWNraW5nLWhlYWRlci1jYXAgdGV4dC1pbmstMiBtYi0xXCJcbiAgICAgICAgICAgICAgPlxuICAgICAgICAgICAgICAgIEJhc2UgcmVudCAoRkNGQSkgPHNwYW4gY2xhc3NOYW1lPVwidGV4dC1vdmVyZHVlXCI+Kjwvc3Bhbj5cbiAgICAgICAgICAgICAgPC9sYWJlbD5cbiAgICAgICAgICAgICAgPGlucHV0XG4gICAgICAgICAgICAgICAgaWQ9XCJiYXNlLXJlbnQtaW5wdXRcIlxuICAgICAgICAgICAgICAgIHR5cGU9XCJudW1iZXJcIlxuICAgICAgICAgICAgICAgIG1pbj1cIjBcIlxuICAgICAgICAgICAgICAgIHN0ZXA9XCIxXCJcbiAgICAgICAgICAgICAgICB2YWx1ZT17YmFzZVJlbnRTdHJ9XG4gICAgICAgICAgICAgICAgb25DaGFuZ2U9eyhlKSA9PiBzZXRCYXNlUmVudFN0cihlLnRhcmdldC52YWx1ZSl9XG4gICAgICAgICAgICAgICAgcmVxdWlyZWRcbiAgICAgICAgICAgICAgICBjbGFzc05hbWU9XCJ3LWZ1bGwgaC0xMCBweC0zIGJnLXN1cmZhY2UgYm9yZGVyIGJvcmRlci1pbnB1dC1ib3JkZXIgcm91bmRlZC1pbnB1dCB0ZXh0LXNtIGZvbnQtbW9ubyB0ZXh0LWluayB0ZXh0LXJpZ2h0IHRhYnVsYXItbnVtcyBmb2N1czpvdXRsaW5lLW5vbmUgZm9jdXM6cmluZy0yIGZvY3VzOnJpbmctcHJpbWFyeVwiXG4gICAgICAgICAgICAgIC8+XG4gICAgICAgICAgICA8L2Rpdj5cblxuICAgICAgICAgICAgPGRpdj5cbiAgICAgICAgICAgICAgPGxhYmVsXG4gICAgICAgICAgICAgICAgaHRtbEZvcj1cIndhdGVyLWZlZS1pbnB1dFwiXG4gICAgICAgICAgICAgICAgY2xhc3NOYW1lPVwiYmxvY2sgdGV4dC14cyBmb250LXNlbWlib2xkIHVwcGVyY2FzZSB0cmFja2luZy1oZWFkZXItY2FwIHRleHQtaW5rLTIgbWItMVwiXG4gICAgICAgICAgICAgID5cbiAgICAgICAgICAgICAgICBXYXRlciBmZWUgKEZDRkEpXG4gICAgICAgICAgICAgIDwvbGFiZWw+XG4gICAgICAgICAgICAgIDxpbnB1dFxuICAgICAgICAgICAgICAgIGlkPVwid2F0ZXItZmVlLWlucHV0XCJcbiAgICAgICAgICAgICAgICB0eXBlPVwibnVtYmVyXCJcbiAgICAgICAgICAgICAgICBtaW49XCIwXCJcbiAgICAgICAgICAgICAgICBzdGVwPVwiMVwiXG4gICAgICAgICAgICAgICAgdmFsdWU9e3dhdGVyRmVlU3RyfVxuICAgICAgICAgICAgICAgIG9uQ2hhbmdlPXsoZSkgPT4gc2V0V2F0ZXJGZWVTdHIoZS50YXJnZXQudmFsdWUpfVxuICAgICAgICAgICAgICAgIGNsYXNzTmFtZT1cInctZnVsbCBoLTEwIHB4LTMgYmctc3VyZmFjZSBib3JkZXIgYm9yZGVyLWlucHV0LWJvcmRlciByb3VuZGVkLWlucHV0IHRleHQtc20gZm9udC1tb25vIHRleHQtaW5rIHRleHQtcmlnaHQgdGFidWxhci1udW1zIGZvY3VzOm91dGxpbmUtbm9uZSBmb2N1czpyaW5nLTIgZm9jdXM6cmluZy1wcmltYXJ5XCJcbiAgICAgICAgICAgICAgLz5cbiAgICAgICAgICAgIDwvZGl2PlxuXG4gICAgICAgICAgICA8ZGl2PlxuICAgICAgICAgICAgICA8bGFiZWxcbiAgICAgICAgICAgICAgICBodG1sRm9yPVwid2FzdGUtZmVlLWlucHV0XCJcbiAgICAgICAgICAgICAgICBjbGFzc05hbWU9XCJibG9jayB0ZXh0LXhzIGZvbnQtc2VtaWJvbGQgdXBwZXJjYXNlIHRyYWNraW5nLWhlYWRlci1jYXAgdGV4dC1pbmstMiBtYi0xXCJcbiAgICAgICAgICAgICAgPlxuICAgICAgICAgICAgICAgIFdhc3RlIGZlZSAoRkNGQSlcbiAgICAgICAgICAgICAgPC9sYWJlbD5cbiAgICAgICAgICAgICAgPGlucHV0XG4gICAgICAgICAgICAgICAgaWQ9XCJ3YXN0ZS1mZWUtaW5wdXRcIlxuICAgICAgICAgICAgICAgIHR5cGU9XCJudW1iZXJcIlxuICAgICAgICAgICAgICAgIG1pbj1cIjBcIlxuICAgICAgICAgICAgICAgIHN0ZXA9XCIxXCJcbiAgICAgICAgICAgICAgICB2YWx1ZT17d2FzdGVGZWVTdHJ9XG4gICAgICAgICAgICAgICAgb25DaGFuZ2U9eyhlKSA9PiBzZXRXYXN0ZUZlZVN0cihlLnRhcmdldC52YWx1ZSl9XG4gICAgICAgICAgICAgICAgY2xhc3NOYW1lPVwidy1mdWxsIGgtMTAgcHgtMyBiZy1zdXJmYWNlIGJvcmRlciBib3JkZXItaW5wdXQtYm9yZGVyIHJvdW5kZWQtaW5wdXQgdGV4dC1zbSBmb250LW1vbm8gdGV4dC1pbmsgdGV4dC1yaWdodCB0YWJ1bGFyLW51bXMgZm9jdXM6b3V0bGluZS1ub25lIGZvY3VzOnJpbmctMiBmb2N1czpyaW5nLXByaW1hcnlcIlxuICAgICAgICAgICAgICAvPlxuICAgICAgICAgICAgPC9kaXY+XG4gICAgICAgICAgPC9kaXY+XG5cbiAgICAgICAgICB7LyogTmV3IE1vbnRobHkgVG90YWwgU3VtbWFyeSAqL31cbiAgICAgICAgICA8ZGl2IGNsYXNzTmFtZT1cInAtMyBiZy1iYW5kLzQwIGJvcmRlciBib3JkZXItcm93LWxpbmUgcm91bmRlZC1idG4tc20gZmxleCBpdGVtcy1jZW50ZXIganVzdGlmeS1iZXR3ZWVuXCI+XG4gICAgICAgICAgICA8c3BhbiBjbGFzc05hbWU9XCJ0ZXh0LXhzIGZvbnQtbWVkaXVtIHRleHQtaW5rLTJcIj5cbiAgICAgICAgICAgICAgTmV3IG1vbnRobHkgdG90YWw6XG4gICAgICAgICAgICA8L3NwYW4+XG4gICAgICAgICAgICA8c3BhbiBjbGFzc05hbWU9XCJ0ZXh0LXNtIGZvbnQtbW9ubyBmb250LXNlbWlib2xkIHRleHQtaW5rIHRhYnVsYXItbnVtc1wiPlxuICAgICAgICAgICAgICB7Zm9ybWF0TW9uZXkoY2FsY3VsYXRlZFRvdGFsLCB0cnVlKX1cbiAgICAgICAgICAgIDwvc3Bhbj5cbiAgICAgICAgICA8L2Rpdj5cblxuICAgICAgICAgIHsvKiBOb3RpY2UgRGF0ZSAqL31cbiAgICAgICAgICA8ZGl2PlxuICAgICAgICAgICAgPGxhYmVsXG4gICAgICAgICAgICAgIGh0bWxGb3I9XCJub3RpY2UtZ2l2ZW4taW5wdXRcIlxuICAgICAgICAgICAgICBjbGFzc05hbWU9XCJibG9jayB0ZXh0LXhzIGZvbnQtc2VtaWJvbGQgdXBwZXJjYXNlIHRyYWNraW5nLWhlYWRlci1jYXAgdGV4dC1pbmstMiBtYi0xXCJcbiAgICAgICAgICAgID5cbiAgICAgICAgICAgICAgTm90aWNlIGRhdGUgKG9wdGlvbmFsKVxuICAgICAgICAgICAgPC9sYWJlbD5cbiAgICAgICAgICAgIDxpbnB1dFxuICAgICAgICAgICAgICBpZD1cIm5vdGljZS1naXZlbi1pbnB1dFwiXG4gICAgICAgICAgICAgIHR5cGU9XCJkYXRlXCJcbiAgICAgICAgICAgICAgdmFsdWU9e25vdGljZUdpdmVuT259XG4gICAgICAgICAgICAgIG9uQ2hhbmdlPXsoZSkgPT4gc2V0Tm90aWNlR2l2ZW5PbihlLnRhcmdldC52YWx1ZSl9XG4gICAgICAgICAgICAgIGNsYXNzTmFtZT1cInctZnVsbCBoLTEwIHB4LTMgYmctc3VyZmFjZSBib3JkZXIgYm9yZGVyLWlucHV0LWJvcmRlciByb3VuZGVkLWlucHV0IHRleHQtc20gdGV4dC1pbmsgZm9jdXM6b3V0bGluZS1ub25lIGZvY3VzOnJpbmctMiBmb2N1czpyaW5nLXByaW1hcnlcIlxuICAgICAgICAgICAgLz5cbiAgICAgICAgICAgIDxwIGNsYXNzTmFtZT1cInRleHQtWzExcHhdIHRleHQtaW5rLTIgbXQtMVwiPlxuICAgICAgICAgICAgICBEYXRlIG9uIHdoaWNoIHRoZSByZW50IGNoYW5nZSBub3RpY2Ugd2FzIGlzc3VlZCB0byB0aGUgdGVuYW50LlxuICAgICAgICAgICAgPC9wPlxuICAgICAgICAgIDwvZGl2PlxuXG4gICAgICAgICAgey8qIEFjdGlvbnMgKi99XG4gICAgICAgICAgPGRpdiBjbGFzc05hbWU9XCJwdC0zIGJvcmRlci10IGJvcmRlci1saW5lIGZsZXggaXRlbXMtY2VudGVyIGp1c3RpZnktZW5kIGdhcC0zXCI+XG4gICAgICAgICAgICA8YnV0dG9uXG4gICAgICAgICAgICAgIHR5cGU9XCJidXR0b25cIlxuICAgICAgICAgICAgICBvbkNsaWNrPXtvbkNsb3NlfVxuICAgICAgICAgICAgICBkaXNhYmxlZD17aXNTdWJtaXR0aW5nfVxuICAgICAgICAgICAgICBjbGFzc05hbWU9XCJweC00IHB5LTIgdGV4dC14cyBmb250LW1lZGl1bSBib3JkZXIgYm9yZGVyLWxpbmUgdGV4dC1pbmsgaG92ZXI6YmctYmFuZCByb3VuZGVkLWJ0bi1zbSB0cmFuc2l0aW9uLWNvbG9ycyBmb2N1czpvdXRsaW5lLW5vbmUgZm9jdXM6cmluZy0yIGZvY3VzOnJpbmctcHJpbWFyeVwiXG4gICAgICAgICAgICA+XG4gICAgICAgICAgICAgIENhbmNlbFxuICAgICAgICAgICAgPC9idXR0b24+XG4gICAgICAgICAgICA8YnV0dG9uXG4gICAgICAgICAgICAgIHR5cGU9XCJzdWJtaXRcIlxuICAgICAgICAgICAgICBkaXNhYmxlZD17aXNTdWJtaXR0aW5nfVxuICAgICAgICAgICAgICBjbGFzc05hbWU9XCJpbmxpbmUtZmxleCBpdGVtcy1jZW50ZXIganVzdGlmeS1jZW50ZXIgZ2FwLTEuNSBweC00IHB5LTIgdGV4dC14cyBmb250LW1lZGl1bSBiZy1wcmltYXJ5IGhvdmVyOmJnLXByaW1hcnktaG92ZXIgYWN0aXZlOmJnLVsjMTc0QkIwXSB0ZXh0LXdoaXRlIHJvdW5kZWQtYnRuLXNtIHRyYW5zaXRpb24tY29sb3JzIGZvY3VzOm91dGxpbmUtbm9uZSBmb2N1czpyaW5nLTIgZm9jdXM6cmluZy1wcmltYXJ5IGRpc2FibGVkOm9wYWNpdHktNTBcIlxuICAgICAgICAgICAgPlxuICAgICAgICAgICAgICB7aXNTdWJtaXR0aW5nICYmIDxMb2FkZXIyIGNsYXNzTmFtZT1cInctMy41IGgtMy41IGFuaW1hdGUtc3BpblwiIC8+fVxuICAgICAgICAgICAgICA8c3Bhbj5TYXZlIHJlbnQgY2hhbmdlPC9zcGFuPlxuICAgICAgICAgICAgPC9idXR0b24+XG4gICAgICAgICAgPC9kaXY+XG4gICAgICAgIDwvZm9ybT5cbiAgICAgIDwvZGl2PlxuICAgIDwvZGl2PlxuICApO1xufTtcblxuIl0sImZpbGUiOiJDOi9Vc2Vycy9BYm9ua3dlIFByaW5jZWx5L0Rlc2t0b3AvTCZOIEVzdGF0ZS9Gcm9udGVuZC9zcmMvY29tcG9uZW50cy9sZWFzZXMvQWRkUmVudENoYW5nZURpYWxvZy50c3gifQ==

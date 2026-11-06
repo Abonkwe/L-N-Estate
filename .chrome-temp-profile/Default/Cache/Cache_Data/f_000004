@@ -1,0 +1,263 @@
+import { createHotContext as __vite__createHotContext } from "/@vite/client";import.meta.hot = __vite__createHotContext("/src/App.tsx");import __vite__cjsImport0_react_jsxDevRuntime from "/node_modules/.vite/deps/react_jsx-dev-runtime.js?v=13fb731d"; const Fragment = __vite__cjsImport0_react_jsxDevRuntime["Fragment"]; const jsxDEV = __vite__cjsImport0_react_jsxDevRuntime["jsxDEV"];
+import * as RefreshRuntime from "/@react-refresh";
+const inWebWorker = typeof WorkerGlobalScope !== "undefined" && self instanceof WorkerGlobalScope;
+let prevRefreshReg;
+let prevRefreshSig;
+if (import.meta.hot && !inWebWorker) {
+  if (!window.$RefreshReg$) {
+    throw new Error(
+      "@vitejs/plugin-react can't detect preamble. Something is wrong."
+    );
+  }
+  prevRefreshReg = window.$RefreshReg$;
+  prevRefreshSig = window.$RefreshSig$;
+  window.$RefreshReg$ = RefreshRuntime.getRefreshReg("C:/Users/Abonkwe Princely/Desktop/L&N Estate/Frontend/src/App.tsx");
+  window.$RefreshSig$ = RefreshRuntime.createSignatureFunctionForTransform;
+}
+var _s = $RefreshSig$();
+import { BrowserRouter, Routes, Route, Navigate } from "/node_modules/.vite/deps/react-router-dom.js?v=13fb731d";
+import { QueryClient, QueryClientProvider } from "/node_modules/.vite/deps/@tanstack_react-query.js?v=13fb731d";
+import { AuthProvider, useAuth } from "/src/context/AuthContext.tsx";
+import { LoginPage } from "/src/pages/Login.tsx?t=1793894282006";
+import { OverviewPage } from "/src/pages/Overview.tsx?t=1793917322153";
+import { LeaseDetailPage } from "/src/pages/LeaseDetail.tsx?t=1793917300570";
+import { TenantsPage } from "/src/pages/Tenants.tsx?t=1793918196196";
+import { TenantDetailPage } from "/src/pages/TenantDetail.tsx?t=1793918196196";
+import { NewLeasePage } from "/src/pages/NewLease.tsx?t=1793987371047";
+import { HousesPage } from "/src/pages/Houses.tsx";
+import { HouseDetailPage } from "/src/pages/HouseDetail.tsx";
+import { AppShell } from "/src/components/layout/AppShell.tsx?t=1793987511873";
+import { PlaceholderPage } from "/src/pages/PlaceholderPage.tsx";
+const queryClient = new QueryClient({
+  defaultOptions: {
+    queries: {
+      retry: 1,
+      refetchOnWindowFocus: false
+    }
+  }
+});
+const ProtectedRoute = ({ children }) => {
+  _s();
+  const { isAuthenticated, isLoading } = useAuth();
+  if (isLoading) {
+    return /* @__PURE__ */ jsxDEV("div", { className: "min-h-screen w-full bg-bg flex items-center justify-center", children: /* @__PURE__ */ jsxDEV("div", { className: "flex flex-col items-center gap-3", children: [
+      /* @__PURE__ */ jsxDEV("div", { className: "w-6 h-6 border-2 border-primary border-t-transparent rounded-full animate-spin" }, void 0, false, {
+        fileName: "C:/Users/Abonkwe Princely/Desktop/L&N Estate/Frontend/src/App.tsx",
+        lineNumber: 51,
+        columnNumber: 11
+      }, this),
+      /* @__PURE__ */ jsxDEV("div", { className: "text-xs uppercase font-semibold tracking-header-cap text-ink-2", children: "Loading AMS..." }, void 0, false, {
+        fileName: "C:/Users/Abonkwe Princely/Desktop/L&N Estate/Frontend/src/App.tsx",
+        lineNumber: 52,
+        columnNumber: 11
+      }, this)
+    ] }, void 0, true, {
+      fileName: "C:/Users/Abonkwe Princely/Desktop/L&N Estate/Frontend/src/App.tsx",
+      lineNumber: 50,
+      columnNumber: 9
+    }, this) }, void 0, false, {
+      fileName: "C:/Users/Abonkwe Princely/Desktop/L&N Estate/Frontend/src/App.tsx",
+      lineNumber: 49,
+      columnNumber: 7
+    }, this);
+  }
+  if (!isAuthenticated) {
+    return /* @__PURE__ */ jsxDEV(Navigate, { to: "/login", replace: true }, void 0, false, {
+      fileName: "C:/Users/Abonkwe Princely/Desktop/L&N Estate/Frontend/src/App.tsx",
+      lineNumber: 61,
+      columnNumber: 12
+    }, this);
+  }
+  return /* @__PURE__ */ jsxDEV(Fragment, { children }, void 0, false, {
+    fileName: "C:/Users/Abonkwe Princely/Desktop/L&N Estate/Frontend/src/App.tsx",
+    lineNumber: 64,
+    columnNumber: 10
+  }, this);
+};
+_s(ProtectedRoute, "yb/FJYAIXt7wZoU4a4YvGQ4Nlsc=", false, function() {
+  return [useAuth];
+});
+_c = ProtectedRoute;
+export const App = () => {
+  return /* @__PURE__ */ jsxDEV(QueryClientProvider, { client: queryClient, children: /* @__PURE__ */ jsxDEV(AuthProvider, { children: /* @__PURE__ */ jsxDEV(BrowserRouter, { children: /* @__PURE__ */ jsxDEV(Routes, { children: [
+    /* @__PURE__ */ jsxDEV(Route, { path: "/login", element: /* @__PURE__ */ jsxDEV(LoginPage, {}, void 0, false, {
+      fileName: "C:/Users/Abonkwe Princely/Desktop/L&N Estate/Frontend/src/App.tsx",
+      lineNumber: 73,
+      columnNumber: 43
+    }, this) }, void 0, false, {
+      fileName: "C:/Users/Abonkwe Princely/Desktop/L&N Estate/Frontend/src/App.tsx",
+      lineNumber: 73,
+      columnNumber: 13
+    }, this),
+    /* @__PURE__ */ jsxDEV(
+      Route,
+      {
+        path: "/",
+        element: /* @__PURE__ */ jsxDEV(ProtectedRoute, { children: /* @__PURE__ */ jsxDEV(AppShell, {}, void 0, false, {
+          fileName: "C:/Users/Abonkwe Princely/Desktop/L&N Estate/Frontend/src/App.tsx",
+          lineNumber: 79,
+          columnNumber: 19
+        }, this) }, void 0, false, {
+          fileName: "C:/Users/Abonkwe Princely/Desktop/L&N Estate/Frontend/src/App.tsx",
+          lineNumber: 78,
+          columnNumber: 15
+        }, this),
+        children: [
+          /* @__PURE__ */ jsxDEV(Route, { index: true, element: /* @__PURE__ */ jsxDEV(OverviewPage, {}, void 0, false, {
+            fileName: "C:/Users/Abonkwe Princely/Desktop/L&N Estate/Frontend/src/App.tsx",
+            lineNumber: 83,
+            columnNumber: 37
+          }, this) }, void 0, false, {
+            fileName: "C:/Users/Abonkwe Princely/Desktop/L&N Estate/Frontend/src/App.tsx",
+            lineNumber: 83,
+            columnNumber: 15
+          }, this),
+          /* @__PURE__ */ jsxDEV(Route, { path: "leases/new", element: /* @__PURE__ */ jsxDEV(NewLeasePage, {}, void 0, false, {
+            fileName: "C:/Users/Abonkwe Princely/Desktop/L&N Estate/Frontend/src/App.tsx",
+            lineNumber: 84,
+            columnNumber: 49
+          }, this) }, void 0, false, {
+            fileName: "C:/Users/Abonkwe Princely/Desktop/L&N Estate/Frontend/src/App.tsx",
+            lineNumber: 84,
+            columnNumber: 15
+          }, this),
+          /* @__PURE__ */ jsxDEV(Route, { path: "leases/:id", element: /* @__PURE__ */ jsxDEV(LeaseDetailPage, {}, void 0, false, {
+            fileName: "C:/Users/Abonkwe Princely/Desktop/L&N Estate/Frontend/src/App.tsx",
+            lineNumber: 85,
+            columnNumber: 49
+          }, this) }, void 0, false, {
+            fileName: "C:/Users/Abonkwe Princely/Desktop/L&N Estate/Frontend/src/App.tsx",
+            lineNumber: 85,
+            columnNumber: 15
+          }, this),
+          /* @__PURE__ */ jsxDEV(Route, { path: "tenants", element: /* @__PURE__ */ jsxDEV(TenantsPage, {}, void 0, false, {
+            fileName: "C:/Users/Abonkwe Princely/Desktop/L&N Estate/Frontend/src/App.tsx",
+            lineNumber: 86,
+            columnNumber: 46
+          }, this) }, void 0, false, {
+            fileName: "C:/Users/Abonkwe Princely/Desktop/L&N Estate/Frontend/src/App.tsx",
+            lineNumber: 86,
+            columnNumber: 15
+          }, this),
+          /* @__PURE__ */ jsxDEV(Route, { path: "tenants/new", element: /* @__PURE__ */ jsxDEV(TenantDetailPage, { isNew: true }, void 0, false, {
+            fileName: "C:/Users/Abonkwe Princely/Desktop/L&N Estate/Frontend/src/App.tsx",
+            lineNumber: 87,
+            columnNumber: 50
+          }, this) }, void 0, false, {
+            fileName: "C:/Users/Abonkwe Princely/Desktop/L&N Estate/Frontend/src/App.tsx",
+            lineNumber: 87,
+            columnNumber: 15
+          }, this),
+          /* @__PURE__ */ jsxDEV(Route, { path: "tenants/:id", element: /* @__PURE__ */ jsxDEV(TenantDetailPage, {}, void 0, false, {
+            fileName: "C:/Users/Abonkwe Princely/Desktop/L&N Estate/Frontend/src/App.tsx",
+            lineNumber: 88,
+            columnNumber: 50
+          }, this) }, void 0, false, {
+            fileName: "C:/Users/Abonkwe Princely/Desktop/L&N Estate/Frontend/src/App.tsx",
+            lineNumber: 88,
+            columnNumber: 15
+          }, this),
+          /* @__PURE__ */ jsxDEV(Route, { path: "houses", element: /* @__PURE__ */ jsxDEV(HousesPage, {}, void 0, false, {
+            fileName: "C:/Users/Abonkwe Princely/Desktop/L&N Estate/Frontend/src/App.tsx",
+            lineNumber: 89,
+            columnNumber: 45
+          }, this) }, void 0, false, {
+            fileName: "C:/Users/Abonkwe Princely/Desktop/L&N Estate/Frontend/src/App.tsx",
+            lineNumber: 89,
+            columnNumber: 15
+          }, this),
+          /* @__PURE__ */ jsxDEV(Route, { path: "houses/:id", element: /* @__PURE__ */ jsxDEV(HouseDetailPage, {}, void 0, false, {
+            fileName: "C:/Users/Abonkwe Princely/Desktop/L&N Estate/Frontend/src/App.tsx",
+            lineNumber: 90,
+            columnNumber: 49
+          }, this) }, void 0, false, {
+            fileName: "C:/Users/Abonkwe Princely/Desktop/L&N Estate/Frontend/src/App.tsx",
+            lineNumber: 90,
+            columnNumber: 15
+          }, this),
+          /* @__PURE__ */ jsxDEV(Route, { path: "payments", element: /* @__PURE__ */ jsxDEV(PlaceholderPage, { title: "Payments" }, void 0, false, {
+            fileName: "C:/Users/Abonkwe Princely/Desktop/L&N Estate/Frontend/src/App.tsx",
+            lineNumber: 91,
+            columnNumber: 47
+          }, this) }, void 0, false, {
+            fileName: "C:/Users/Abonkwe Princely/Desktop/L&N Estate/Frontend/src/App.tsx",
+            lineNumber: 91,
+            columnNumber: 15
+          }, this),
+          /* @__PURE__ */ jsxDEV(Route, { path: "expenses", element: /* @__PURE__ */ jsxDEV(PlaceholderPage, { title: "Expenses" }, void 0, false, {
+            fileName: "C:/Users/Abonkwe Princely/Desktop/L&N Estate/Frontend/src/App.tsx",
+            lineNumber: 92,
+            columnNumber: 47
+          }, this) }, void 0, false, {
+            fileName: "C:/Users/Abonkwe Princely/Desktop/L&N Estate/Frontend/src/App.tsx",
+            lineNumber: 92,
+            columnNumber: 15
+          }, this),
+          /* @__PURE__ */ jsxDEV(Route, { path: "reports", element: /* @__PURE__ */ jsxDEV(PlaceholderPage, { title: "Reports" }, void 0, false, {
+            fileName: "C:/Users/Abonkwe Princely/Desktop/L&N Estate/Frontend/src/App.tsx",
+            lineNumber: 93,
+            columnNumber: 46
+          }, this) }, void 0, false, {
+            fileName: "C:/Users/Abonkwe Princely/Desktop/L&N Estate/Frontend/src/App.tsx",
+            lineNumber: 93,
+            columnNumber: 15
+          }, this),
+          /* @__PURE__ */ jsxDEV(Route, { path: "*", element: /* @__PURE__ */ jsxDEV(Navigate, { to: "/", replace: true }, void 0, false, {
+            fileName: "C:/Users/Abonkwe Princely/Desktop/L&N Estate/Frontend/src/App.tsx",
+            lineNumber: 94,
+            columnNumber: 40
+          }, this) }, void 0, false, {
+            fileName: "C:/Users/Abonkwe Princely/Desktop/L&N Estate/Frontend/src/App.tsx",
+            lineNumber: 94,
+            columnNumber: 15
+          }, this)
+        ]
+      },
+      void 0,
+      true,
+      {
+        fileName: "C:/Users/Abonkwe Princely/Desktop/L&N Estate/Frontend/src/App.tsx",
+        lineNumber: 75,
+        columnNumber: 13
+      },
+      this
+    )
+  ] }, void 0, true, {
+    fileName: "C:/Users/Abonkwe Princely/Desktop/L&N Estate/Frontend/src/App.tsx",
+    lineNumber: 72,
+    columnNumber: 11
+  }, this) }, void 0, false, {
+    fileName: "C:/Users/Abonkwe Princely/Desktop/L&N Estate/Frontend/src/App.tsx",
+    lineNumber: 71,
+    columnNumber: 9
+  }, this) }, void 0, false, {
+    fileName: "C:/Users/Abonkwe Princely/Desktop/L&N Estate/Frontend/src/App.tsx",
+    lineNumber: 70,
+    columnNumber: 7
+  }, this) }, void 0, false, {
+    fileName: "C:/Users/Abonkwe Princely/Desktop/L&N Estate/Frontend/src/App.tsx",
+    lineNumber: 69,
+    columnNumber: 5
+  }, this);
+};
+_c2 = App;
+export default App;
+var _c, _c2;
+$RefreshReg$(_c, "ProtectedRoute");
+$RefreshReg$(_c2, "App");
+if (import.meta.hot && !inWebWorker) {
+  window.$RefreshReg$ = prevRefreshReg;
+  window.$RefreshSig$ = prevRefreshSig;
+}
+if (import.meta.hot && !inWebWorker) {
+  RefreshRuntime.__hmr_import(import.meta.url).then((currentExports) => {
+    RefreshRuntime.registerExportsForReactRefresh("C:/Users/Abonkwe Princely/Desktop/L&N Estate/Frontend/src/App.tsx", currentExports);
+    import.meta.hot.accept((nextExports) => {
+      if (!nextExports) return;
+      const invalidateMessage = RefreshRuntime.validateRefreshBoundaryAndEnqueueUpdate("C:/Users/Abonkwe Princely/Desktop/L&N Estate/Frontend/src/App.tsx", currentExports, nextExports);
+      if (invalidateMessage) import.meta.hot.invalidate(invalidateMessage);
+    });
+  });
+}
+
+//# sourceMappingURL=data:application/json;base64,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QixLQUFqRDtBQUFBO0FBQUE7QUFBQTtBQUFBLGlCQUFxRDtBQUFBO0FBQUE7QUFBQSxNQW5CdkQ7QUFBQTtBQUFBO0FBQUE7QUFBQTtBQUFBO0FBQUE7QUFBQTtBQUFBLElBb0JBO0FBQUEsT0F2QkY7QUFBQTtBQUFBO0FBQUE7QUFBQSxTQXdCQSxLQXpCRjtBQUFBO0FBQUE7QUFBQTtBQUFBLFNBMEJBLEtBM0JGO0FBQUE7QUFBQTtBQUFBO0FBQUEsU0E0QkEsS0E3QkY7QUFBQTtBQUFBO0FBQUE7QUFBQSxTQThCQTtBQUVKO0FBQUVXLE1BbENXRDtBQW9DYixlQUFlQTtBQUFJLElBQUFFLElBQUFEO0FBQUEsYUFBQUMsSUFBQTtBQUFBLGFBQUFELEtBQUEiLCJuYW1lcyI6WyJCcm93c2VyUm91dGVyIiwiUm91dGVzIiwiUm91dGUiLCJOYXZpZ2F0ZSIsIlF1ZXJ5Q2xpZW50IiwiUXVlcnlDbGllbnRQcm92aWRlciIsIkF1dGhQcm92aWRlciIsInVzZUF1dGgiLCJMb2dpblBhZ2UiLCJPdmVydmlld1BhZ2UiLCJMZWFzZURldGFpbFBhZ2UiLCJUZW5hbnRzUGFnZSIsIlRlbmFudERldGFpbFBhZ2UiLCJOZXdMZWFzZVBhZ2UiLCJIb3VzZXNQYWdlIiwiSG91c2VEZXRhaWxQYWdlIiwiQXBwU2hlbGwiLCJQbGFjZWhvbGRlclBhZ2UiLCJxdWVyeUNsaWVudCIsImRlZmF1bHRPcHRpb25zIiwicXVlcmllcyIsInJldHJ5IiwicmVmZXRjaE9uV2luZG93Rm9jdXMiLCJQcm90ZWN0ZWRSb3V0ZSIsImNoaWxkcmVuIiwiX3MiLCJpc0F1dGhlbnRpY2F0ZWQiLCJpc0xvYWRpbmciLCJBcHAiLCJfYzIiLCJfYyJdLCJpZ25vcmVMaXN0IjpbXSwic291cmNlcyI6WyJBcHAudHN4Il0sInNvdXJjZXNDb250ZW50IjpbImltcG9ydCBSZWFjdCBmcm9tIFwicmVhY3RcIjtcbmltcG9ydCB7IEJyb3dzZXJSb3V0ZXIsIFJvdXRlcywgUm91dGUsIE5hdmlnYXRlIH0gZnJvbSBcInJlYWN0LXJvdXRlci1kb21cIjtcbmltcG9ydCB7IFF1ZXJ5Q2xpZW50LCBRdWVyeUNsaWVudFByb3ZpZGVyIH0gZnJvbSBcIkB0YW5zdGFjay9yZWFjdC1xdWVyeVwiO1xuaW1wb3J0IHsgQXV0aFByb3ZpZGVyLCB1c2VBdXRoIH0gZnJvbSBcIi4vY29udGV4dC9BdXRoQ29udGV4dFwiO1xuaW1wb3J0IHsgTG9naW5QYWdlIH0gZnJvbSBcIi4vcGFnZXMvTG9naW5cIjtcbmltcG9ydCB7IE92ZXJ2aWV3UGFnZSB9IGZyb20gXCIuL3BhZ2VzL092ZXJ2aWV3XCI7XG5pbXBvcnQgeyBMZWFzZURldGFpbFBhZ2UgfSBmcm9tIFwiLi9wYWdlcy9MZWFzZURldGFpbFwiO1xuaW1wb3J0IHsgVGVuYW50c1BhZ2UgfSBmcm9tIFwiLi9wYWdlcy9UZW5hbnRzXCI7XG5pbXBvcnQgeyBUZW5hbnREZXRhaWxQYWdlIH0gZnJvbSBcIi4vcGFnZXMvVGVuYW50RGV0YWlsXCI7XG5pbXBvcnQgeyBOZXdMZWFzZVBhZ2UgfSBmcm9tIFwiLi9wYWdlcy9OZXdMZWFzZVwiO1xuaW1wb3J0IHsgSG91c2VzUGFnZSB9IGZyb20gXCIuL3BhZ2VzL0hvdXNlc1wiO1xuaW1wb3J0IHsgSG91c2VEZXRhaWxQYWdlIH0gZnJvbSBcIi4vcGFnZXMvSG91c2VEZXRhaWxcIjtcbmltcG9ydCB7IEFwcFNoZWxsIH0gZnJvbSBcIi4vY29tcG9uZW50cy9sYXlvdXQvQXBwU2hlbGxcIjtcbmltcG9ydCB7IFBsYWNlaG9sZGVyUGFnZSB9IGZyb20gXCIuL3BhZ2VzL1BsYWNlaG9sZGVyUGFnZVwiO1xuXG5jb25zdCBxdWVyeUNsaWVudCA9IG5ldyBRdWVyeUNsaWVudCh7XG4gIGRlZmF1bHRPcHRpb25zOiB7XG4gICAgcXVlcmllczoge1xuICAgICAgcmV0cnk6IDEsXG4gICAgICByZWZldGNoT25XaW5kb3dGb2N1czogZmFsc2UsXG4gICAgfSxcbiAgfSxcbn0pO1xuXG5jb25zdCBQcm90ZWN0ZWRSb3V0ZTogUmVhY3QuRkM8eyBjaGlsZHJlbjogUmVhY3QuUmVhY3ROb2RlIH0+ID0gKHsgY2hpbGRyZW4gfSkgPT4ge1xuICBjb25zdCB7IGlzQXV0aGVudGljYXRlZCwgaXNMb2FkaW5nIH0gPSB1c2VBdXRoKCk7XG5cbiAgaWYgKGlzTG9hZGluZykge1xuICAgIHJldHVybiAoXG4gICAgICA8ZGl2IGNsYXNzTmFtZT1cIm1pbi1oLXNjcmVlbiB3LWZ1bGwgYmctYmcgZmxleCBpdGVtcy1jZW50ZXIganVzdGlmeS1jZW50ZXJcIj5cbiAgICAgICAgPGRpdiBjbGFzc05hbWU9XCJmbGV4IGZsZXgtY29sIGl0ZW1zLWNlbnRlciBnYXAtM1wiPlxuICAgICAgICAgIDxkaXYgY2xhc3NOYW1lPVwidy02IGgtNiBib3JkZXItMiBib3JkZXItcHJpbWFyeSBib3JkZXItdC10cmFuc3BhcmVudCByb3VuZGVkLWZ1bGwgYW5pbWF0ZS1zcGluXCIgLz5cbiAgICAgICAgICA8ZGl2IGNsYXNzTmFtZT1cInRleHQteHMgdXBwZXJjYXNlIGZvbnQtc2VtaWJvbGQgdHJhY2tpbmctaGVhZGVyLWNhcCB0ZXh0LWluay0yXCI+XG4gICAgICAgICAgICBMb2FkaW5nIEFNUy4uLlxuICAgICAgICAgIDwvZGl2PlxuICAgICAgICA8L2Rpdj5cbiAgICAgIDwvZGl2PlxuICAgICk7XG4gIH1cblxuICBpZiAoIWlzQXV0aGVudGljYXRlZCkge1xuICAgIHJldHVybiA8TmF2aWdhdGUgdG89XCIvbG9naW5cIiByZXBsYWNlIC8+O1xuICB9XG5cbiAgcmV0dXJuIDw+e2NoaWxkcmVufTwvPjtcbn07XG5cbmV4cG9ydCBjb25zdCBBcHA6IFJlYWN0LkZDID0gKCkgPT4ge1xuICByZXR1cm4gKFxuICAgIDxRdWVyeUNsaWVudFByb3ZpZGVyIGNsaWVudD17cXVlcnlDbGllbnR9PlxuICAgICAgPEF1dGhQcm92aWRlcj5cbiAgICAgICAgPEJyb3dzZXJSb3V0ZXI+XG4gICAgICAgICAgPFJvdXRlcz5cbiAgICAgICAgICAgIDxSb3V0ZSBwYXRoPVwiL2xvZ2luXCIgZWxlbWVudD17PExvZ2luUGFnZSAvPn0gLz5cblxuICAgICAgICAgICAgPFJvdXRlXG4gICAgICAgICAgICAgIHBhdGg9XCIvXCJcbiAgICAgICAgICAgICAgZWxlbWVudD17XG4gICAgICAgICAgICAgICAgPFByb3RlY3RlZFJvdXRlPlxuICAgICAgICAgICAgICAgICAgPEFwcFNoZWxsIC8+XG4gICAgICAgICAgICAgICAgPC9Qcm90ZWN0ZWRSb3V0ZT5cbiAgICAgICAgICAgICAgfVxuICAgICAgICAgICAgPlxuICAgICAgICAgICAgICA8Um91dGUgaW5kZXggZWxlbWVudD17PE92ZXJ2aWV3UGFnZSAvPn0gLz5cbiAgICAgICAgICAgICAgPFJvdXRlIHBhdGg9XCJsZWFzZXMvbmV3XCIgZWxlbWVudD17PE5ld0xlYXNlUGFnZSAvPn0gLz5cbiAgICAgICAgICAgICAgPFJvdXRlIHBhdGg9XCJsZWFzZXMvOmlkXCIgZWxlbWVudD17PExlYXNlRGV0YWlsUGFnZSAvPn0gLz5cbiAgICAgICAgICAgICAgPFJvdXRlIHBhdGg9XCJ0ZW5hbnRzXCIgZWxlbWVudD17PFRlbmFudHNQYWdlIC8+fSAvPlxuICAgICAgICAgICAgICA8Um91dGUgcGF0aD1cInRlbmFudHMvbmV3XCIgZWxlbWVudD17PFRlbmFudERldGFpbFBhZ2UgaXNOZXc9e3RydWV9IC8+fSAvPlxuICAgICAgICAgICAgICA8Um91dGUgcGF0aD1cInRlbmFudHMvOmlkXCIgZWxlbWVudD17PFRlbmFudERldGFpbFBhZ2UgLz59IC8+XG4gICAgICAgICAgICAgIDxSb3V0ZSBwYXRoPVwiaG91c2VzXCIgZWxlbWVudD17PEhvdXNlc1BhZ2UgLz59IC8+XG4gICAgICAgICAgICAgIDxSb3V0ZSBwYXRoPVwiaG91c2VzLzppZFwiIGVsZW1lbnQ9ezxIb3VzZURldGFpbFBhZ2UgLz59IC8+XG4gICAgICAgICAgICAgIDxSb3V0ZSBwYXRoPVwicGF5bWVudHNcIiBlbGVtZW50PXs8UGxhY2Vob2xkZXJQYWdlIHRpdGxlPVwiUGF5bWVudHNcIiAvPn0gLz5cbiAgICAgICAgICAgICAgPFJvdXRlIHBhdGg9XCJleHBlbnNlc1wiIGVsZW1lbnQ9ezxQbGFjZWhvbGRlclBhZ2UgdGl0bGU9XCJFeHBlbnNlc1wiIC8+fSAvPlxuICAgICAgICAgICAgICA8Um91dGUgcGF0aD1cInJlcG9ydHNcIiBlbGVtZW50PXs8UGxhY2Vob2xkZXJQYWdlIHRpdGxlPVwiUmVwb3J0c1wiIC8+fSAvPlxuICAgICAgICAgICAgICA8Um91dGUgcGF0aD1cIipcIiBlbGVtZW50PXs8TmF2aWdhdGUgdG89XCIvXCIgcmVwbGFjZSAvPn0gLz5cbiAgICAgICAgICAgIDwvUm91dGU+XG4gICAgICAgICAgPC9Sb3V0ZXM+XG4gICAgICAgIDwvQnJvd3NlclJvdXRlcj5cbiAgICAgIDwvQXV0aFByb3ZpZGVyPlxuICAgIDwvUXVlcnlDbGllbnRQcm92aWRlcj5cbiAgKTtcbn07XG5cbmV4cG9ydCBkZWZhdWx0IEFwcDtcbiJdLCJmaWxlIjoiQzovVXNlcnMvQWJvbmt3ZSBQcmluY2VseS9EZXNrdG9wL0wmTiBFc3RhdGUvRnJvbnRlbmQvc3JjL0FwcC50c3gifQ==

@@ -2,25 +2,77 @@ import React from "react";
 import { formatMoney } from "@/lib/format";
 import { cn } from "@/lib/cn";
 
-interface SummaryStripProps {
-  monthlyRentRoll: number;
-  leaseCount: number;
-  overdueCount: number;
-  graceCount: number;
-  expiringCount: number;
-  upToDateCount: number;
-  className?: string;
+export interface SummaryStripItem {
+  value: React.ReactNode;
+  label: string;
+  sublabel?: string;
+  valueClassName?: string;
 }
 
-export const SummaryStrip: React.FC<SummaryStripProps> = ({
-  monthlyRentRoll,
-  leaseCount,
-  overdueCount,
-  graceCount,
-  expiringCount,
-  upToDateCount,
-  className,
-}) => {
+export type SummaryStripProps =
+  | {
+      items: SummaryStripItem[];
+      className?: string;
+      monthlyRentRoll?: never;
+      leaseCount?: never;
+      overdueCount?: never;
+      graceCount?: never;
+      expiringCount?: never;
+      upToDateCount?: never;
+    }
+  | {
+      monthlyRentRoll: number;
+      leaseCount: number;
+      overdueCount: number;
+      graceCount: number;
+      expiringCount: number;
+      upToDateCount: number;
+      className?: string;
+      items?: never;
+    };
+
+export const SummaryStrip: React.FC<SummaryStripProps> = (props) => {
+  if (props.items) {
+    const { items, className } = props;
+    const colCount = items.length;
+    return (
+      <div
+        className={cn(
+          "border-t-2 border-b border-line bg-transparent grid divide-y sm:divide-y-0 sm:divide-x divide-line",
+          colCount === 3 ? "grid-cols-1 sm:grid-cols-3" : "grid-cols-1 sm:grid-cols-2 md:grid-cols-4",
+          className
+        )}
+      >
+        {items.map((item, idx) => (
+          <div key={idx} className="px-5 py-4 flex flex-col justify-center">
+            <div
+              className={cn(
+                "text-[30px] font-mono font-medium text-ink tabular-nums leading-none tracking-tight",
+                item.valueClassName
+              )}
+            >
+              {item.value}
+            </div>
+            <div className="text-[13px] text-ink-2 mt-2 leading-none">
+              {item.label}
+              {item.sublabel && <span className="ml-1 text-ink-2/70">{item.sublabel}</span>}
+            </div>
+          </div>
+        ))}
+      </div>
+    );
+  }
+
+  const {
+    monthlyRentRoll,
+    leaseCount,
+    overdueCount,
+    graceCount,
+    expiringCount,
+    upToDateCount,
+    className,
+  } = props;
+
   return (
     <div
       className={cn(

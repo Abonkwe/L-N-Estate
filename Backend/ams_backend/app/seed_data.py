@@ -28,19 +28,19 @@ from .services import audit, lease_out, record_payment, today_local
 
 DEV_EMAIL, DEV_PASSWORD = "abonkwe@gmail.com", "abo-password-123"
 
-HOUSES = [("House 1", "Demo Street 1"), ("House 2", "Demo Street 2"), ("House 3", "Demo Street 3")]
+HOUSES = [("Lumnji House", "Demo Street 1"), ("L&N House", "Demo Street 2"), ("McNdam Lodge", "Demo Street 3")]
 
 UNITS = [  # house, label, type, description
-    ("House 1", "A1", "apartment", "2 bedrooms, balcony"),
-    ("House 1", "A2", "apartment", "2 bedrooms"),
-    ("House 1", "A3", "studio", "Studio, ground floor"),
-    ("House 1", "A4", "studio", "Studio, never let yet"),          # stays vacant
-    ("House 2", "B1", "studio", "Studio"),
-    ("House 2", "B2", "apartment", "3 bedrooms"),
-    ("House 2", "B3", "apartment", "2 bedrooms"),
-    ("House 3", "C1", "apartment", "2 bedrooms"),
-    ("House 3", "C2", "apartment", "2 bedrooms, large living room"),
-    ("House 3", "C3", "studio", "Studio, previous tenant moved out"),
+    ("Lumnji House", "A1", "apartment", "2 bedrooms, balcony"),
+    ("Lumnji House", "A2", "apartment", "2 bedrooms"),
+    ("Lumnji House", "A3", "studio", "Studio, ground floor"),
+    ("Lumnji House", "A4", "studio", "Studio, never let yet"),          # stays vacant
+    ("L&N House", "B1", "studio", "Studio"),
+    ("L&N House", "B2", "apartment", "3 bedrooms"),
+    ("L&N House", "B3", "apartment", "2 bedrooms"),
+    ("McNdam Lodge", "C1", "apartment", "2 bedrooms"),
+    ("McNdam Lodge", "C2", "apartment", "2 bedrooms, large living room"),
+    ("McNdam Lodge", "C3", "studio", "Studio, previous tenant moved out"),
 ]
 
 TENANTS = {  # key: (title, full name)
@@ -131,14 +131,14 @@ def build(db: Session, today: date, user: m.User | None) -> None:
     c3.deposit_notes = "Wall repair deducted from deposit"
 
     expenses = [  # house, unit, category, amount, date, description, paid to
-        ("House 1", None, "repairs", 35_000, mo(-2) + timedelta(days=6), "Main water pipe repair", "Local plumber"),
-        ("House 1", "A2", "maintenance", 12_000, mo(-1) + timedelta(days=3), "Repaint kitchen wall", "Painter"),
-        ("House 1", None, "water_bill", 31_000, today, "Water bill", "Water company"),
-        ("House 2", None, "water_bill", 28_500, mo(-1) + timedelta(days=9), "Water bill", "Water company"),
-        ("House 2", "B3", "installation", 60_000, mo(-3) + timedelta(days=13), "New door lock and handle", "Hardware shop"),
-        ("House 3", None, "tax", 45_000, mo(-1) + timedelta(days=4), "Council property tax", "Council"),
-        ("House 3", "C2", "repairs", 18_000, today, "Fix leaking roof section", "Roofer"),
-        ("House 3", "C3", "maintenance", 25_000, mo(-2) + timedelta(days=10), "Clean and repaint after move-out", "Painter"),
+        ("Lumnji House", None, "repairs", 35_000, mo(-2) + timedelta(days=6), "Main water pipe repair", "Local plumber"),
+        ("Lumnji House", "A2", "maintenance", 12_000, mo(-1) + timedelta(days=3), "Repaint kitchen wall", "Painter"),
+        ("Lumnji House", None, "water_bill", 31_000, today, "Water bill", "Water company"),
+        ("L&N House", None, "water_bill", 28_500, mo(-1) + timedelta(days=9), "Water bill", "Water company"),
+        ("L&N House", "B3", "installation", 60_000, mo(-3) + timedelta(days=13), "New door lock and handle", "Hardware shop"),
+        ("McNdam Lodge", None, "tax", 45_000, mo(-1) + timedelta(days=4), "Council property tax", "Council"),
+        ("McNdam Lodge", "C2", "repairs", 18_000, today, "Fix leaking roof section", "Roofer"),
+        ("McNdam Lodge", "C3", "maintenance", 25_000, mo(-2) + timedelta(days=10), "Clean and repaint after move-out", "Painter"),
     ]
     for house, unit, cat, amount, when, desc, to in expenses:
         db.add(m.Expense(house_id=houses[house].id, unit_id=units[unit].id if unit else None,

@@ -8,8 +8,12 @@ import { LeaseDetailPage } from "./pages/LeaseDetail";
 import { TenantsPage } from "./pages/Tenants";
 import { TenantDetailPage } from "./pages/TenantDetail";
 import { NewLeasePage } from "./pages/NewLease";
+import { HousesPage } from "./pages/Houses";
+import { HouseDetailPage } from "./pages/HouseDetail";
+import { PaymentsPage } from "./pages/Payments";
+import { ExpensesPage } from "./pages/Expenses";
+import { ReportsPage } from "./pages/Reports";
 import { AppShell } from "./components/layout/AppShell";
-import { PlaceholderPage } from "./pages/PlaceholderPage";
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -65,10 +69,11 @@ export const App: React.FC = () => {
               <Route path="tenants" element={<TenantsPage />} />
               <Route path="tenants/new" element={<TenantDetailPage isNew={true} />} />
               <Route path="tenants/:id" element={<TenantDetailPage />} />
-              <Route path="payments" element={<PlaceholderPage title="Payments" />} />
-              <Route path="expenses" element={<PlaceholderPage title="Expenses" />} />
-              <Route path="reports" element={<PlaceholderPage title="Reports" />} />
-              <Route path="houses" element={<PlaceholderPage title="Houses & Units" />} />
+              <Route path="houses" element={<HousesPage />} />
+              <Route path="houses/:id" element={<HouseDetailPage />} />
+              <Route path="payments" element={<PaymentsPage />} />
+              <Route path="expenses" element={<ExpensesPage />} />
+              <Route path="reports" element={<ReportsPage />} />
               <Route path="*" element={<Navigate to="/" replace />} />
             </Route>
           </Routes>
@@ -79,4 +84,3 @@ export const App: React.FC = () => {
 };
 
 export default App;
-

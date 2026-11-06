@@ -26,7 +26,7 @@ export const Sidebar: React.FC<SidebarProps> = ({ onNavigate, isMobileDrawer = f
   const { data: houses = [], isLoading: housesLoading } = useQuery<House[]>({
     queryKey: ["houses"],
     queryFn: getHousesApi,
-    staleTime: 1000 * 60 * 5,
+    staleTime: 1000 * 30, // 30s fresh time, invalidated on any house/unit update
   });
 
   return (
@@ -93,9 +93,25 @@ export const Sidebar: React.FC<SidebarProps> = ({ onNavigate, isMobileDrawer = f
         {/* Houses Section */}
         <div>
           <div className="px-3 mb-2 flex items-center justify-between">
-            <span className="text-[11px] font-semibold uppercase tracking-header-cap text-sidebar-label">
+            <NavLink
+              to="/houses"
+              onClick={onNavigate}
+              className={cn(
+                "text-[11px] font-semibold uppercase tracking-header-cap transition-colors",
+                location.pathname === "/houses"
+                  ? "text-white font-bold underline underline-offset-4"
+                  : "text-sidebar-label hover:text-white"
+              )}
+            >
               Houses
-            </span>
+            </NavLink>
+            <NavLink
+              to="/houses"
+              onClick={onNavigate}
+              className="text-[10px] uppercase font-semibold text-sidebar-label hover:text-white tracking-wider transition-colors"
+            >
+              All
+            </NavLink>
           </div>
 
           <div className="space-y-0.5">
@@ -107,11 +123,11 @@ export const Sidebar: React.FC<SidebarProps> = ({ onNavigate, isMobileDrawer = f
               houses.map((house) => (
                 <NavLink
                   key={house.id}
-                  to={`/houses?house_id=${house.id}`}
+                  to={`/houses/${house.id}`}
                   onClick={onNavigate}
                   className={cn(
                     "flex items-center justify-between px-3 py-2 rounded-btn-sm text-sm transition-colors min-h-[38px] md:min-h-[36px]",
-                    location.search.includes(`house_id=${house.id}`)
+                    location.pathname === `/houses/${house.id}`
                       ? "bg-sidebar-active text-white font-medium"
                       : "text-sidebar-text hover:bg-sidebar-hover hover:text-white"
                   )}

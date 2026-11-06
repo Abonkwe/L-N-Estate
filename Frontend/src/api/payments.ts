@@ -51,14 +51,16 @@ export async function createPaymentApi(data: PaymentIn): Promise<PaymentOut> {
 }
 
 export async function getPaymentsApi(
-  leaseId?: number,
-  includeVoid: boolean = true
+  leaseId?: number | null,
+  includeVoid: boolean = true,
+  limit: number = 200
 ): Promise<PaymentOut[]> {
   const result = await api.GET("/payments", {
     params: {
       query: {
-        lease_id: leaseId,
+        lease_id: leaseId ?? undefined,
         include_void: includeVoid,
+        limit,
       },
     },
   });
