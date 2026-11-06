@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef, useMemo } from "react";
 import { z } from "zod";
 import { X, CheckCircle2, Printer, Loader2, ArrowRight } from "lucide-react";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
-import { getActiveLeasesApi, type LeaseItem } from "@/api/leases";
+import { getActiveLeasesApi, type LeaseItem, type LeaseDetail } from "@/api/leases";
 import {
   previewPaymentApi,
   createPaymentApi,
@@ -16,7 +16,7 @@ import { formatMoney, formatDate } from "@/lib/format";
 interface RecordPaymentDialogProps {
   isOpen: boolean;
   onClose: () => void;
-  preselectedLease?: LeaseItem | null;
+  preselectedLease?: LeaseItem | LeaseDetail | null;
   onSuccess?: () => void;
 }
 

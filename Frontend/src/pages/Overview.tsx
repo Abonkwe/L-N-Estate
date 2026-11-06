@@ -320,12 +320,12 @@ export const OverviewPage: React.FC = () => {
                 </>
               )}
             </span>
-            <button
-              type="button"
+            <Link
+              to={vacantUnits.length > 0 ? `/leases/new?unit_id=${vacantUnits[0].id}` : "/leases/new"}
               className="inline-flex items-center px-3 py-1 text-xs font-medium border border-line text-primary hover:bg-primary/5 active:bg-primary/10 rounded-btn-sm transition-colors focus:outline-none focus:ring-2 focus:ring-primary"
             >
               New lease
-            </button>
+            </Link>
           </div>
         </>
       )}

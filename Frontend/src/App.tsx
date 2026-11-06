@@ -4,6 +4,10 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { AuthProvider, useAuth } from "./context/AuthContext";
 import { LoginPage } from "./pages/Login";
 import { OverviewPage } from "./pages/Overview";
+import { LeaseDetailPage } from "./pages/LeaseDetail";
+import { TenantsPage } from "./pages/Tenants";
+import { TenantDetailPage } from "./pages/TenantDetail";
+import { NewLeasePage } from "./pages/NewLease";
 import { AppShell } from "./components/layout/AppShell";
 import { PlaceholderPage } from "./pages/PlaceholderPage";
 
@@ -56,7 +60,11 @@ export const App: React.FC = () => {
               }
             >
               <Route index element={<OverviewPage />} />
-              <Route path="tenants" element={<PlaceholderPage title="Tenants" />} />
+              <Route path="leases/new" element={<NewLeasePage />} />
+              <Route path="leases/:id" element={<LeaseDetailPage />} />
+              <Route path="tenants" element={<TenantsPage />} />
+              <Route path="tenants/new" element={<TenantDetailPage isNew={true} />} />
+              <Route path="tenants/:id" element={<TenantDetailPage />} />
               <Route path="payments" element={<PlaceholderPage title="Payments" />} />
               <Route path="expenses" element={<PlaceholderPage title="Expenses" />} />
               <Route path="reports" element={<PlaceholderPage title="Reports" />} />
