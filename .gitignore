@@ -1,0 +1,43 @@
+# Dependencies
+node_modules/
+Frontend/node_modules/
+
+# Production builds
+dist/
+Frontend/dist/
+
+# Browser temporary profiles & test artifacts
+.chrome-temp-profile/
+.chrome-temp-*/
+
+# Environment variables
+.env
+.env.local
+*.local
+
+# Python caches & virtual environments
+__pycache__/
+*.py[cod]
+*$py.class
+.pytest_cache/
+.venv/
+Backend/ams_backend/.venv/
+
+# SQLite databases & journals
+*.db
+*.db-journal
+*.db-shm
+*.db-wal
+Backend/ams_backend/ams.db
+Backend/ams_backend/ams.db-journal
+Backend/ams_backend/ams.db-shm
+Backend/ams_backend/ams.db-wal
+
+# OS generated files
+Thumbs.db
+[Dd]esktop.ini
+.DS_Store
+
+# Editor directories
+.vscode/
+.idea/
