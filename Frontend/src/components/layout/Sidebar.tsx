@@ -77,7 +77,7 @@ export const Sidebar: React.FC<SidebarProps> = ({ onNavigate, isMobileDrawer = f
                   to={item.to}
                   onClick={onNavigate}
                   className={cn(
-                    "flex items-center px-3 py-2 rounded-btn-sm text-sm font-medium transition-colors min-h-[38px] md:min-h-[36px]",
+                    "flex items-center px-3 py-2 rounded-btn-sm text-sm font-medium transition-colors min-h-[44px] md:min-h-[36px] focus:outline-none focus-visible:ring-2 focus-visible:ring-primary",
                     isActive
                       ? "bg-sidebar-active text-white"
                       : "text-sidebar-text hover:bg-sidebar-hover hover:text-white"
@@ -126,7 +126,7 @@ export const Sidebar: React.FC<SidebarProps> = ({ onNavigate, isMobileDrawer = f
                   to={`/houses/${house.id}`}
                   onClick={onNavigate}
                   className={cn(
-                    "flex items-center justify-between px-3 py-2 rounded-btn-sm text-sm transition-colors min-h-[38px] md:min-h-[36px]",
+                    "flex items-center justify-between px-3 py-2 rounded-btn-sm text-sm transition-colors min-h-[44px] md:min-h-[36px] focus:outline-none focus-visible:ring-2 focus-visible:ring-primary",
                     location.pathname === `/houses/${house.id}`
                       ? "bg-sidebar-active text-white font-medium"
                       : "text-sidebar-text hover:bg-sidebar-hover hover:text-white"
@@ -156,7 +156,7 @@ export const Sidebar: React.FC<SidebarProps> = ({ onNavigate, isMobileDrawer = f
             onClick={logout}
             title="Sign out"
             aria-label="Sign out"
-            className="p-2 text-sidebar-label hover:text-white hover:bg-sidebar-hover rounded-btn-sm transition-colors min-w-[36px] min-h-[36px] flex items-center justify-center focus:outline-none focus:ring-2 focus:ring-primary"
+            className="p-2 text-sidebar-label hover:text-white hover:bg-sidebar-hover rounded-btn-sm transition-colors min-w-[44px] min-h-[44px] flex items-center justify-center focus:outline-none focus-visible:ring-2 focus-visible:ring-primary"
           >
             <LogOut className="w-4 h-4" />
           </button>

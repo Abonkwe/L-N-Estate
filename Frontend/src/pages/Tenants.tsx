@@ -82,22 +82,24 @@ export const TenantsPage: React.FC = () => {
           </p>
         </div>
 
-        <div className="flex items-center gap-3">
+        <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3 w-full sm:w-auto">
           {/* Search box */}
           <div className="relative w-full sm:w-72">
             <Search className="w-4 h-4 text-ink-2 absolute left-3 top-1/2 -translate-y-1/2 pointer-events-none" />
             <input
               type="text"
+              aria-label="Search tenants by name or phone"
               value={searchInput}
               onChange={(e) => setSearchInput(e.target.value)}
               placeholder="Search name or phone..."
-              className="w-full h-10 pl-9 pr-3 bg-surface border border-input-border rounded-input text-sm text-ink placeholder:text-ink-2/60 focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent transition-colors"
+              className="w-full h-11 sm:h-10 pl-9 pr-3 bg-surface border border-input-border rounded-input text-sm text-ink placeholder:text-ink-2/60 focus:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:border-transparent transition-colors"
             />
             {searchInput && (
               <button
                 type="button"
+                aria-label="Clear search"
                 onClick={() => setSearchInput("")}
-                className="absolute right-2.5 top-1/2 -translate-y-1/2 text-xs text-ink-2 hover:text-ink"
+                className="absolute right-2.5 top-1/2 -translate-y-1/2 p-1 text-xs text-ink-2 hover:text-ink min-w-[36px] min-h-[36px] flex items-center justify-center focus:outline-none focus-visible:ring-2 focus-visible:ring-primary rounded"
               >
                 Clear
               </button>
@@ -107,7 +109,7 @@ export const TenantsPage: React.FC = () => {
           {/* New Tenant Button */}
           <Link
             to="/tenants/new"
-            className="inline-flex items-center gap-1.5 h-10 px-4 bg-primary hover:bg-primary-hover active:bg-[#174BB0] text-white text-sm font-medium rounded-btn transition-colors shrink-0 focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2"
+            className="inline-flex items-center justify-center gap-1.5 h-11 sm:h-10 px-4 bg-primary hover:bg-primary-hover active:bg-primary-hover text-white text-sm font-medium rounded-btn transition-colors shrink-0 focus:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 min-h-[44px] sm:min-h-[40px]"
           >
             <Plus className="w-4 h-4" />
             <span>New tenant</span>
@@ -119,7 +121,7 @@ export const TenantsPage: React.FC = () => {
       {isTenantsError && (
         <div
           role="alert"
-          className="p-4 rounded-panel bg-[#FDF2F1] border border-overdue/30 flex items-center justify-between gap-4"
+          className="p-4 rounded-panel bg-overdue/10 border border-overdue/30 flex items-center justify-between gap-4"
         >
           <div className="flex items-center gap-3">
             <AlertCircle className="w-5 h-5 text-overdue shrink-0" />
@@ -131,7 +133,7 @@ export const TenantsPage: React.FC = () => {
           </div>
           <button
             onClick={() => refetchTenants()}
-            className="inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-semibold bg-white border border-overdue/40 text-overdue rounded-btn-sm hover:bg-overdue/5"
+            className="inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-semibold bg-white border border-overdue/40 text-overdue rounded-btn-sm hover:bg-overdue/5 focus:outline-none focus-visible:ring-2 focus-visible:ring-overdue min-h-[36px]"
           >
             <RefreshCw className="w-3.5 h-3.5" />
             <span>Retry</span>

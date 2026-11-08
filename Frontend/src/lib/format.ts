@@ -1,5 +1,5 @@
 /**
- * Format a whole FCFA integer with thin space thousands separators.
+ * Format a whole FCFA integer with thin space (narrow no-break space) thousands separators.
  * e.g. 113000 -> "113 000" or "113 000 FCFA"
  */
 export function formatMoney(amount: number | null | undefined, showUnit = false): string {
@@ -7,18 +7,19 @@ export function formatMoney(amount: number | null | undefined, showUnit = false)
   const integerAmount = Math.round(amount);
   const formatted = integerAmount
     .toString()
-    .replace(/\B(?=(\d{3})+(?!\d))/g, " ");
+    .replace(/\B(?=(\d{3})+(?!\d))/g, "\u202F");
 
   return showUnit ? `${formatted} FCFA` : formatted;
 }
 
 /**
- * Format an ISO date string (YYYY-MM-DD) into display format "31 Aug 2026".
+ * Format an ISO date string (YYYY-MM-DD or YYYY-MM-DDTHH:mm:ss) into display format "31 Aug 2026".
  */
 export function formatDate(isoDate: string | null | undefined): string {
   if (!isoDate) return "—";
-  // Avoid timezone shifts by splitting the YYYY-MM-DD string directly
-  const parts = isoDate.split("-");
+  // Handle optional ISO time component
+  const dateOnly = isoDate.split("T")[0];
+  const parts = dateOnly.split("-");
   if (parts.length !== 3) return isoDate;
 
   const year = parseInt(parts[0], 10);

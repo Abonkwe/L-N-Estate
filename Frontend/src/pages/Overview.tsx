@@ -74,7 +74,7 @@ export const OverviewPage: React.FC = () => {
     return (
       <tr
         key={lease.id}
-        className="border-b border-row-line last:border-b-0 hover:bg-[#F8FAFC] transition-colors"
+        className="border-b border-row-line last:border-b-0 hover:bg-band/40 transition-colors"
       >
         {/* Tenant */}
         <td className="px-5 py-3.5 text-[14.5px] font-medium text-ink">
@@ -117,7 +117,7 @@ export const OverviewPage: React.FC = () => {
             <button
               type="button"
               onClick={() => handleOpenPayment(lease)}
-              className="inline-flex items-center justify-center h-8 px-4 text-xs font-medium bg-primary hover:bg-primary-hover active:bg-[#174BB0] text-white rounded-btn-sm transition-colors focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-1"
+              className="inline-flex items-center justify-center h-8 px-4 text-xs font-medium bg-primary hover:bg-primary-hover active:bg-primary-hover text-white rounded-btn-sm transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-1"
             >
               Record payment
             </button>
@@ -125,14 +125,14 @@ export const OverviewPage: React.FC = () => {
             <button
               type="button"
               onClick={() => handleOpenPayment(lease)}
-              className="inline-flex items-center justify-center h-8 px-4 text-xs font-medium border border-primary text-primary hover:bg-primary/5 active:bg-primary/10 rounded-btn-sm transition-colors focus:outline-none focus:ring-2 focus:ring-primary"
+              className="inline-flex items-center justify-center h-8 px-4 text-xs font-medium border border-primary text-primary hover:bg-primary/5 active:bg-primary/10 rounded-btn-sm transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-primary"
             >
               Record payment
             </button>
           ) : (
             <Link
               to={`/leases/${lease.id}`}
-              className="inline-flex items-center justify-center h-8 px-4 text-xs font-medium border border-line text-primary hover:bg-primary/5 active:bg-primary/10 rounded-btn-sm transition-colors focus:outline-none focus:ring-2 focus:ring-primary"
+              className="inline-flex items-center justify-center h-8 px-4 text-xs font-medium border border-line text-primary hover:bg-primary/5 active:bg-primary/10 rounded-btn-sm transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-primary"
             >
               View
             </Link>
@@ -168,20 +168,23 @@ export const OverviewPage: React.FC = () => {
           </p>
         </div>
 
-        <div className="flex items-center gap-3">
+        <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3 w-full sm:w-auto">
           {/* Search box */}
           <div className="relative w-full sm:w-64">
             <input
               type="text"
+              aria-label="Search tenant or unit"
               value={search}
               onChange={(e) => setSearch(e.target.value)}
               placeholder="Search tenant or unit"
-              className="w-full h-10 px-3.5 bg-surface border border-input-border rounded-input text-sm text-ink placeholder:text-ink-2/60 focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent transition-colors"
+              className="w-full h-11 sm:h-10 px-3.5 bg-surface border border-input-border rounded-input text-sm text-ink placeholder:text-ink-2/60 focus:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:border-transparent transition-colors"
             />
             {search && (
               <button
+                type="button"
+                aria-label="Clear search"
                 onClick={() => setSearch("")}
-                className="absolute right-2.5 top-1/2 -translate-y-1/2 text-xs text-ink-2 hover:text-ink"
+                className="absolute right-2.5 top-1/2 -translate-y-1/2 p-1 text-xs text-ink-2 hover:text-ink min-w-[36px] min-h-[36px] flex items-center justify-center focus:outline-none focus-visible:ring-2 focus-visible:ring-primary rounded"
               >
                 Clear
               </button>
@@ -192,7 +195,7 @@ export const OverviewPage: React.FC = () => {
           <button
             type="button"
             onClick={() => handleOpenPayment(null)}
-            className="h-10 px-4 bg-primary hover:bg-primary-hover active:bg-[#174BB0] text-white text-sm font-medium rounded-btn transition-colors shrink-0 focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2 flex items-center justify-center"
+            className="h-11 sm:h-10 px-4 bg-primary hover:bg-primary-hover active:bg-primary-hover text-white text-sm font-medium rounded-btn transition-colors shrink-0 focus:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 flex items-center justify-center min-h-[44px] sm:min-h-[40px]"
           >
             Record payment
           </button>
@@ -203,7 +206,7 @@ export const OverviewPage: React.FC = () => {
       {isError && (
         <div
           role="alert"
-          className="p-4 rounded-panel bg-[#FDF2F1] border border-overdue/30 flex items-center justify-between gap-4"
+          className="p-4 rounded-panel bg-overdue/10 border border-overdue/30 flex items-center justify-between gap-4"
         >
           <div className="flex items-center gap-3">
             <AlertCircle className="w-5 h-5 text-overdue shrink-0" />
@@ -213,7 +216,7 @@ export const OverviewPage: React.FC = () => {
           </div>
           <button
             onClick={() => refetch()}
-            className="inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-semibold bg-white border border-overdue/40 text-overdue rounded-btn-sm hover:bg-overdue/5"
+            className="inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-semibold bg-white border border-overdue/40 text-overdue rounded-btn-sm hover:bg-overdue/5 focus:outline-none focus-visible:ring-2 focus-visible:ring-overdue min-h-[36px]"
           >
             <RefreshCw className="w-3.5 h-3.5" />
             <span>Retry</span>

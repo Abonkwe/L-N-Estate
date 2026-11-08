@@ -19,6 +19,7 @@ import { getUnitsApi, getUnitApi, type Unit } from "@/api/units";
 import { getTenantsApi, createTenantApi, type Tenant } from "@/api/tenants";
 import { createLeaseApi } from "@/api/leases";
 import { formatMoney, formatDate } from "@/lib/format";
+import { Money } from "@/components/shared/Money";
 
 export const NewLeasePage: React.FC = () => {
   const navigate = useNavigate();
@@ -360,7 +361,7 @@ export const NewLeasePage: React.FC = () => {
       {formError && (
         <div
           role="alert"
-          className="p-4 bg-[#FDF2F1] border border-overdue/30 rounded-panel flex items-start gap-3 text-xs text-overdue font-medium"
+          className="p-4 bg-overdue/10 border border-overdue/30 rounded-panel flex items-start gap-3 text-xs text-overdue font-medium"
         >
           <AlertCircle className="w-4 h-4 shrink-0 mt-0.5" />
           <div className="flex-1">{formError}</div>
@@ -453,7 +454,7 @@ export const NewLeasePage: React.FC = () => {
                       }}
                       className={`p-4 rounded-btn-sm border text-left transition-all ${
                         isSelected
-                          ? "bg-[#EBF7EE] border-paid ring-1 ring-paid/30 shadow-sm"
+                          ? "bg-paid/10 border-paid ring-1 ring-paid/30 shadow-sm"
                           : "bg-surface border-line hover:bg-band/40"
                       }`}
                     >
@@ -472,7 +473,7 @@ export const NewLeasePage: React.FC = () => {
                       <div className="mt-3 pt-2 border-t border-row-line flex justify-between text-xs">
                         <span className="text-ink-2">Listed rent:</span>
                         <span className="font-mono font-semibold text-ink">
-                          {unit.listed_rent ? formatMoney(unit.listed_rent, true) : "Not listed"}
+                          {unit.listed_rent ? <Money amount={unit.listed_rent} showUnit /> : "Not listed"}
                         </span>
                       </div>
                     </button>
@@ -488,7 +489,7 @@ export const NewLeasePage: React.FC = () => {
               type="button"
               disabled={!selectedUnit}
               onClick={() => setCurrentStep(2)}
-              className="inline-flex items-center gap-2 px-5 py-2.5 text-xs font-semibold bg-primary hover:bg-primary-hover active:bg-[#174BB0] text-white rounded-btn transition-colors focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-1 disabled:opacity-50"
+              className="inline-flex items-center gap-2 h-11 sm:h-10 px-5 py-2.5 text-xs font-semibold bg-primary hover:bg-primary-hover active:bg-primary-hover text-white rounded-btn transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-1 disabled:opacity-50 min-h-[44px] sm:min-h-[40px]"
             >
               <span>Next: Choose tenant</span>
               <ArrowRight className="w-4 h-4" />
@@ -538,7 +539,7 @@ export const NewLeasePage: React.FC = () => {
 
           {/* Selected Tenant Preview Chip */}
           {selectedTenant && (
-            <div className="p-3 bg-[#EBF7EE] border border-paid/30 rounded-btn-sm flex items-center justify-between">
+            <div className="p-3 bg-paid/10 border border-paid/30 rounded-btn-sm flex items-center justify-between">
               <div className="flex items-center gap-2">
                 <Check className="w-4 h-4 text-paid" />
                 <span className="text-xs text-ink font-medium">
@@ -631,7 +632,7 @@ export const NewLeasePage: React.FC = () => {
               {inlineTenantError && (
                 <div
                   role="alert"
-                  className="p-3 bg-[#FDF2F1] border border-overdue/30 rounded-btn-sm text-xs text-overdue font-medium"
+                  className="p-3 bg-overdue/10 border border-overdue/30 rounded-btn-sm text-xs text-overdue font-medium"
                 >
                   {inlineTenantError}
                 </div>
@@ -717,7 +718,7 @@ export const NewLeasePage: React.FC = () => {
               type="button"
               disabled={!selectedTenant}
               onClick={() => setCurrentStep(3)}
-              className="inline-flex items-center gap-2 px-5 py-2 text-xs font-semibold bg-primary hover:bg-primary-hover active:bg-[#174BB0] text-white rounded-btn transition-colors focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-1 disabled:opacity-50"
+              className="inline-flex items-center gap-2 h-11 sm:h-10 px-5 py-2 text-xs font-semibold bg-primary hover:bg-primary-hover active:bg-primary-hover text-white rounded-btn transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-1 disabled:opacity-50 min-h-[44px] sm:min-h-[40px]"
             >
               <span>Next: Lease terms</span>
               <ArrowRight className="w-4 h-4" />
@@ -778,8 +779,8 @@ export const NewLeasePage: React.FC = () => {
 
             {/* > 2 years Warning Callout */}
             {isMoreThanTwoYears && (
-              <div className="p-3.5 bg-[#FFF9EB] border border-[#D9971B]/30 rounded-btn-sm flex items-start gap-2.5 text-xs text-[#7A5200]">
-                <AlertTriangle className="w-4 h-4 shrink-0 mt-0.5 text-[#D9971B]" />
+              <div className="p-3.5 bg-grace/10 border border-grace/30 rounded-btn-sm flex items-start gap-2.5 text-xs text-grace-text">
+                <AlertTriangle className="w-4 h-4 shrink-0 mt-0.5 text-grace" />
                 <div className="space-y-0.5">
                   <p className="font-semibold">Notice: Term exceeds 2 years</p>
                   <p className="leading-relaxed">
@@ -934,13 +935,13 @@ export const NewLeasePage: React.FC = () => {
                 <div className="flex justify-between py-1 border-b border-row-line">
                   <span className="text-ink-2">Monthly Total:</span>
                   <span className="font-mono font-bold text-ink">
-                    {formatMoney(monthlyTotal, true)}
+                    <Money amount={monthlyTotal} showUnit />
                   </span>
                 </div>
                 <div className="flex justify-between py-1 border-b border-row-line">
                   <span className="text-ink-2">Required Deposit:</span>
                   <span className="font-mono font-bold text-ink">
-                    {formatMoney(calculatedDeposit, true)}
+                    <Money amount={calculatedDeposit} showUnit />
                   </span>
                 </div>
               </div>
@@ -951,7 +952,7 @@ export const NewLeasePage: React.FC = () => {
               <button
                 type="button"
                 onClick={() => setCurrentStep(2)}
-                className="inline-flex items-center gap-1.5 px-4 py-2 text-xs font-medium border border-line text-ink hover:bg-band rounded-btn transition-colors"
+                className="inline-flex items-center gap-1.5 h-11 sm:h-10 px-4 py-2 text-xs font-medium border border-line text-ink hover:bg-band rounded-btn transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-primary min-h-[44px] sm:min-h-[40px]"
               >
                 <ArrowLeft className="w-3.5 h-3.5" />
                 <span>Back to Step 2</span>
@@ -960,7 +961,7 @@ export const NewLeasePage: React.FC = () => {
               <button
                 type="submit"
                 disabled={isSubmittingLease || numBaseRent <= 0}
-                className="inline-flex items-center justify-center gap-2 px-6 py-2.5 text-xs font-semibold bg-primary hover:bg-primary-hover active:bg-[#174BB0] text-white rounded-btn transition-colors focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-1 disabled:opacity-50"
+                className="inline-flex items-center justify-center gap-2 h-11 sm:h-10 px-6 py-2.5 text-xs font-semibold bg-primary hover:bg-primary-hover active:bg-primary-hover text-white rounded-btn transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-1 disabled:opacity-50 min-h-[44px] sm:min-h-[40px]"
               >
                 {isSubmittingLease && <Loader2 className="w-4 h-4 animate-spin" />}
                 <span>Create lease agreement</span>

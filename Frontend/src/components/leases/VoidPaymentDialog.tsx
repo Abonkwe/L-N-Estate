@@ -2,7 +2,9 @@ import React, { useState, useEffect } from "react";
 import { X, Loader2, AlertCircle, AlertTriangle } from "lucide-react";
 import type { PaymentOut } from "@/api/payments";
 import { voidPaymentApi } from "@/api/payments";
-import { formatMoney, formatDate } from "@/lib/format";
+import { formatDate } from "@/lib/format";
+import { Money } from "@/components/shared/Money";
+import { useDialogA11y } from "@/lib/useDialogA11y";
 
 interface VoidPaymentDialogProps {
   isOpen: boolean;
@@ -28,17 +30,13 @@ export const VoidPaymentDialog: React.FC<VoidPaymentDialogProps> = ({
     }
   }, [isOpen]);
 
-  // Handle ESC key
-  useEffect(() => {
-    if (!isOpen) return;
-    const handleKeyDown = (e: KeyboardEvent) => {
-      if (e.key === "Escape" && !isSubmitting) {
-        onClose();
-      }
-    };
-    window.addEventListener("keydown", handleKeyDown);
-    return () => window.removeEventListener("keydown", handleKeyDown);
-  }, [isOpen, isSubmitting, onClose]);
+  // Accessible dialog focus trap and Escape handler
+  const dialogRef = useDialogA11y<HTMLDivElement>({
+    isOpen,
+    onClose: () => {
+      if (!isSubmitting) onClose();
+    },
+  });
 
   if (!isOpen || !payment) return null;
 
@@ -82,7 +80,8 @@ export const VoidPaymentDialog: React.FC<VoidPaymentDialogProps> = ({
 
   return (
     <div
-      className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 overflow-y-auto"
+      ref={dialogRef}
+      className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-4 bg-black/50 overflow-y-auto"
       role="dialog"
       aria-modal="true"
       aria-labelledby="void-dialog-title"
@@ -102,7 +101,7 @@ export const VoidPaymentDialog: React.FC<VoidPaymentDialogProps> = ({
             type="button"
             onClick={onClose}
             disabled={isSubmitting}
-            className="p-1 text-ink-2 hover:text-ink rounded-btn-sm hover:bg-band focus:outline-none focus:ring-2 focus:ring-primary"
+            className="p-2 text-ink-2 hover:text-ink rounded-btn-sm hover:bg-band focus:outline-none focus-visible:ring-2 focus-visible:ring-primary min-w-[44px] min-h-[44px] flex items-center justify-center"
             aria-label="Close dialog"
           >
             <X className="w-5 h-5" />
@@ -112,7 +111,7 @@ export const VoidPaymentDialog: React.FC<VoidPaymentDialogProps> = ({
         {/* Content */}
         <form onSubmit={handleSubmit} className="p-6 space-y-4">
           {/* Explicit Rule Warning required by brief */}
-          <div className="p-3.5 bg-[#FDF2F1] border border-overdue/30 rounded-panel flex items-start gap-3">
+          <div className="p-3.5 bg-overdue/10 border border-overdue/30 rounded-panel flex items-start gap-3">
             <AlertTriangle className="w-5 h-5 text-overdue shrink-0 mt-0.5" />
             <div className="text-xs text-ink space-y-1">
               <p className="font-bold text-overdue">Important:</p>
@@ -128,7 +127,7 @@ export const VoidPaymentDialog: React.FC<VoidPaymentDialogProps> = ({
           {errorMessage && (
             <div
               role="alert"
-              className="p-3 bg-[#FDF2F1] border border-overdue/30 rounded-btn-sm flex items-start gap-2.5 text-xs text-overdue font-medium"
+              className="p-3 bg-overdue/10 border border-overdue/30 rounded-btn-sm flex items-start gap-2.5 text-xs text-overdue font-medium"
             >
               <AlertCircle className="w-4 h-4 shrink-0 mt-0.5" />
               <div className="flex-1">{errorMessage}</div>
@@ -140,7 +139,7 @@ export const VoidPaymentDialog: React.FC<VoidPaymentDialogProps> = ({
             <div className="flex justify-between">
               <span className="text-ink-2">Amount:</span>
               <span className="font-mono font-bold text-ink">
-                {formatMoney(payment.amount, true)}
+                <Money amount={payment.amount} showUnit />
               </span>
             </div>
             <div className="flex justify-between">
@@ -175,7 +174,7 @@ export const VoidPaymentDialog: React.FC<VoidPaymentDialogProps> = ({
               onChange={(e) => setReason(e.target.value)}
               required
               minLength={3}
-              className="w-full p-2.5 bg-surface border border-input-border rounded-input text-sm text-ink placeholder:text-ink-2/60 focus:outline-none focus:ring-2 focus:ring-primary resize-none"
+              className="w-full p-2.5 bg-surface border border-input-border rounded-input text-sm text-ink placeholder:text-ink-2/60 focus:outline-none focus-visible:ring-2 focus-visible:ring-primary resize-none"
             />
           </div>
 
@@ -185,14 +184,14 @@ export const VoidPaymentDialog: React.FC<VoidPaymentDialogProps> = ({
               type="button"
               onClick={onClose}
               disabled={isSubmitting}
-              className="px-4 py-2 text-xs font-medium border border-line text-ink hover:bg-band rounded-btn-sm transition-colors focus:outline-none focus:ring-2 focus:ring-primary"
+              className="h-10 sm:h-9 px-4 py-2 text-xs font-medium border border-line text-ink hover:bg-band rounded-btn-sm transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-primary min-h-[44px] sm:min-h-[36px]"
             >
               Cancel
             </button>
             <button
               type="submit"
               disabled={isSubmitting || reason.trim().length < 3}
-              className="inline-flex items-center justify-center gap-1.5 px-4 py-2 text-xs font-semibold bg-overdue hover:bg-overdue/90 active:bg-[#851E17] text-white rounded-btn-sm transition-colors focus:outline-none focus:ring-2 focus:ring-overdue disabled:opacity-50"
+              className="inline-flex items-center justify-center gap-1.5 h-10 sm:h-9 px-4 py-2 text-xs font-semibold bg-overdue hover:bg-overdue/90 active:bg-overdue text-white rounded-btn-sm transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-overdue disabled:opacity-50 min-h-[44px] sm:min-h-[36px]"
             >
               {isSubmitting && <Loader2 className="w-3.5 h-3.5 animate-spin" />}
               <span>Void payment</span>

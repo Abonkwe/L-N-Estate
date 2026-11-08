@@ -32,16 +32,16 @@ export const StatusMarker: React.FC<StatusMarkerProps> = ({
       break;
 
     case "grace": {
-      markerBg = "bg-[#D9971B]"; // --grace-marker
-      textColor = "text-[#7A5200]"; // --grace-text
+      markerBg = "bg-grace-marker";
+      textColor = "text-grace-text";
       const day = Math.min(Math.max(Math.abs(daysUntilExpiry) || 1, 1), graceDays);
       defaultLabel = `Grace period, day ${day} of ${graceDays}`;
       break;
     }
 
     case "expiring_soon":
-      markerBg = "bg-[#1F5FD6]"; // --expiring-marker
-      textColor = "text-[#1F4E9E]"; // --expiring-text
+      markerBg = "bg-expiring-marker";
+      textColor = "text-expiring-text";
       defaultLabel = `Expires in ${daysUntilExpiry} day${daysUntilExpiry === 1 ? "" : "s"}`;
       break;
 

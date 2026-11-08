@@ -12,6 +12,8 @@ import {
   type PaymentOut,
 } from "@/api/payments";
 import { formatMoney, formatDate } from "@/lib/format";
+import { Money } from "@/components/shared/Money";
+import { useDialogA11y } from "@/lib/useDialogA11y";
 
 interface RecordPaymentDialogProps {
   isOpen: boolean;
@@ -114,18 +116,6 @@ export const RecordPaymentDialog: React.FC<RecordPaymentDialogProps> = ({
     }
     return activeLeases.find((l) => l.id === selectedLeaseId) ?? null;
   }, [preselectedLease, activeLeases, selectedLeaseId]);
-
-  // Handle ESC key to close
-  useEffect(() => {
-    if (!isOpen) return;
-    const handleKeyDown = (e: KeyboardEvent) => {
-      if (e.key === "Escape" && !isSubmitting) {
-        onClose();
-      }
-    };
-    window.addEventListener("keydown", handleKeyDown);
-    return () => window.removeEventListener("keydown", handleKeyDown);
-  }, [isOpen, isSubmitting, onClose]);
 
   // Debounced Live Preview Effect
   useEffect(() => {
@@ -264,6 +254,20 @@ export const RecordPaymentDialog: React.FC<RecordPaymentDialogProps> = ({
     }
   };
 
+  // Accessible dialog focus trap and Escape handler
+  const dialogRef = useDialogA11y<HTMLDivElement>({
+    isOpen,
+    onClose: () => {
+      if (isSubmitting) return;
+      if (createdPayment) {
+        handleDone();
+      } else {
+        onClose();
+      }
+    },
+    initialFocusRef: amountInputRef,
+  });
+
   if (!isOpen) return null;
 
   // Filtered active leases for picker
@@ -279,6 +283,7 @@ export const RecordPaymentDialog: React.FC<RecordPaymentDialogProps> = ({
 
   return (
     <div
+      ref={dialogRef}
       className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-4 bg-black/40 backdrop-blur-[1px]"
       role="dialog"
       aria-modal="true"
@@ -301,9 +306,9 @@ export const RecordPaymentDialog: React.FC<RecordPaymentDialogProps> = ({
             <button
               onClick={createdPayment ? handleDone : onClose}
               aria-label="Close dialog"
-              className="p-1 text-ink-2 hover:text-ink hover:bg-band rounded-btn-sm transition-colors focus:outline-none focus:ring-2 focus:ring-primary"
+              className="p-2 text-ink-2 hover:text-ink hover:bg-band rounded-btn-sm transition-colors min-w-[44px] min-h-[44px] flex items-center justify-center focus:outline-none focus-visible:ring-2 focus-visible:ring-primary"
             >
-              <X className="w-4 h-4" />
+              <X className="w-5 h-5" />
             </button>
           )}
         </div>
@@ -311,7 +316,7 @@ export const RecordPaymentDialog: React.FC<RecordPaymentDialogProps> = ({
         {/* Success View */}
         {createdPayment ? (
           <div className="p-5 space-y-4 overflow-y-auto">
-            <div className="p-3.5 bg-[#F2F7F4] border border-[#2F6B4A]/30 rounded-panel flex items-start gap-3">
+            <div className="p-3.5 bg-paid/10 border border-paid/30 rounded-panel flex items-start gap-3">
               <CheckCircle2 className="w-5 h-5 text-paid shrink-0 mt-0.5" />
               <div>
                 <div className="text-sm font-semibold text-paid">
@@ -323,7 +328,7 @@ export const RecordPaymentDialog: React.FC<RecordPaymentDialogProps> = ({
                   {createdPayment.house_name}, {createdPayment.unit_label}).
                 </div>
                 <div className="text-xs font-mono tabular-nums text-ink mt-1.5">
-                  Amount: <span className="font-semibold">{formatMoney(createdPayment.amount)} FCFA</span> &bull; Paid on{" "}
+                  Amount: <span className="font-semibold"><Money amount={createdPayment.amount} showUnit /></span> &bull; Paid on{" "}
                   {formatDate(createdPayment.paid_on)}
                 </div>
               </div>
@@ -334,7 +339,7 @@ export const RecordPaymentDialog: React.FC<RecordPaymentDialogProps> = ({
                 type="button"
                 onClick={handlePrintReceipt}
                 disabled={!receiptBlobUrl || isLoadingPdf}
-                className="h-9 px-3.5 bg-surface border border-line text-primary hover:bg-primary/5 active:bg-primary/10 font-medium text-xs rounded-btn transition-colors focus:outline-none focus:ring-2 focus:ring-primary flex items-center gap-1.5 disabled:opacity-50"
+                className="h-10 sm:h-9 px-3.5 bg-surface border border-line text-primary hover:bg-primary/5 active:bg-primary/10 font-medium text-xs rounded-btn transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-primary flex items-center gap-1.5 disabled:opacity-50 min-h-[44px] sm:min-h-[36px]"
               >
                 {isLoadingPdf ? (
                   <Loader2 className="w-3.5 h-3.5 animate-spin" />
@@ -347,7 +352,7 @@ export const RecordPaymentDialog: React.FC<RecordPaymentDialogProps> = ({
               <button
                 type="button"
                 onClick={handleDone}
-                className="h-9 px-4 bg-primary hover:bg-primary-hover active:bg-[#174BB0] text-white font-medium text-xs rounded-btn transition-colors focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2"
+                className="h-10 sm:h-9 px-4 bg-primary hover:bg-primary-hover active:bg-primary-hover text-white font-medium text-xs rounded-btn transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 min-h-[44px] sm:min-h-[36px]"
               >
                 Done
               </button>
@@ -361,7 +366,7 @@ export const RecordPaymentDialog: React.FC<RecordPaymentDialogProps> = ({
               {formError && (
                 <div
                   role="alert"
-                  className="p-2.5 px-3 text-xs font-medium rounded-btn-sm border border-overdue/30 bg-[#FDF2F1] text-overdue"
+                  className="p-2.5 px-3 text-xs font-medium rounded-btn-sm border border-overdue/30 bg-overdue/10 text-overdue"
                 >
                   {formError}
                 </div>
@@ -383,7 +388,7 @@ export const RecordPaymentDialog: React.FC<RecordPaymentDialogProps> = ({
                   </div>
                   <div className="text-right shrink-0 ml-2">
                     <span className="font-mono text-xs font-semibold text-ink tabular-nums">
-                      {formatMoney(preselectedLease.monthly_total)} FCFA
+                      <Money amount={preselectedLease.monthly_total} showUnit />
                     </span>
                     <span className="text-[10px] text-ink-2 ml-1">/mo</span>
                   </div>
@@ -421,7 +426,7 @@ export const RecordPaymentDialog: React.FC<RecordPaymentDialogProps> = ({
                               setLeaseSearch(`${l.tenant_name} (${l.house_name}, ${l.unit_label})`);
                               setFormError(null);
                             }}
-                            className={`w-full px-3 py-1.5 text-left text-xs flex items-center justify-between hover:bg-band transition-colors ${
+                            className={`w-full px-3 py-2 text-left text-xs flex items-center justify-between hover:bg-band transition-colors min-h-[38px] ${
                               selectedLeaseId === l.id ? "bg-primary/10 font-semibold" : ""
                             }`}
                           >
@@ -432,7 +437,7 @@ export const RecordPaymentDialog: React.FC<RecordPaymentDialogProps> = ({
                               </span>
                             </div>
                             <span className="font-mono text-ink tabular-nums shrink-0 ml-2">
-                              {formatMoney(l.next_month_charge)} FCFA
+                              <Money amount={l.next_month_charge} showUnit />
                             </span>
                           </button>
                         ))
@@ -639,7 +644,7 @@ export const RecordPaymentDialog: React.FC<RecordPaymentDialogProps> = ({
                     <div className="flex items-center justify-between text-ink">
                       <span className="text-ink-2">Balance Remaining (Reste):</span>
                       <span className="font-mono font-semibold tabular-nums text-ink">
-                        {formatMoney(preview.balance_remaining)} FCFA
+                        <Money amount={preview.balance_remaining} showUnit />
                       </span>
                     </div>
 
@@ -661,7 +666,7 @@ export const RecordPaymentDialog: React.FC<RecordPaymentDialogProps> = ({
                 type="button"
                 onClick={onClose}
                 disabled={isSubmitting}
-                className="h-9 px-3.5 text-xs font-semibold uppercase tracking-header-cap text-ink-2 hover:text-ink rounded-btn-sm transition-colors focus:outline-none focus:ring-2 focus:ring-primary disabled:opacity-50"
+                className="h-10 sm:h-9 px-3.5 text-xs font-semibold uppercase tracking-header-cap text-ink-2 hover:text-ink rounded-btn-sm transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-primary disabled:opacity-50 min-h-[44px] sm:min-h-[36px]"
               >
                 Cancel
               </button>
@@ -669,7 +674,7 @@ export const RecordPaymentDialog: React.FC<RecordPaymentDialogProps> = ({
               <button
                 type="submit"
                 disabled={isSubmitting || !selectedLeaseId || !amountStr || previewLoading}
-                className="h-9 px-4 bg-primary hover:bg-primary-hover active:bg-[#174BB0] text-white font-medium text-xs rounded-btn transition-colors focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2 disabled:opacity-60 flex items-center justify-center gap-1.5"
+                className="h-10 sm:h-9 px-4 bg-primary hover:bg-primary-hover active:bg-primary-hover text-white font-medium text-xs rounded-btn transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 disabled:opacity-60 flex items-center justify-center gap-1.5 min-h-[44px] sm:min-h-[36px]"
               >
                 {isSubmitting ? (
                   <>

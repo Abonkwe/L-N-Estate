@@ -186,7 +186,7 @@ export const LeaseDetailPage: React.FC = () => {
         </Link>
         <div
           role="alert"
-          className="p-5 bg-[#FDF2F1] border border-overdue/30 rounded-panel flex items-start justify-between gap-4"
+          className="p-5 bg-overdue/10 border border-overdue/30 rounded-panel flex items-start justify-between gap-4"
         >
           <div className="flex items-start gap-3">
             <AlertCircle className="w-5 h-5 text-overdue shrink-0 mt-0.5" />
@@ -201,7 +201,7 @@ export const LeaseDetailPage: React.FC = () => {
           </div>
           <button
             onClick={() => refetchLease()}
-            className="inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-semibold bg-white border border-overdue/40 text-overdue rounded-btn-sm hover:bg-overdue/5"
+            className="inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-semibold bg-white border border-overdue/40 text-overdue rounded-btn-sm hover:bg-overdue/5 focus:outline-none focus-visible:ring-2 focus-visible:ring-overdue min-h-[36px]"
           >
             <RefreshCw className="w-3.5 h-3.5" />
             <span>Retry</span>
@@ -219,7 +219,7 @@ export const LeaseDetailPage: React.FC = () => {
       <div>
         <Link
           to="/"
-          className="inline-flex items-center gap-1.5 text-xs font-semibold text-ink-2 hover:text-primary transition-colors group"
+          className="inline-flex items-center gap-1.5 text-xs font-semibold text-ink-2 hover:text-primary transition-colors group focus:outline-none focus-visible:ring-2 focus-visible:ring-primary rounded p-1"
         >
           <ArrowLeft className="w-4 h-4 transition-transform group-hover:-translate-x-0.5" />
           <span>Back to Overview</span>
@@ -230,7 +230,7 @@ export const LeaseDetailPage: React.FC = () => {
       {receiptError && (
         <div
           role="alert"
-          className="p-4 bg-[#FDF2F1] border border-overdue/30 rounded-panel flex items-center justify-between gap-3 text-xs text-overdue font-medium"
+          className="p-4 bg-overdue/10 border border-overdue/30 rounded-panel flex items-center justify-between gap-3 text-xs text-overdue font-medium"
         >
           <div className="flex items-center gap-2">
             <AlertCircle className="w-4 h-4 shrink-0" />
@@ -286,7 +286,7 @@ export const LeaseDetailPage: React.FC = () => {
             <button
               type="button"
               onClick={() => setIsPaymentDialogOpen(true)}
-              className="inline-flex items-center gap-1.5 h-9 px-4 text-xs font-semibold bg-primary hover:bg-primary-hover active:bg-[#174BB0] text-white rounded-btn transition-colors focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-1"
+              className="inline-flex items-center justify-center gap-1.5 h-11 sm:h-9 px-4 text-xs font-semibold bg-primary hover:bg-primary-hover active:bg-primary-hover text-white rounded-btn transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-1 min-h-[44px] sm:min-h-[36px]"
             >
               <CreditCard className="w-3.5 h-3.5" />
               <span>Record payment</span>
@@ -295,7 +295,7 @@ export const LeaseDetailPage: React.FC = () => {
             <button
               type="button"
               onClick={() => setIsRentChangeDialogOpen(true)}
-              className="inline-flex items-center gap-1.5 h-9 px-3.5 text-xs font-semibold border border-line bg-surface text-ink hover:bg-band rounded-btn transition-colors focus:outline-none focus:ring-2 focus:ring-primary"
+              className="inline-flex items-center justify-center gap-1.5 h-11 sm:h-9 px-3.5 text-xs font-semibold border border-line bg-surface text-ink hover:bg-band rounded-btn transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-primary min-h-[44px] sm:min-h-[36px]"
             >
               <Plus className="w-3.5 h-3.5" />
               <span>Add rent change</span>
@@ -304,7 +304,7 @@ export const LeaseDetailPage: React.FC = () => {
             <button
               type="button"
               onClick={() => setIsAdjustmentDialogOpen(true)}
-              className="inline-flex items-center gap-1.5 h-9 px-3.5 text-xs font-semibold border border-line bg-surface text-ink hover:bg-band rounded-btn transition-colors focus:outline-none focus:ring-2 focus:ring-primary"
+              className="inline-flex items-center justify-center gap-1.5 h-11 sm:h-9 px-3.5 text-xs font-semibold border border-line bg-surface text-ink hover:bg-band rounded-btn transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-primary min-h-[44px] sm:min-h-[36px]"
             >
               <Plus className="w-3.5 h-3.5" />
               <span>Add adjustment</span>
@@ -315,7 +315,7 @@ export const LeaseDetailPage: React.FC = () => {
               <button
                 type="button"
                 onClick={() => setIsEndLeaseDialogOpen(true)}
-                className="inline-flex items-center gap-1.5 h-9 px-3.5 text-xs font-semibold border border-overdue/40 text-overdue bg-surface hover:bg-[#FDF2F1] rounded-btn transition-colors focus:outline-none focus:ring-2 focus:ring-overdue"
+                className="inline-flex items-center justify-center gap-1.5 h-11 sm:h-9 px-3.5 text-xs font-semibold border border-overdue/40 text-overdue bg-surface hover:bg-overdue/10 rounded-btn transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-overdue min-h-[44px] sm:min-h-[36px]"
               >
                 <Ban className="w-3.5 h-3.5" />
                 <span>End lease</span>
@@ -409,7 +409,7 @@ export const LeaseDetailPage: React.FC = () => {
         {isRentSheetError && (
           <div
             role="alert"
-            className="p-3 bg-[#FDF2F1] border border-overdue/30 rounded-panel flex items-center justify-between text-xs text-overdue"
+            className="p-3 bg-overdue/10 border border-overdue/30 rounded-panel flex items-center justify-between text-xs text-overdue"
           >
             <span>
               {rentSheetError instanceof Error
@@ -566,7 +566,7 @@ export const LeaseDetailPage: React.FC = () => {
         {isPaymentsError && (
           <div
             role="alert"
-            className="p-3 bg-[#FDF2F1] border border-overdue/30 rounded-panel flex items-center justify-between text-xs text-overdue"
+            className="p-3 bg-overdue/10 border border-overdue/30 rounded-panel flex items-center justify-between text-xs text-overdue"
           >
             <span>
               {paymentsError instanceof Error
@@ -641,7 +641,7 @@ export const LeaseDetailPage: React.FC = () => {
                         key={payment.id}
                         className={`border-b border-row-line transition-colors ${
                           isVoid
-                            ? "bg-[#FAF5F5] text-ink-2/65"
+                            ? "bg-overdue/5 text-ink-2/65"
                             : "hover:bg-band/40 text-ink"
                         }`}
                       >
@@ -688,7 +688,7 @@ export const LeaseDetailPage: React.FC = () => {
                               type="button"
                               onClick={() => handleOpenReceipt(payment.id)}
                               disabled={isOpeningPdf}
-                              className={`inline-flex items-center gap-1.5 px-2.5 py-1 text-xs font-medium border rounded-btn-sm transition-colors focus:outline-none focus:ring-1 focus:ring-primary ${
+                              className={`inline-flex items-center gap-1.5 px-2.5 py-1 text-xs font-medium border rounded-btn-sm transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-primary ${
                                 isVoid
                                   ? "border-line text-ink-2/70 hover:bg-band"
                                   : "border-line hover:border-primary text-primary hover:bg-primary/5"
@@ -712,7 +712,7 @@ export const LeaseDetailPage: React.FC = () => {
                         <td className="px-5 py-3.5 text-xs">
                           {isVoid ? (
                             <div className="space-y-0.5">
-                              <span className="inline-flex items-center px-2 py-0.5 rounded text-[11px] font-bold bg-[#FDF2F1] text-overdue border border-overdue/20 uppercase tracking-wider">
+                              <span className="inline-flex items-center px-2 py-0.5 rounded text-[11px] font-bold bg-overdue/10 text-overdue border border-overdue/20 uppercase tracking-wider">
                                 Voided
                               </span>
                               {payment.void_reason && (
@@ -722,7 +722,7 @@ export const LeaseDetailPage: React.FC = () => {
                               )}
                             </div>
                           ) : (
-                            <span className="inline-flex items-center px-2 py-0.5 rounded text-[11px] font-medium bg-[#EBF7EE] text-paid border border-paid/20">
+                            <span className="inline-flex items-center px-2 py-0.5 rounded text-[11px] font-medium bg-paid/10 text-paid border border-paid/20">
                               Completed
                             </span>
                           )}

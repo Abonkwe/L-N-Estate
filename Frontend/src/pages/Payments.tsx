@@ -111,7 +111,7 @@ export const PaymentsPage: React.FC = () => {
           <button
             type="button"
             onClick={() => setIsRecordDialogOpen(true)}
-            className="inline-flex items-center gap-1.5 h-10 px-4 bg-primary hover:bg-primary-hover active:bg-[#174BB0] text-white text-sm font-medium rounded-btn transition-colors shrink-0 focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2"
+            className="inline-flex items-center justify-center gap-1.5 h-11 sm:h-10 px-4 bg-primary hover:bg-primary-hover active:bg-primary-hover text-white text-sm font-medium rounded-btn transition-colors shrink-0 focus:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 min-h-[44px] sm:min-h-[40px]"
           >
             <Plus className="w-4 h-4" />
             <span>Record payment</span>
@@ -133,7 +133,7 @@ export const PaymentsPage: React.FC = () => {
       {receiptError && (
         <div
           role="alert"
-          className="p-3.5 rounded-panel bg-[#FDF2F1] border border-overdue/30 flex items-center justify-between gap-3 text-xs text-overdue"
+          className="p-3.5 rounded-panel bg-overdue/10 border border-overdue/30 flex items-center justify-between gap-3 text-xs text-overdue"
         >
           <div className="flex items-center gap-2">
             <AlertCircle className="w-4 h-4 shrink-0" />
@@ -153,7 +153,7 @@ export const PaymentsPage: React.FC = () => {
       {isError && (
         <div
           role="alert"
-          className="p-4 rounded-panel bg-[#FDF2F1] border border-overdue/30 flex items-center justify-between gap-4"
+          className="p-4 rounded-panel bg-overdue/10 border border-overdue/30 flex items-center justify-between gap-4"
         >
           <div className="flex items-center gap-3">
             <AlertCircle className="w-5 h-5 text-overdue shrink-0" />
@@ -164,7 +164,7 @@ export const PaymentsPage: React.FC = () => {
           <button
             type="button"
             onClick={() => refetch()}
-            className="inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-semibold bg-white border border-overdue/40 text-overdue rounded-btn-sm hover:bg-overdue/5"
+            className="inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-semibold bg-white border border-overdue/40 text-overdue rounded-btn-sm hover:bg-overdue/5 focus:outline-none focus-visible:ring-2 focus-visible:ring-overdue min-h-[36px]"
           >
             <RefreshCw className="w-3.5 h-3.5" />
             <span>Retry</span>
@@ -358,7 +358,7 @@ export const PaymentsPage: React.FC = () => {
                       <td className="px-5 py-3.5 text-xs">
                         {isVoid ? (
                           <div className="space-y-0.5">
-                            <span className="inline-flex items-center px-2 py-0.5 rounded text-[11px] font-bold bg-[#FDF2F1] text-overdue border border-overdue/20 uppercase tracking-wider">
+                            <span className="inline-flex items-center px-2 py-0.5 rounded text-[11px] font-bold bg-overdue/10 text-overdue border border-overdue/20 uppercase tracking-wider">
                               Voided
                             </span>
                             {payment.void_reason && (

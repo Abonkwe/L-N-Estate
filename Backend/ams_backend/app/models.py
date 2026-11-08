@@ -68,7 +68,10 @@ class ExpenseCategory(str, enum.Enum):
     installation = "installation"
     maintenance = "maintenance"
     water_bill = "water_bill"
-    tax = "tax"
+    tax = "tax",
+    cleaning = "cleaning",
+    waste_removal = "waste_removal",
+    sewage_removal = "sewage_removal",
     other = "other"
 
 

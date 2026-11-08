@@ -3,6 +3,8 @@ import { X, Loader2, AlertCircle, AlertTriangle, ArrowLeft } from "lucide-react"
 import type { LeaseDetail } from "@/api/leases";
 import { endLeaseApi } from "@/api/leases";
 import { formatMoney, formatDate } from "@/lib/format";
+import { Money } from "@/components/shared/Money";
+import { useDialogA11y } from "@/lib/useDialogA11y";
 
 interface EndLeaseDialogProps {
   isOpen: boolean;
@@ -39,17 +41,13 @@ export const EndLeaseDialog: React.FC<EndLeaseDialogProps> = ({
     }
   }, [isOpen, lease]);
 
-  // Handle ESC key
-  useEffect(() => {
-    if (!isOpen) return;
-    const handleKeyDown = (e: KeyboardEvent) => {
-      if (e.key === "Escape" && !isSubmitting) {
-        onClose();
-      }
-    };
-    window.addEventListener("keydown", handleKeyDown);
-    return () => window.removeEventListener("keydown", handleKeyDown);
-  }, [isOpen, isSubmitting, onClose]);
+  // Accessible dialog focus trap and Escape handler
+  const dialogRef = useDialogA11y<HTMLDivElement>({
+    isOpen,
+    onClose: () => {
+      if (!isSubmitting) onClose();
+    },
+  });
 
   if (!isOpen) return null;
 
@@ -105,7 +103,8 @@ export const EndLeaseDialog: React.FC<EndLeaseDialogProps> = ({
 
   return (
     <div
-      className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 overflow-y-auto"
+      ref={dialogRef}
+      className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-4 bg-black/50 overflow-y-auto"
       role="dialog"
       aria-modal="true"
       aria-labelledby="end-lease-dialog-title"
@@ -128,7 +127,7 @@ export const EndLeaseDialog: React.FC<EndLeaseDialogProps> = ({
             type="button"
             onClick={onClose}
             disabled={isSubmitting}
-            className="p-1 text-ink-2 hover:text-ink rounded-btn-sm hover:bg-band focus:outline-none focus:ring-2 focus:ring-primary"
+            className="p-2 text-ink-2 hover:text-ink rounded-btn-sm hover:bg-band focus:outline-none focus-visible:ring-2 focus-visible:ring-primary min-w-[44px] min-h-[44px] flex items-center justify-center"
             aria-label="Close dialog"
           >
             <X className="w-5 h-5" />
@@ -141,7 +140,7 @@ export const EndLeaseDialog: React.FC<EndLeaseDialogProps> = ({
             {errorMessage && (
               <div
                 role="alert"
-                className="p-3 bg-[#FDF2F1] border border-overdue/30 rounded-btn-sm flex items-start gap-2.5 text-xs text-overdue font-medium"
+                className="p-3 bg-overdue/10 border border-overdue/30 rounded-btn-sm flex items-start gap-2.5 text-xs text-overdue font-medium"
               >
                 <AlertCircle className="w-4 h-4 shrink-0 mt-0.5" />
                 <div className="flex-1">{errorMessage}</div>
@@ -157,7 +156,7 @@ export const EndLeaseDialog: React.FC<EndLeaseDialogProps> = ({
                 <button
                   type="button"
                   onClick={() => setStatus("ended")}
-                  className={`flex flex-col text-left p-3 rounded-btn-sm border transition-all ${
+                  className={`flex flex-col text-left p-3 rounded-btn-sm border transition-all focus:outline-none focus-visible:ring-2 focus-visible:ring-primary min-h-[44px] ${
                     status === "ended"
                       ? "bg-band/80 border-primary ring-1 ring-primary/30"
                       : "bg-surface border-line hover:bg-band/40"
@@ -172,9 +171,9 @@ export const EndLeaseDialog: React.FC<EndLeaseDialogProps> = ({
                 <button
                   type="button"
                   onClick={() => setStatus("terminated")}
-                  className={`flex flex-col text-left p-3 rounded-btn-sm border transition-all ${
+                  className={`flex flex-col text-left p-3 rounded-btn-sm border transition-all focus:outline-none focus-visible:ring-2 focus-visible:ring-primary min-h-[44px] ${
                     status === "terminated"
-                      ? "bg-[#FDF2F1] border-overdue ring-1 ring-overdue/30"
+                      ? "bg-overdue/10 border-overdue ring-1 ring-overdue/30"
                       : "bg-surface border-line hover:bg-band/40"
                   }`}
                 >
@@ -200,7 +199,7 @@ export const EndLeaseDialog: React.FC<EndLeaseDialogProps> = ({
                 value={endedOn}
                 onChange={(e) => setEndedOn(e.target.value)}
                 required
-                className="w-full h-10 px-3 bg-surface border border-input-border rounded-input text-sm text-ink focus:outline-none focus:ring-2 focus:ring-primary"
+                className="w-full h-10 px-3 bg-surface border border-input-border rounded-input text-sm text-ink focus:outline-none focus-visible:ring-2 focus-visible:ring-primary font-mono"
               />
             </div>
 
@@ -214,7 +213,7 @@ export const EndLeaseDialog: React.FC<EndLeaseDialogProps> = ({
                   Deposit refunded (FCFA) <span className="text-overdue">*</span>
                 </label>
                 <span className="text-[11px] font-mono text-ink-2">
-                  Held: {formatMoney(lease.deposit_amount, true)}
+                  Held: <Money amount={lease.deposit_amount} showUnit />
                 </span>
               </div>
               <input
@@ -226,10 +225,10 @@ export const EndLeaseDialog: React.FC<EndLeaseDialogProps> = ({
                 value={depositRefundedStr}
                 onChange={(e) => setDepositRefundedStr(e.target.value)}
                 required
-                className="w-full h-10 px-3 bg-surface border border-input-border rounded-input text-sm font-mono text-ink text-right tabular-nums focus:outline-none focus:ring-2 focus:ring-primary"
+                className="w-full h-10 px-3 bg-surface border border-input-border rounded-input text-sm font-mono text-ink text-right tabular-nums focus:outline-none focus-visible:ring-2 focus-visible:ring-primary"
               />
               <p className="text-[11px] text-ink-2 mt-1">
-                Enter 0 for full forfeiture, up to {formatMoney(lease.deposit_amount, true)} for full return.
+                Enter 0 for full forfeiture, up to <Money amount={lease.deposit_amount} showUnit /> for full return.
               </p>
             </div>
 
@@ -247,7 +246,7 @@ export const EndLeaseDialog: React.FC<EndLeaseDialogProps> = ({
                 placeholder="Details of checkout inspection, keys returned, deductions, etc."
                 value={notes}
                 onChange={(e) => setNotes(e.target.value)}
-                className="w-full p-2.5 bg-surface border border-input-border rounded-input text-sm text-ink placeholder:text-ink-2/60 focus:outline-none focus:ring-2 focus:ring-primary resize-none"
+                className="w-full p-2.5 bg-surface border border-input-border rounded-input text-sm text-ink placeholder:text-ink-2/60 focus:outline-none focus-visible:ring-2 focus-visible:ring-primary resize-none"
               />
             </div>
 
@@ -256,13 +255,13 @@ export const EndLeaseDialog: React.FC<EndLeaseDialogProps> = ({
               <button
                 type="button"
                 onClick={onClose}
-                className="px-4 py-2 text-xs font-medium border border-line text-ink hover:bg-band rounded-btn-sm transition-colors focus:outline-none focus:ring-2 focus:ring-primary"
+                className="h-10 sm:h-9 px-4 py-2 text-xs font-medium border border-line text-ink hover:bg-band rounded-btn-sm transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-primary min-h-[44px] sm:min-h-[36px]"
               >
                 Cancel
               </button>
               <button
                 type="submit"
-                className="px-4 py-2 text-xs font-medium bg-overdue hover:bg-overdue/90 text-white rounded-btn-sm transition-colors focus:outline-none focus:ring-2 focus:ring-overdue"
+                className="h-10 sm:h-9 px-4 py-2 text-xs font-medium bg-overdue hover:bg-overdue/90 text-white rounded-btn-sm transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-overdue min-h-[44px] sm:min-h-[36px]"
               >
                 Review termination &rarr;
               </button>
@@ -274,7 +273,7 @@ export const EndLeaseDialog: React.FC<EndLeaseDialogProps> = ({
         {step === "confirm" && (
           <div className="p-6 space-y-5">
             {/* Warning Callout */}
-            <div className="p-4 bg-[#FDF2F1] border border-overdue/30 rounded-panel flex items-start gap-3">
+            <div className="p-4 bg-overdue/10 border border-overdue/30 rounded-panel flex items-start gap-3">
               <AlertTriangle className="w-5 h-5 text-overdue shrink-0 mt-0.5" />
               <div className="text-xs text-ink space-y-1">
                 <p className="font-bold text-overdue text-sm">
@@ -292,7 +291,7 @@ export const EndLeaseDialog: React.FC<EndLeaseDialogProps> = ({
             {errorMessage && (
               <div
                 role="alert"
-                className="p-3 bg-[#FDF2F1] border border-overdue/30 rounded-btn-sm flex items-start gap-2.5 text-xs text-overdue font-medium"
+                className="p-3 bg-overdue/10 border border-overdue/30 rounded-btn-sm flex items-start gap-2.5 text-xs text-overdue font-medium"
               >
                 <AlertCircle className="w-4 h-4 shrink-0 mt-0.5" />
                 <div className="flex-1">{errorMessage}</div>
@@ -326,13 +325,13 @@ export const EndLeaseDialog: React.FC<EndLeaseDialogProps> = ({
               <div className="flex justify-between py-1 border-b border-row-line">
                 <span className="text-ink-2">Deposit held:</span>
                 <span className="font-mono text-ink">
-                  {formatMoney(lease.deposit_amount, true)}
+                  <Money amount={lease.deposit_amount} showUnit />
                 </span>
               </div>
               <div className="flex justify-between py-1">
                 <span className="text-ink-2">Deposit refunded to tenant:</span>
                 <span className="font-mono font-bold text-ink">
-                  {formatMoney(parseInt(depositRefundedStr, 10) || 0, true)}
+                  <Money amount={parseInt(depositRefundedStr, 10) || 0} showUnit />
                 </span>
               </div>
               {notes.trim() && (
@@ -349,7 +348,7 @@ export const EndLeaseDialog: React.FC<EndLeaseDialogProps> = ({
                 type="button"
                 onClick={() => setStep("form")}
                 disabled={isSubmitting}
-                className="inline-flex items-center gap-1.5 px-3 py-2 text-xs font-medium border border-line text-ink hover:bg-band rounded-btn-sm transition-colors focus:outline-none focus:ring-2 focus:ring-primary"
+                className="inline-flex items-center gap-1.5 h-10 sm:h-9 px-3 py-2 text-xs font-medium border border-line text-ink hover:bg-band rounded-btn-sm transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-primary min-h-[44px] sm:min-h-[36px]"
               >
                 <ArrowLeft className="w-3.5 h-3.5" />
                 <span>Back to edit</span>
@@ -359,7 +358,7 @@ export const EndLeaseDialog: React.FC<EndLeaseDialogProps> = ({
                 type="button"
                 onClick={handleConfirmEnd}
                 disabled={isSubmitting}
-                className="inline-flex items-center justify-center gap-1.5 px-5 py-2 text-xs font-semibold bg-overdue hover:bg-overdue/90 text-white rounded-btn-sm transition-colors focus:outline-none focus:ring-2 focus:ring-overdue disabled:opacity-50"
+                className="inline-flex items-center justify-center gap-1.5 h-10 sm:h-9 px-5 py-2 text-xs font-semibold bg-overdue hover:bg-overdue/90 text-white rounded-btn-sm transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-overdue disabled:opacity-50 min-h-[44px] sm:min-h-[36px]"
               >
                 {isSubmitting && <Loader2 className="w-3.5 h-3.5 animate-spin" />}
                 <span>Confirm and end lease</span>

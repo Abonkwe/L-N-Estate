@@ -691,7 +691,7 @@ export interface components {
          * ExpenseCategory
          * @enum {string}
          */
-        ExpenseCategory: "repairs" | "installation" | "maintenance" | "water_bill" | "tax" | "other";
+        ExpenseCategory: "repairs" | "installation" | "maintenance" | "water_bill" | "tax" | "cleaning" | "waste_removal" | "sewage_removal" | "other";
         /** ExpenseIn */
         ExpenseIn: {
             /** Unit Id */

@@ -189,7 +189,7 @@ export const TenantDetailPage: React.FC<TenantDetailProps> = ({ isNew = false })
           <ArrowLeft className="w-4 h-4" />
           <span>Back to Tenants</span>
         </Link>
-        <div className="p-5 bg-[#FDF2F1] border border-overdue/30 rounded-panel flex items-start gap-3">
+        <div className="p-5 bg-overdue/10 border border-overdue/30 rounded-panel flex items-start gap-3">
           <AlertCircle className="w-5 h-5 text-overdue shrink-0 mt-0.5" />
           <div>
             <h3 className="text-sm font-bold text-overdue">Tenant not found</h3>
@@ -231,7 +231,7 @@ export const TenantDetailPage: React.FC<TenantDetailProps> = ({ isNew = false })
         {!isCreateMode && (
           <Link
             to={`/leases/new?tenant_id=${tenantId}`}
-            className="inline-flex items-center gap-1.5 h-10 px-4 text-xs font-semibold bg-primary hover:bg-primary-hover active:bg-[#174BB0] text-white rounded-btn transition-colors focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-1 self-start sm:self-auto"
+            className="inline-flex items-center gap-1.5 h-11 sm:h-10 px-4 text-xs font-semibold bg-primary hover:bg-primary-hover active:bg-primary-hover text-white rounded-btn transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-1 self-start sm:self-auto min-h-[44px] sm:min-h-[40px]"
           >
             <Plus className="w-4 h-4" />
             <span>New lease for this tenant</span>
@@ -243,7 +243,7 @@ export const TenantDetailPage: React.FC<TenantDetailProps> = ({ isNew = false })
       {formError && (
         <div
           role="alert"
-          className="p-4 bg-[#FDF2F1] border border-overdue/30 rounded-panel flex items-start gap-3 text-xs text-overdue font-medium"
+          className="p-4 bg-overdue/10 border border-overdue/30 rounded-panel flex items-start gap-3 text-xs text-overdue font-medium"
         >
           <AlertCircle className="w-4 h-4 shrink-0 mt-0.5" />
           <div className="flex-1">{formError}</div>
@@ -254,7 +254,7 @@ export const TenantDetailPage: React.FC<TenantDetailProps> = ({ isNew = false })
       {saveSuccessMsg && (
         <div
           role="status"
-          className="p-4 bg-[#EBF7EE] border border-paid/30 rounded-panel flex items-center gap-3 text-xs text-paid font-medium"
+          className="p-4 bg-paid/10 border border-paid/30 rounded-panel flex items-center gap-3 text-xs text-paid font-medium"
         >
           <CheckCircle2 className="w-4 h-4 shrink-0" />
           <span>{saveSuccessMsg}</span>
@@ -544,14 +544,14 @@ export const TenantDetailPage: React.FC<TenantDetailProps> = ({ isNew = false })
         <div className="px-6 md:px-8 py-4 bg-band/30 border-t border-line flex items-center justify-end gap-3">
           <Link
             to="/tenants"
-            className="px-4 py-2 text-xs font-medium border border-line text-ink hover:bg-band rounded-btn transition-colors focus:outline-none focus:ring-2 focus:ring-primary"
+            className="h-10 sm:h-9 px-4 py-2 text-xs font-medium border border-line text-ink hover:bg-band rounded-btn transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-primary min-h-[44px] sm:min-h-[36px] flex items-center justify-center"
           >
             Cancel
           </Link>
           <button
             type="submit"
             disabled={isSubmitting}
-            className="inline-flex items-center justify-center gap-1.5 px-5 py-2 text-xs font-semibold bg-primary hover:bg-primary-hover active:bg-[#174BB0] text-white rounded-btn transition-colors focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-1 disabled:opacity-50"
+            className="inline-flex items-center justify-center gap-1.5 h-10 sm:h-9 px-5 py-2 text-xs font-semibold bg-primary hover:bg-primary-hover active:bg-primary-hover text-white rounded-btn transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-1 disabled:opacity-50 min-h-[44px] sm:min-h-[36px]"
           >
             {isSubmitting && <Loader2 className="w-3.5 h-3.5 animate-spin" />}
             <span>{isCreateMode ? "Create tenant" : "Save changes"}</span>

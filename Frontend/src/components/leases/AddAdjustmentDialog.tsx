@@ -2,7 +2,8 @@ import React, { useState, useEffect, useMemo } from "react";
 import { X, Loader2, AlertCircle, Plus, Minus } from "lucide-react";
 import type { LeaseDetail } from "@/api/leases";
 import { createAdjustmentApi } from "@/api/payments";
-import { formatMoney } from "@/lib/format";
+import { Money } from "@/components/shared/Money";
+import { useDialogA11y } from "@/lib/useDialogA11y";
 
 interface AddAdjustmentDialogProps {
   isOpen: boolean;
@@ -37,17 +38,13 @@ export const AddAdjustmentDialog: React.FC<AddAdjustmentDialogProps> = ({
     }
   }, [isOpen]);
 
-  // Handle ESC key
-  useEffect(() => {
-    if (!isOpen) return;
-    const handleKeyDown = (e: KeyboardEvent) => {
-      if (e.key === "Escape" && !isSubmitting) {
-        onClose();
-      }
-    };
-    window.addEventListener("keydown", handleKeyDown);
-    return () => window.removeEventListener("keydown", handleKeyDown);
-  }, [isOpen, isSubmitting, onClose]);
+  // Accessible dialog focus trap and Escape handler
+  const dialogRef = useDialogA11y<HTMLDivElement>({
+    isOpen,
+    onClose: () => {
+      if (!isSubmitting) onClose();
+    },
+  });
 
   const signedAmount = useMemo(() => {
     const raw = parseInt(amountStr, 10);
@@ -100,7 +97,8 @@ export const AddAdjustmentDialog: React.FC<AddAdjustmentDialogProps> = ({
 
   return (
     <div
-      className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 overflow-y-auto"
+      ref={dialogRef}
+      className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-4 bg-black/50 overflow-y-auto"
       role="dialog"
       aria-modal="true"
       aria-labelledby="adjustment-dialog-title"
@@ -123,7 +121,7 @@ export const AddAdjustmentDialog: React.FC<AddAdjustmentDialogProps> = ({
             type="button"
             onClick={onClose}
             disabled={isSubmitting}
-            className="p-1 text-ink-2 hover:text-ink rounded-btn-sm hover:bg-band focus:outline-none focus:ring-2 focus:ring-primary"
+            className="p-2 text-ink-2 hover:text-ink rounded-btn-sm hover:bg-band focus:outline-none focus-visible:ring-2 focus-visible:ring-primary min-w-[44px] min-h-[44px] flex items-center justify-center"
             aria-label="Close dialog"
           >
             <X className="w-5 h-5" />
@@ -150,7 +148,7 @@ export const AddAdjustmentDialog: React.FC<AddAdjustmentDialogProps> = ({
           {errorMessage && (
             <div
               role="alert"
-              className="p-3 bg-[#FDF2F1] border border-overdue/30 rounded-btn-sm flex items-start gap-2.5 text-xs text-overdue font-medium"
+              className="p-3 bg-overdue/10 border border-overdue/30 rounded-btn-sm flex items-start gap-2.5 text-xs text-overdue font-medium"
             >
               <AlertCircle className="w-4 h-4 shrink-0 mt-0.5" />
               <div className="flex-1">{errorMessage}</div>
@@ -166,9 +164,9 @@ export const AddAdjustmentDialog: React.FC<AddAdjustmentDialogProps> = ({
               <button
                 type="button"
                 onClick={() => setAdjustmentType("credit")}
-                className={`flex items-center justify-center gap-2 h-10 px-3 rounded-btn-sm text-xs font-semibold border transition-all ${
+                className={`flex items-center justify-center gap-2 h-11 px-3 rounded-btn-sm text-xs font-semibold border transition-all focus:outline-none focus-visible:ring-2 focus-visible:ring-primary min-h-[44px] ${
                   adjustmentType === "credit"
-                    ? "bg-[#EBF7EE] border-paid text-paid shadow-sm ring-1 ring-paid/20"
+                    ? "bg-paid/10 border-paid text-paid shadow-sm ring-1 ring-paid/20"
                     : "bg-surface border-line text-ink-2 hover:bg-band"
                 }`}
               >
@@ -179,9 +177,9 @@ export const AddAdjustmentDialog: React.FC<AddAdjustmentDialogProps> = ({
               <button
                 type="button"
                 onClick={() => setAdjustmentType("charge")}
-                className={`flex items-center justify-center gap-2 h-10 px-3 rounded-btn-sm text-xs font-semibold border transition-all ${
+                className={`flex items-center justify-center gap-2 h-11 px-3 rounded-btn-sm text-xs font-semibold border transition-all focus:outline-none focus-visible:ring-2 focus-visible:ring-primary min-h-[44px] ${
                   adjustmentType === "charge"
-                    ? "bg-[#FDF2F1] border-overdue text-overdue shadow-sm ring-1 ring-overdue/20"
+                    ? "bg-overdue/10 border-overdue text-overdue shadow-sm ring-1 ring-overdue/20"
                     : "bg-surface border-line text-ink-2 hover:bg-band"
                 }`}
               >
@@ -216,7 +214,7 @@ export const AddAdjustmentDialog: React.FC<AddAdjustmentDialogProps> = ({
                 value={amountStr}
                 onChange={(e) => setAmountStr(e.target.value)}
                 required
-                className="w-full h-10 pl-8 pr-3 bg-surface border border-input-border rounded-input text-sm font-mono text-ink tabular-nums focus:outline-none focus:ring-2 focus:ring-primary"
+                className="w-full h-10 pl-8 pr-3 bg-surface border border-input-border rounded-input text-sm font-mono text-ink tabular-nums focus:outline-none focus-visible:ring-2 focus-visible:ring-primary"
               />
             </div>
             {signedAmount !== 0 && (
@@ -224,7 +222,7 @@ export const AddAdjustmentDialog: React.FC<AddAdjustmentDialogProps> = ({
                 Net ledger change:{" "}
                 <span className="font-mono font-semibold text-ink">
                   {adjustmentType === "credit" ? "+" : "−"}
-                  {formatMoney(Math.abs(signedAmount), true)}
+                  <Money amount={Math.abs(signedAmount)} showUnit />
                 </span>
               </p>
             )}
@@ -246,7 +244,7 @@ export const AddAdjustmentDialog: React.FC<AddAdjustmentDialogProps> = ({
               onChange={(e) => setReason(e.target.value)}
               required
               minLength={3}
-              className="w-full h-10 px-3 bg-surface border border-input-border rounded-input text-sm text-ink placeholder:text-ink-2/60 focus:outline-none focus:ring-2 focus:ring-primary"
+              className="w-full h-10 px-3 bg-surface border border-input-border rounded-input text-sm text-ink placeholder:text-ink-2/60 focus:outline-none focus-visible:ring-2 focus-visible:ring-primary"
             />
           </div>
 
@@ -264,7 +262,7 @@ export const AddAdjustmentDialog: React.FC<AddAdjustmentDialogProps> = ({
               value={adjustedOn}
               onChange={(e) => setAdjustedOn(e.target.value)}
               required
-              className="w-full h-10 px-3 bg-surface border border-input-border rounded-input text-sm text-ink focus:outline-none focus:ring-2 focus:ring-primary"
+              className="w-full h-10 px-3 bg-surface border border-input-border rounded-input text-sm text-ink focus:outline-none focus-visible:ring-2 focus-visible:ring-primary font-mono"
             />
           </div>
 
@@ -274,14 +272,14 @@ export const AddAdjustmentDialog: React.FC<AddAdjustmentDialogProps> = ({
               type="button"
               onClick={onClose}
               disabled={isSubmitting}
-              className="px-4 py-2 text-xs font-medium border border-line text-ink hover:bg-band rounded-btn-sm transition-colors focus:outline-none focus:ring-2 focus:ring-primary"
+              className="h-10 sm:h-9 px-4 py-2 text-xs font-medium border border-line text-ink hover:bg-band rounded-btn-sm transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-primary min-h-[44px] sm:min-h-[36px]"
             >
               Cancel
             </button>
             <button
               type="submit"
               disabled={isSubmitting || reason.trim().length < 3 || !amountStr}
-              className="inline-flex items-center justify-center gap-1.5 px-4 py-2 text-xs font-medium bg-primary hover:bg-primary-hover active:bg-[#174BB0] text-white rounded-btn-sm transition-colors focus:outline-none focus:ring-2 focus:ring-primary disabled:opacity-50"
+              className="inline-flex items-center justify-center gap-1.5 h-10 sm:h-9 px-4 py-2 text-xs font-medium bg-primary hover:bg-primary-hover active:bg-primary-hover text-white rounded-btn-sm transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 disabled:opacity-50 min-h-[44px] sm:min-h-[36px]"
             >
               {isSubmitting && <Loader2 className="w-3.5 h-3.5 animate-spin" />}
               <span>Apply adjustment</span>

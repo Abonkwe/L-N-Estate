@@ -1,14 +1,27 @@
 import React, { useState } from "react";
-import { Navigate, useNavigate } from "react-router-dom";
+import { Navigate, useNavigate, useLocation } from "react-router-dom";
 import { useAuth } from "@/context/AuthContext";
 
 export const LoginPage: React.FC = () => {
   const { isAuthenticated, login, isLoading: authLoading } = useAuth();
   const navigate = useNavigate();
+  const location = useLocation();
 
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [error, setError] = useState<string | null>(null);
+  const [error, setError] = useState<string | null>(() => {
+    try {
+      const msg = sessionStorage.getItem("ams_login_message");
+      if (msg) {
+        sessionStorage.removeItem("ams_login_message");
+        return msg;
+      }
+    } catch {
+      // ignore
+    }
+    const stateMsg = (location.state as { message?: string } | null)?.message;
+    return stateMsg || null;
+  });
   const [submitting, setSubmitting] = useState(false);
 
   if (isAuthenticated && !authLoading) {
@@ -54,7 +67,7 @@ export const LoginPage: React.FC = () => {
         {error && (
           <div
             role="alert"
-            className="mb-6 p-3 text-sm rounded-btn-sm border border-overdue/30 bg-[#FDF2F1] text-overdue font-medium"
+            className="mb-6 p-3 text-sm rounded-btn-sm border border-overdue/30 bg-overdue/10 text-overdue font-medium"
           >
             {error}
           </div>
@@ -97,7 +110,7 @@ export const LoginPage: React.FC = () => {
               required
               value={password}
               onChange={(e) => setPassword(e.target.value)}
-              placeholder="&bull;&bull;&bull;&bull;&bull;&bull;&bull;&bull;"
+              placeholder="••••••••"
               disabled={submitting}
               className="w-full h-11 px-3.5 bg-surface border border-input-border rounded-input text-sm text-ink placeholder:text-ink-2/50 focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent transition-colors disabled:opacity-50"
             />
@@ -106,7 +119,7 @@ export const LoginPage: React.FC = () => {
           <button
             type="submit"
             disabled={submitting}
-            className="w-full h-11 bg-primary hover:bg-primary-hover active:bg-[#143E94] text-white font-medium text-sm rounded-btn transition-colors focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2 disabled:opacity-60 flex items-center justify-center gap-2"
+            className="w-full h-11 bg-primary hover:bg-primary-hover active:bg-primary-hover text-white font-medium text-sm rounded-btn transition-colors focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2 disabled:opacity-60 flex items-center justify-center gap-2"
           >
             {submitting ? (
               <>

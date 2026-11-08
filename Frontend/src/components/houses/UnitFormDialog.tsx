@@ -3,6 +3,7 @@ import { X, Loader2, AlertCircle } from "lucide-react";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import type { Unit, UnitIn, UnitPatch, UnitType } from "@/api/units";
 import { getUnitsApi, createUnitApi, updateUnitApi } from "@/api/units";
+import { useDialogA11y } from "@/lib/useDialogA11y";
 
 interface UnitFormDialogProps {
   isOpen: boolean;
@@ -54,17 +55,13 @@ export const UnitFormDialog: React.FC<UnitFormDialogProps> = ({
     }
   }, [isOpen, unit]);
 
-  // Handle ESC key
-  useEffect(() => {
-    if (!isOpen) return;
-    const handleKeyDown = (e: KeyboardEvent) => {
-      if (e.key === "Escape" && !isSubmitting) {
-        onClose();
-      }
-    };
-    window.addEventListener("keydown", handleKeyDown);
-    return () => window.removeEventListener("keydown", handleKeyDown);
-  }, [isOpen, isSubmitting, onClose]);
+  // Accessible dialog focus trap and Escape handler
+  const dialogRef = useDialogA11y<HTMLDivElement>({
+    isOpen,
+    onClose: () => {
+      if (!isSubmitting) onClose();
+    },
+  });
 
   if (!isOpen) return null;
 
@@ -139,7 +136,8 @@ export const UnitFormDialog: React.FC<UnitFormDialogProps> = ({
 
   return (
     <div
-      className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 overflow-y-auto"
+      ref={dialogRef}
+      className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-4 bg-black/50 overflow-y-auto"
       role="dialog"
       aria-modal="true"
       aria-labelledby="unit-dialog-title"
@@ -160,7 +158,7 @@ export const UnitFormDialog: React.FC<UnitFormDialogProps> = ({
             type="button"
             onClick={onClose}
             disabled={isSubmitting}
-            className="p-1 text-ink-2 hover:text-ink rounded-btn-sm hover:bg-band focus:outline-none focus:ring-2 focus:ring-primary min-w-[36px] min-h-[36px] flex items-center justify-center"
+            className="p-2 text-ink-2 hover:text-ink rounded-btn-sm hover:bg-band focus:outline-none focus-visible:ring-2 focus-visible:ring-primary min-w-[44px] min-h-[44px] flex items-center justify-center"
             aria-label="Close dialog"
           >
             <X className="w-5 h-5" />
@@ -172,7 +170,7 @@ export const UnitFormDialog: React.FC<UnitFormDialogProps> = ({
           {errorMessage && (
             <div
               role="alert"
-              className="p-3 bg-[#FDF2F1] border border-overdue/30 rounded-btn-sm flex items-start gap-2.5 text-xs text-overdue font-medium"
+              className="p-3 bg-overdue/10 border border-overdue/30 rounded-btn-sm flex items-start gap-2.5 text-xs text-overdue font-medium"
             >
               <AlertCircle className="w-4 h-4 shrink-0 mt-0.5" />
               <div className="flex-1">{errorMessage}</div>
@@ -194,7 +192,7 @@ export const UnitFormDialog: React.FC<UnitFormDialogProps> = ({
               value={label}
               onChange={(e) => setLabel(e.target.value)}
               placeholder="e.g. Unit 1, Flat 3B, Studio 102"
-              className="w-full h-10 px-3 bg-surface border border-input-border rounded-input text-sm text-ink placeholder:text-ink-2/60 focus:outline-none focus:ring-2 focus:ring-primary"
+              className="w-full h-10 px-3 bg-surface border border-input-border rounded-input text-sm text-ink placeholder:text-ink-2/60 focus:outline-none focus-visible:ring-2 focus-visible:ring-primary"
             />
           </div>
 
@@ -210,7 +208,7 @@ export const UnitFormDialog: React.FC<UnitFormDialogProps> = ({
               id="unit-type-select"
               value={unitType}
               onChange={(e) => setUnitType(e.target.value as UnitType)}
-              className="w-full h-10 px-3 bg-surface border border-input-border rounded-input text-sm text-ink focus:outline-none focus:ring-2 focus:ring-primary"
+              className="w-full h-10 px-3 bg-surface border border-input-border rounded-input text-sm text-ink focus:outline-none focus-visible:ring-2 focus-visible:ring-primary"
             >
               <option value="apartment">Apartment</option>
               <option value="studio">Studio</option>
@@ -234,7 +232,7 @@ export const UnitFormDialog: React.FC<UnitFormDialogProps> = ({
                 value={listedRentStr}
                 onChange={(e) => setListedRentStr(e.target.value)}
                 placeholder="e.g. 100 000"
-                className="w-full h-10 pl-3 pr-14 bg-surface border border-input-border rounded-input text-sm font-mono text-ink placeholder:text-ink-2/60 focus:outline-none focus:ring-2 focus:ring-primary tabular-nums"
+                className="w-full h-10 pl-3 pr-14 bg-surface border border-input-border rounded-input text-sm font-mono text-ink placeholder:text-ink-2/60 focus:outline-none focus-visible:ring-2 focus-visible:ring-primary tabular-nums"
               />
               <span className="absolute right-3 top-1/2 -translate-y-1/2 text-xs font-semibold text-ink-2 pointer-events-none">
                 FCFA
@@ -259,7 +257,7 @@ export const UnitFormDialog: React.FC<UnitFormDialogProps> = ({
               value={description}
               onChange={(e) => setDescription(e.target.value)}
               placeholder="e.g. Ground floor front side, 2 bedrooms, private veranda..."
-              className="w-full p-2.5 bg-surface border border-input-border rounded-input text-sm text-ink placeholder:text-ink-2/60 focus:outline-none focus:ring-2 focus:ring-primary resize-none"
+              className="w-full p-2.5 bg-surface border border-input-border rounded-input text-sm text-ink placeholder:text-ink-2/60 focus:outline-none focus-visible:ring-2 focus-visible:ring-primary resize-none"
             />
           </div>
 
@@ -269,14 +267,14 @@ export const UnitFormDialog: React.FC<UnitFormDialogProps> = ({
               type="button"
               onClick={onClose}
               disabled={isSubmitting}
-              className="px-4 py-2 text-xs font-medium border border-line text-ink hover:bg-band rounded-btn-sm transition-colors focus:outline-none focus:ring-2 focus:ring-primary min-h-[36px]"
+              className="h-10 sm:h-9 px-4 py-2 text-xs font-medium border border-line text-ink hover:bg-band rounded-btn-sm transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-primary min-h-[44px] sm:min-h-[36px]"
             >
               Cancel
             </button>
             <button
               type="submit"
               disabled={isSubmitting || !label.trim()}
-              className="inline-flex items-center justify-center gap-1.5 px-4 py-2 text-xs font-semibold bg-primary hover:bg-primary-hover active:bg-[#174BB0] text-white rounded-btn-sm transition-colors focus:outline-none focus:ring-2 focus:ring-primary disabled:opacity-50 min-h-[36px]"
+              className="inline-flex items-center justify-center gap-1.5 h-10 sm:h-9 px-4 py-2 text-xs font-semibold bg-primary hover:bg-primary-hover active:bg-primary-hover text-white rounded-btn-sm transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 disabled:opacity-50 min-h-[44px] sm:min-h-[36px]"
             >
               {isSubmitting && <Loader2 className="w-3.5 h-3.5 animate-spin" />}
               <span>{isEditing ? "Save changes" : "Create unit"}</span>

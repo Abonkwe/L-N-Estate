@@ -34,6 +34,9 @@ const CATEGORY_NAMES: Record<string, string> = {
   maintenance: "Maintenance",
   water_bill: "Water Bill",
   tax: "Tax",
+  cleaning: "Cleaning",
+  waste_removal: "Waste Removal",
+  sewage_removal: "Sewage Removal",
   other: "Other",
 };
 
@@ -125,7 +128,7 @@ export const ReportsPage: React.FC = () => {
       {isError && (
         <div
           role="alert"
-          className="p-4 rounded-panel bg-[#FDF2F1] border border-overdue/30 flex items-center justify-between gap-4"
+          className="p-4 rounded-panel bg-overdue/10 border border-overdue/30 flex items-center justify-between gap-4"
         >
           <div className="flex items-center gap-3">
             <AlertCircle className="w-5 h-5 text-overdue shrink-0" />
@@ -136,7 +139,7 @@ export const ReportsPage: React.FC = () => {
           <button
             type="button"
             onClick={() => refetch()}
-            className="inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-semibold bg-white border border-overdue/40 text-overdue rounded-btn-sm hover:bg-overdue/5"
+            className="inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-semibold bg-white border border-overdue/40 text-overdue rounded-btn-sm hover:bg-overdue/5 focus:outline-none focus-visible:ring-2 focus-visible:ring-overdue min-h-[36px]"
           >
             <RefreshCw className="w-3.5 h-3.5" />
             <span>Retry</span>

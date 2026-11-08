@@ -2,7 +2,8 @@ import React, { useState, useEffect, useMemo } from "react";
 import { X, Loader2, AlertCircle } from "lucide-react";
 import type { LeaseDetail } from "@/api/leases";
 import { addRentTermApi } from "@/api/leases";
-import { formatMoney } from "@/lib/format";
+import { Money } from "@/components/shared/Money";
+import { useDialogA11y } from "@/lib/useDialogA11y";
 
 interface AddRentChangeDialogProps {
   isOpen: boolean;
@@ -40,17 +41,13 @@ export const AddRentChangeDialog: React.FC<AddRentChangeDialogProps> = ({
     }
   }, [isOpen, lease]);
 
-  // Handle ESC key
-  useEffect(() => {
-    if (!isOpen) return;
-    const handleKeyDown = (e: KeyboardEvent) => {
-      if (e.key === "Escape" && !isSubmitting) {
-        onClose();
-      }
-    };
-    window.addEventListener("keydown", handleKeyDown);
-    return () => window.removeEventListener("keydown", handleKeyDown);
-  }, [isOpen, isSubmitting, onClose]);
+  // Accessible dialog focus trap and Escape handler
+  const dialogRef = useDialogA11y<HTMLDivElement>({
+    isOpen,
+    onClose: () => {
+      if (!isSubmitting) onClose();
+    },
+  });
 
   // Derived preview total
   const calculatedTotal = useMemo(() => {
@@ -113,7 +110,8 @@ export const AddRentChangeDialog: React.FC<AddRentChangeDialogProps> = ({
 
   return (
     <div
-      className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 overflow-y-auto"
+      ref={dialogRef}
+      className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-4 bg-black/50 overflow-y-auto"
       role="dialog"
       aria-modal="true"
       aria-labelledby="rent-change-dialog-title"
@@ -136,7 +134,7 @@ export const AddRentChangeDialog: React.FC<AddRentChangeDialogProps> = ({
             type="button"
             onClick={onClose}
             disabled={isSubmitting}
-            className="p-1 text-ink-2 hover:text-ink rounded-btn-sm hover:bg-band focus:outline-none focus:ring-2 focus:ring-primary"
+            className="p-2 text-ink-2 hover:text-ink rounded-btn-sm hover:bg-band focus:outline-none focus-visible:ring-2 focus-visible:ring-primary min-w-[44px] min-h-[44px] flex items-center justify-center"
             aria-label="Close dialog"
           >
             <X className="w-5 h-5" />
@@ -154,7 +152,7 @@ export const AddRentChangeDialog: React.FC<AddRentChangeDialogProps> = ({
           {errorMessage && (
             <div
               role="alert"
-              className="p-3 bg-[#FDF2F1] border border-overdue/30 rounded-btn-sm flex items-start gap-2.5 text-xs text-overdue font-medium"
+              className="p-3 bg-overdue/10 border border-overdue/30 rounded-btn-sm flex items-start gap-2.5 text-xs text-overdue font-medium"
             >
               <AlertCircle className="w-4 h-4 shrink-0 mt-0.5" />
               <div className="flex-1">{errorMessage}</div>
@@ -175,7 +173,7 @@ export const AddRentChangeDialog: React.FC<AddRentChangeDialogProps> = ({
               value={effectiveFrom}
               onChange={(e) => setEffectiveFrom(e.target.value)}
               required
-              className="w-full h-10 px-3 bg-surface border border-input-border rounded-input text-sm text-ink focus:outline-none focus:ring-2 focus:ring-primary"
+              className="w-full h-10 px-3 bg-surface border border-input-border rounded-input text-sm text-ink focus:outline-none focus-visible:ring-2 focus-visible:ring-primary font-mono"
             />
           </div>
 
@@ -196,7 +194,7 @@ export const AddRentChangeDialog: React.FC<AddRentChangeDialogProps> = ({
                 value={baseRentStr}
                 onChange={(e) => setBaseRentStr(e.target.value)}
                 required
-                className="w-full h-10 px-3 bg-surface border border-input-border rounded-input text-sm font-mono text-ink text-right tabular-nums focus:outline-none focus:ring-2 focus:ring-primary"
+                className="w-full h-10 px-3 bg-surface border border-input-border rounded-input text-sm font-mono text-ink text-right tabular-nums focus:outline-none focus-visible:ring-2 focus-visible:ring-primary"
               />
             </div>
 
@@ -214,7 +212,7 @@ export const AddRentChangeDialog: React.FC<AddRentChangeDialogProps> = ({
                 step="1"
                 value={waterFeeStr}
                 onChange={(e) => setWaterFeeStr(e.target.value)}
-                className="w-full h-10 px-3 bg-surface border border-input-border rounded-input text-sm font-mono text-ink text-right tabular-nums focus:outline-none focus:ring-2 focus:ring-primary"
+                className="w-full h-10 px-3 bg-surface border border-input-border rounded-input text-sm font-mono text-ink text-right tabular-nums focus:outline-none focus-visible:ring-2 focus-visible:ring-primary"
               />
             </div>
 
@@ -232,7 +230,7 @@ export const AddRentChangeDialog: React.FC<AddRentChangeDialogProps> = ({
                 step="1"
                 value={wasteFeeStr}
                 onChange={(e) => setWasteFeeStr(e.target.value)}
-                className="w-full h-10 px-3 bg-surface border border-input-border rounded-input text-sm font-mono text-ink text-right tabular-nums focus:outline-none focus:ring-2 focus:ring-primary"
+                className="w-full h-10 px-3 bg-surface border border-input-border rounded-input text-sm font-mono text-ink text-right tabular-nums focus:outline-none focus-visible:ring-2 focus-visible:ring-primary"
               />
             </div>
           </div>
@@ -243,7 +241,7 @@ export const AddRentChangeDialog: React.FC<AddRentChangeDialogProps> = ({
               New monthly total:
             </span>
             <span className="text-sm font-mono font-semibold text-ink tabular-nums">
-              {formatMoney(calculatedTotal, true)}
+              <Money amount={calculatedTotal} showUnit />
             </span>
           </div>
 
@@ -260,7 +258,7 @@ export const AddRentChangeDialog: React.FC<AddRentChangeDialogProps> = ({
               type="date"
               value={noticeGivenOn}
               onChange={(e) => setNoticeGivenOn(e.target.value)}
-              className="w-full h-10 px-3 bg-surface border border-input-border rounded-input text-sm text-ink focus:outline-none focus:ring-2 focus:ring-primary"
+              className="w-full h-10 px-3 bg-surface border border-input-border rounded-input text-sm text-ink focus:outline-none focus-visible:ring-2 focus-visible:ring-primary font-mono"
             />
             <p className="text-[11px] text-ink-2 mt-1">
               Date on which the rent change notice was issued to the tenant.
@@ -273,14 +271,14 @@ export const AddRentChangeDialog: React.FC<AddRentChangeDialogProps> = ({
               type="button"
               onClick={onClose}
               disabled={isSubmitting}
-              className="px-4 py-2 text-xs font-medium border border-line text-ink hover:bg-band rounded-btn-sm transition-colors focus:outline-none focus:ring-2 focus:ring-primary"
+              className="h-10 sm:h-9 px-4 py-2 text-xs font-medium border border-line text-ink hover:bg-band rounded-btn-sm transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-primary min-h-[44px] sm:min-h-[36px]"
             >
               Cancel
             </button>
             <button
               type="submit"
               disabled={isSubmitting}
-              className="inline-flex items-center justify-center gap-1.5 px-4 py-2 text-xs font-medium bg-primary hover:bg-primary-hover active:bg-[#174BB0] text-white rounded-btn-sm transition-colors focus:outline-none focus:ring-2 focus:ring-primary disabled:opacity-50"
+              className="inline-flex items-center justify-center gap-1.5 h-10 sm:h-9 px-4 py-2 text-xs font-medium bg-primary hover:bg-primary-hover active:bg-primary-hover text-white rounded-btn-sm transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 disabled:opacity-50 min-h-[44px] sm:min-h-[36px]"
             >
               {isSubmitting && <Loader2 className="w-3.5 h-3.5 animate-spin" />}
               <span>Save rent change</span>

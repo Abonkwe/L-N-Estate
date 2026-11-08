@@ -14,6 +14,7 @@ import { PaymentsPage } from "./pages/Payments";
 import { ExpensesPage } from "./pages/Expenses";
 import { ReportsPage } from "./pages/Reports";
 import { AppShell } from "./components/layout/AppShell";
+import { ErrorBoundary } from "./components/shared/ErrorBoundary";
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -49,37 +50,39 @@ const ProtectedRoute: React.FC<{ children: React.ReactNode }> = ({ children }) =
 
 export const App: React.FC = () => {
   return (
-    <QueryClientProvider client={queryClient}>
-      <AuthProvider>
-        <BrowserRouter>
-          <Routes>
-            <Route path="/login" element={<LoginPage />} />
+    <ErrorBoundary>
+      <QueryClientProvider client={queryClient}>
+        <AuthProvider>
+          <BrowserRouter>
+            <Routes>
+              <Route path="/login" element={<LoginPage />} />
 
-            <Route
-              path="/"
-              element={
-                <ProtectedRoute>
-                  <AppShell />
-                </ProtectedRoute>
-              }
-            >
-              <Route index element={<OverviewPage />} />
-              <Route path="leases/new" element={<NewLeasePage />} />
-              <Route path="leases/:id" element={<LeaseDetailPage />} />
-              <Route path="tenants" element={<TenantsPage />} />
-              <Route path="tenants/new" element={<TenantDetailPage isNew={true} />} />
-              <Route path="tenants/:id" element={<TenantDetailPage />} />
-              <Route path="houses" element={<HousesPage />} />
-              <Route path="houses/:id" element={<HouseDetailPage />} />
-              <Route path="payments" element={<PaymentsPage />} />
-              <Route path="expenses" element={<ExpensesPage />} />
-              <Route path="reports" element={<ReportsPage />} />
-              <Route path="*" element={<Navigate to="/" replace />} />
-            </Route>
-          </Routes>
-        </BrowserRouter>
-      </AuthProvider>
-    </QueryClientProvider>
+              <Route
+                path="/"
+                element={
+                  <ProtectedRoute>
+                    <AppShell />
+                  </ProtectedRoute>
+                }
+              >
+                <Route index element={<OverviewPage />} />
+                <Route path="leases/new" element={<NewLeasePage />} />
+                <Route path="leases/:id" element={<LeaseDetailPage />} />
+                <Route path="tenants" element={<TenantsPage />} />
+                <Route path="tenants/new" element={<TenantDetailPage isNew={true} />} />
+                <Route path="tenants/:id" element={<TenantDetailPage />} />
+                <Route path="houses" element={<HousesPage />} />
+                <Route path="houses/:id" element={<HouseDetailPage />} />
+                <Route path="payments" element={<PaymentsPage />} />
+                <Route path="expenses" element={<ExpensesPage />} />
+                <Route path="reports" element={<ReportsPage />} />
+                <Route path="*" element={<Navigate to="/" replace />} />
+              </Route>
+            </Routes>
+          </BrowserRouter>
+        </AuthProvider>
+      </QueryClientProvider>
+    </ErrorBoundary>
   );
 };
 

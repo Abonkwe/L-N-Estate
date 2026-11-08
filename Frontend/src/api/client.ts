@@ -36,8 +36,18 @@ const authMiddleware: Middleware = {
   async onResponse({ response }) {
     if (response.status === 401) {
       setStoredToken(null);
+      try {
+        sessionStorage.setItem(
+          "ams_login_message",
+          "Your session has expired. Please sign in again."
+        );
+      } catch {
+        // Ignore if storage is inaccessible
+      }
       if (unauthorizedHandler) {
         unauthorizedHandler();
+      } else if (typeof window !== "undefined" && window.location.pathname !== "/login") {
+        window.location.href = "/login";
       }
     }
     return response;
